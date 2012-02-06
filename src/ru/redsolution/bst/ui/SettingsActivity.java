@@ -1,7 +1,7 @@
 package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
-import ru.redsolution.bst.data.tables.CompanyTable;
+import ru.redsolution.bst.data.tables.MyCompanyTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.ConfirmDialogListener;
@@ -23,8 +23,8 @@ public class SettingsActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, ConfirmDialogListener {
 
 	private static final int DIALOG_AUTH_ID = 1;
-	private static final int DIALOG_STORE_ID = 2;
-	private static final int DIALOG_COMPANY_ID = 3;
+	private static final int DIALOG_WAREHOUSE_ID = 2;
+	private static final int DIALOG_MY_COMPANY_ID = 3;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,12 +60,13 @@ public class SettingsActivity extends PreferenceActivity implements
 					false);
 			return new ConfirmDialogBuilder(this, DIALOG_AUTH_ID, this)
 					.setView(layout).setTitle(R.string.auth_title).create();
-		case DIALOG_STORE_ID:
+		case DIALOG_WAREHOUSE_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
-					.getInstance().list(), -1, WarehouseTable.Fields.NAME).create();
-		case DIALOG_COMPANY_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, CompanyTable
-					.getInstance().list(), -1, CompanyTable.Fields.NAME)
+					.getInstance().list(), -1, WarehouseTable.Fields.NAME)
+					.create();
+		case DIALOG_MY_COMPANY_ID:
+			return new CursorChoiceDialogBuilder(this, id, this, MyCompanyTable
+					.getInstance().list(), -1, MyCompanyTable.Fields.NAME)
 					.create();
 		default:
 			return super.onCreateDialog(id);

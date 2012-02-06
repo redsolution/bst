@@ -1,9 +1,9 @@
 package ru.redsolution.bst.data.tables;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
 
 /**
  * Список организаций.
@@ -11,19 +11,15 @@ import android.provider.BaseColumns;
  * @author alexander.ivanov
  * 
  */
-public class CompanyTable implements DatabaseTable, ListableTable {
-	public static final class Fields implements BaseColumns {
+public class CompanyTable extends NamedTable {
+	public static final class Fields implements NamedTable.Fields {
 		private Fields() {
 		}
 
-		public static final String _ID = "_id";
-		public static final String ID = "id";
-		public static final String NAME = "name";
+		public static final String FOLDER = "folder";
 	}
 
 	private static final String NAME = "company";
-	private static final String[] PROJECTION = new String[] { Fields._ID,
-			Fields.ID, Fields.NAME };
 
 	private final static CompanyTable instance;
 
@@ -37,26 +33,20 @@ public class CompanyTable implements DatabaseTable, ListableTable {
 	}
 
 	@Override
-	public void create(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + NAME + " (" + Fields._ID
-				+ " INTEGER PRIMARY KEY, " + Fields.ID + " INTEGER,"
-				+ Fields.NAME + " TEXT);");
+	protected String getTableName() {
+		return NAME;
 	}
 
 	@Override
-	public void migrate(SQLiteDatabase db, int toVersion) {
+	public Collection<String> getFields() {
+		Collection<String> collection = new ArrayList<String>(super.getFields());
+		collection.add(Fields.FOLDER);
+		return collection;
 	}
 
 	@Override
-	public void clear() {
-		DatabaseHelper.getInstance().getWritableDatabase()
-				.delete(NAME, null, null);
-	}
-
-	@Override
-	public Cursor list() {
-		return DatabaseHelper.getInstance().getReadableDatabase()
-				.query(NAME, PROJECTION, null, null, null, null, null);
+	public void add(String id, String name) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -64,12 +54,11 @@ public class CompanyTable implements DatabaseTable, ListableTable {
 	 * 
 	 * @param id
 	 * @param name
+	 * @param folder
 	 */
-	public void add(String id, String name) {
-		ContentValues values = new ContentValues();
-		values.put(Fields.ID, id);
-		values.put(Fields.NAME, name);
-		DatabaseHelper.getInstance().getWritableDatabase()
-				.insert(NAME, Fields.NAME, values);
+	public void add(String id, String name, String folder) {
+		ContentValues values = getValues(id, name);
+		values.put(Fields.FOLDER, folder);
+		add(values);
 	}
 }

@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "test6.db";
+	private static final String DATABASE_NAME = "testA.db";
 	private static final int DATABASE_VERSION = 1;
 
 	private static final DatabaseHelper instance;
@@ -33,7 +33,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		tables = new ArrayList<DatabaseTable>();
-		System.out.println("construct");
 	}
 
 	public void addTable(DatabaseTable table) {
@@ -42,7 +41,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase paramSQLiteDatabase) {
-		System.out.println("create" + tables);
 		for (DatabaseTable table : tables)
 			table.create(paramSQLiteDatabase);
 	}

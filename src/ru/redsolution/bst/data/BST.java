@@ -3,8 +3,14 @@ package ru.redsolution.bst.data;
 import java.util.Random;
 
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.tables.CompanyFolderTable;
 import ru.redsolution.bst.data.tables.CompanyTable;
 import ru.redsolution.bst.data.tables.DatabaseHelper;
+import ru.redsolution.bst.data.tables.GoodBarcodeTable;
+import ru.redsolution.bst.data.tables.GoodFolderTable;
+import ru.redsolution.bst.data.tables.GoodTable;
+import ru.redsolution.bst.data.tables.MyCompanyTable;
+import ru.redsolution.bst.data.tables.UomTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -42,8 +48,14 @@ public class BST extends Application {
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		DatabaseHelper.getInstance();
-		WarehouseTable.getInstance();
+		CompanyFolderTable.getInstance();
 		CompanyTable.getInstance();
+		GoodTable.getInstance();
+		GoodFolderTable.getInstance();
+		GoodBarcodeTable.getInstance();
+		MyCompanyTable.getInstance();
+		UomTable.getInstance();
+		WarehouseTable.getInstance();
 	}
 
 	/**
@@ -52,12 +64,9 @@ public class BST extends Application {
 	public void importData() {
 		DatabaseHelper.getInstance().clear();
 
-		WarehouseTable.getInstance()
-				.add("1", "Основной склад #" + random.nextInt());
-		CompanyTable.getInstance().add("1",
-				"Моя организация #" + random.nextInt());
-		CompanyTable.getInstance().add("2",
-				"Ещё одна организация #" + random.nextInt());
+		WarehouseTable.getInstance().add("z", "Основной склад", "");
+		MyCompanyTable.getInstance().add("a", "Моя организация", "");
+		MyCompanyTable.getInstance().add("b", "Ещё одна организация", "");
 	}
 
 	public String getLogin() {

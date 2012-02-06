@@ -17,9 +17,10 @@
     <string name="wait">Пожалуйста, подождите &#8230;</string>
 
     <string name="warehouse_title">Склад</string>
-    <string name="company_title">Организация</string>
+    <string name="my_company_title">Организация</string>
 
     <string name="defaults_title">Значения, используемые по умолчанию</string>
+    <string name="defaults_hint">Не выбраны реквизиты, используемые по умолчанию. Хотите задать их сейчас?</string>
 
     <string name="create">Создать</string>
 

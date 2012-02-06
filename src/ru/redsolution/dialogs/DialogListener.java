@@ -3,19 +3,19 @@ package ru.redsolution.dialogs;
 /**
  * Listener for choice in {@link RequestDialog}.
  */
-public interface ConfirmDialogListener {
+public interface DialogListener {
 	/**
 	 * Request was accepted.
 	 */
-	void onAccept(ConfirmDialogBuilder dialogBuilder);
+	void onAccept(DialogBuilder dialogBuilder);
 
 	/**
 	 * Request was declined.
 	 */
-	void onDecline(ConfirmDialogBuilder dialogBuilder);
+	void onDecline(DialogBuilder dialogBuilder);
 
 	/**
 	 * Request was canceled.
 	 */
-	void onCancel(ConfirmDialogBuilder dialogBuilder);
+	void onCancel(DialogBuilder dialogBuilder);
 }

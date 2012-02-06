@@ -11,7 +11,7 @@ import android.content.DialogInterface;
  */
 public class ConfirmDialogBuilder extends DialogBuilder implements
 		DialogInterface.OnClickListener {
-	private final ConfirmDialogListener listener;
+	private final DialogListener listener;
 	private State state;
 
 	private static enum State {
@@ -42,7 +42,7 @@ public class ConfirmDialogBuilder extends DialogBuilder implements
 	 *            ID of the dialog.
 	 */
 	public ConfirmDialogBuilder(Activity activity, int dialogId,
-			ConfirmDialogListener listener) {
+			DialogListener listener) {
 		super(activity, dialogId);
 		this.listener = listener;
 		state = State.canceled;

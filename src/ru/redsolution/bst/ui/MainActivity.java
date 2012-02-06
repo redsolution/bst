@@ -30,10 +30,16 @@ public class MainActivity extends PreferenceActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		updateView();
+	}
+
+	@Override
 	public boolean onPreferenceClick(Preference paramPreference) {
 		if (paramPreference.getKey().equals(getString(R.string.import_action))) {
 			BST.getInstance().importData();
-			// TODO
+			updateView();
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.inventory_action))) {
 			startActivity(new Intent(this, InventoryActivity.class));
@@ -43,4 +49,12 @@ public class MainActivity extends PreferenceActivity implements
 		}
 		return true;
 	}
+
+	private void updateView() {
+		findPreference(getString(R.string.inventory_action)).setEnabled(
+				BST.getInstance().isImported());
+		findPreference(getString(R.string.settings_action)).setEnabled(
+				BST.getInstance().isImported());
+	}
+
 }

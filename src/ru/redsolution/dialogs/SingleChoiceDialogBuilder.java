@@ -18,7 +18,7 @@ public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
 	private Integer selected;
 
 	public SingleChoiceDialogBuilder(Activity activity, int dialogId,
-			ConfirmDialogListener listener, List<T> items, List<String> labels,
+			DialogListener listener, List<T> items, List<String> labels,
 			Integer selected) {
 		super(activity, dialogId);
 		this.items = items;

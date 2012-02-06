@@ -17,9 +17,10 @@
     <string name="wait">Please, wait &#8230;</string>
 
     <string name="warehouse_title">Ware house</string>
-    <string name="company_title">Company</string>
-
-    <string name="defaults_title">Defaut values</string>
+    <string name="my_company_title">Company</string>
+    
+    <string name="defaults_title">Default values</string>
+    <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>
 
     <string name="create">Create</string>
 

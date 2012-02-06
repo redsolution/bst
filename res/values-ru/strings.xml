@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Barcode Scanner Terminal</string>
+    <string name="import_action">Импорт данных</string>
+    <string name="import_summary">Загрузка справочников</string>
+    <string name="inventory_action">Инвентаризация</string>
+    <string name="shipment_action">Отгрузка</string>
+    <string name="retail_action">Розничная продажа</string>
+    <string name="movement_action">Перемещение</string>
+    <string name="settings_action">Настройки</string>
+
+    <string name="auth_title">Настройки авторизации</string>
+    <string name="login_title">Имя пользователя или email</string>
+    <string name="login_hint">имя@организация</string>
+    <string name="password_title">Пароль</string>
+
+    <string name="wait">Пожалуйста, подождите &#8230;</string>
+
+    <string name="warehouse_title">Склад</string>
+    <string name="company_title">Организация</string>
+
+    <string name="defaults_title">Значения, используемые по умолчанию</string>
+
+    <string name="create">Создать</string>
+
+    <string name="good_title">Добавление товара</string>
+    <string name="name_title">Наименование</string>
+    <string name="barcode_title">Штрих код</string>
+    <string name="code_title">Код</string>
+    <string name="article_title">Артикул</string>
+    <string name="quantity_title">Количество</string>
+    <string name="rest_text">%d + </string>
+    <string name="more">Ещё</string>
+
+    <string name="scan_action">Сканировать</string>
+    <string name="list_action">Список товаров</string>
+    <string name="remove_action">Удалить</string>
+    <string name="header_action">Изменить шапку</string>
+    <string name="send_action">Отпрака документа</string>
+    <string name="cancel_action">Удалить документ</string>
+    <string name="cancel_confirm">Вы действительно хотите удалить документ?</string>
+</resources>

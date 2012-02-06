@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_action"
+    >
+    <PreferenceCategory
+        android:title="@string/auth_title"
+        >
+        <PreferenceScreen
+            android:key="@string/auth_title"
+            android:title="@string/auth_title"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/defaults_title"
+        >
+        <PreferenceScreen
+            android:key="@string/warehouse_title"
+            android:title="@string/warehouse_title"
+            />
+        <PreferenceScreen
+            android:key="@string/company_title"
+            android:title="@string/company_title"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

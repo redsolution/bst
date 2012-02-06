@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_key">login</string>
+    <string name="password_key">password</string>
+    <string name="store_key">store</string>
+    <string name="company_key">company</string>
+</resources>

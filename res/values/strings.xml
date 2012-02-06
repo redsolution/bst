@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Barcode Scanner Terminal</string>
+    <string name="import_action">Import</string>
+    <string name="import_summary">Load data</string>
+    <string name="inventory_action">Inventory</string>
+    <string name="shipment_action">Shipment</string>
+    <string name="retail_action">Retial</string>
+    <string name="movement_action">Movement</string>
+    <string name="settings_action">Settings</string>
+
+    <string name="auth_title">Authorization</string>
+    <string name="login_title">Login or email</string>
+    <string name="login_hint">name@company</string>
+    <string name="password_title">password</string>
+
+    <string name="wait">Please, wait &#8230;</string>
+
+    <string name="warehouse_title">Ware house</string>
+    <string name="company_title">Company</string>
+
+    <string name="defaults_title">Defaut values</string>
+
+    <string name="create">Create</string>
+
+    <string name="good_title">Add good</string>
+    <string name="name_title">Name</string>
+    <string name="barcode_title">Barcode</string>
+    <string name="code_title">Code</string>
+    <string name="article_title">Article</string>
+    <string name="quantity_title">Quantity</string>
+    <string name="rest_text">%d + </string>
+    <string name="more">More</string>
+
+    <string name="scan_action">Scan</string>
+    <string name="list_action">List of goods</string>
+    <string name="remove_action">Remove</string>
+    <string name="header_action">Change header</string>
+    <string name="send_action">Send document</string>
+    <string name="cancel_action">Remove document</string>
+    <string name="cancel_confirm">Do you realy want to remove document?</string>
+</resources>

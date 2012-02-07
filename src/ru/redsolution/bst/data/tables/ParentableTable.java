@@ -11,7 +11,7 @@ import android.content.ContentValues;
  * @author alexander.ivanov
  * 
  */
-public abstract class ParantableTable extends NamedTable {
+public abstract class ParentableTable extends NamedTable {
 	public static interface Fields extends NamedTable.Fields {
 		public static final String PARENT = "parent";
 	}

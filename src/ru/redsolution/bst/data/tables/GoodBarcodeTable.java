@@ -6,7 +6,7 @@ package ru.redsolution.bst.data.tables;
  * @author alexander.ivanov
  * 
  */
-public class GoodBarcodeTable extends ParantableTable {
+public class GoodBarcodeTable extends BaseBarcodeTable {
 
 	private static final String NAME = "good_barcode";
 

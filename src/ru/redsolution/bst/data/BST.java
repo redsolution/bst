@@ -9,7 +9,12 @@ import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.parse.DocumentImporter;
 import ru.redsolution.bst.data.tables.CompanyFolderTable;
 import ru.redsolution.bst.data.tables.CompanyTable;
 import ru.redsolution.bst.data.tables.DatabaseHelper;
@@ -125,11 +130,25 @@ public class BST extends Application {
 	public void importData() {
 		DatabaseHelper.getInstance().clear();
 		HttpResponse response = executeRequest(new HttpGet(IMPORT_URL));
+		XmlPullParser parser;
+		try {
+			parser = XmlPullParserFactory.newInstance().newPullParser();
+			parser.setInput(response.getEntity().getContent(), "UTF-8");
+		} catch (IllegalStateException e) {
+			throw new RuntimeException(e);
+		} catch (XmlPullParserException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		try {
+			new DocumentImporter().parse(parser);
+		} catch (XmlPullParserException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-		WarehouseTable.getInstance().add("z", "Основной склад", "");
-		MyCompanyTable.getInstance().add("a", "Моя организация", "");
-		MyCompanyTable.getInstance().add("b", "Ещё одна организация", "");
-		// HttpGet get = new HttpGet(IMPORT_URL);
 		Editor editor = settings.edit();
 		editor.putBoolean(getString(R.string.imported_key), true);
 		editor.commit();

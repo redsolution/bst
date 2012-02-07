@@ -7,7 +7,7 @@ package ru.redsolution.bst.data.tables;
  * @author alexander.ivanov
  * 
  */
-public class MyCompanyTable extends ParantableTable {
+public class MyCompanyTable extends ParentableTable {
 
 	private static final String NAME = "my_company";
 

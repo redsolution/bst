@@ -6,7 +6,7 @@ package ru.redsolution.bst.data.tables;
  * @author alexander.ivanov
  * 
  */
-public class CompanyFolderTable extends ParantableTable {
+public class CompanyFolderTable extends ParentableTable {
 
 	private static final String NAME = "company_folder";
 

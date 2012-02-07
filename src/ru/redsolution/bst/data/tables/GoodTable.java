@@ -13,12 +13,12 @@ import android.content.ContentValues;
  */
 public class GoodTable extends NamedTable {
 	public static interface Fields extends NamedTable.Fields {
-		public static final String BUY_PRICE = "buy_price"; // buyPrice
-		public static final String SALE_PRICE = "sale_price"; // salePrice
-		public static final String UOM = "uom"; // uomId
-		public static final String GOOD_FOLDER = "good_folder"; // parentId
-		public static final String PRODUCT_CODE = "product_code"; // productCode
-		public static final String CODE = "code"; // <code>
+		public static final String BUY_PRICE = "buy_price";
+		public static final String SALE_PRICE = "sale_price";
+		public static final String UOM = "uom";
+		public static final String GOOD_FOLDER = "good_folder";
+		public static final String PRODUCT_CODE = "product_code";
+		public static final String CODE = "code";
 	}
 
 	private static final String NAME = "good";
@@ -51,9 +51,16 @@ public class GoodTable extends NamedTable {
 		return collection;
 	}
 
+	@Override
+	public void add(String id, String name) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * Добавить штрих код.
+	 * Добавить объект.
 	 * 
+	 * @param id
+	 * @param name
 	 * @param buyPrice
 	 * @param salePrice
 	 * @param uom
@@ -61,9 +68,9 @@ public class GoodTable extends NamedTable {
 	 * @param productCode
 	 * @param code
 	 */
-	public void add(String buyPrice, String salePrice, String uom,
-			String folder, String productCode, String code) {
-		ContentValues values = new ContentValues();
+	public void add(String id, String name, String buyPrice, String salePrice,
+			String uom, String folder, String productCode, String code) {
+		ContentValues values = getValues(id, name);
 		values.put(Fields.BUY_PRICE, buyPrice);
 		values.put(Fields.SALE_PRICE, salePrice);
 		values.put(Fields.UOM, uom);

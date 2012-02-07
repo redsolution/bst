@@ -6,7 +6,7 @@ package ru.redsolution.bst.data.tables;
  * @author alexander.ivanov
  * 
  */
-public class GoodFolderTable extends ParantableTable {
+public class GoodFolderTable extends ParentableTable {
 
 	private static final String NAME = "good_folder";
 

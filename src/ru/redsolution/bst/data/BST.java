@@ -38,6 +38,8 @@ public class BST extends Application {
 	private String warehouse;
 	private String myCompany;
 
+	private final TrustedHttpClient httpClient;
+
 	public BST() {
 		super();
 		if (instance != null)
@@ -45,6 +47,7 @@ public class BST extends Application {
 		instance = this;
 		warehouse = "";
 		myCompany = "";
+		httpClient = new TrustedHttpClient(this);
 	}
 
 	@Override

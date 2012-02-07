@@ -1,5 +1,14 @@
 package ru.redsolution.bst.data;
 
+import java.io.IOException;
+
+import net.iharder.base64.Base64;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthenticationException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.tables.CompanyFolderTable;
 import ru.redsolution.bst.data.tables.CompanyTable;
@@ -23,7 +32,9 @@ import android.preference.PreferenceManager;
  */
 public class BST extends Application {
 
-	private static final String IMPORT_URL = "https://online.moysklad.ru/exchange/xml/export?name=Dictionary";
+	private static final String HOST_URL = "https://online.moysklad.ru";
+	private static final String IMPORT_URL = HOST_URL
+			+ "/exchange/xml/export?name=Dictionary";
 
 	private static BST instance;
 
@@ -67,10 +78,53 @@ public class BST extends Application {
 	}
 
 	/**
+	 * Отправляет запрос, добавляя информацию для авторизации.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private HttpResponse executeRequest(HttpUriRequest request) {
+		request.setHeader(
+				"Authorization",
+				"Basic "
+						+ Base64.encodeBytes((getLogin() + ":" + getPassword())
+								.getBytes()));
+		HttpResponse response;
+		try {
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.getStatusLine().getStatusCode() != 200)
+			throw new RuntimeException(new AuthenticationException(response
+					.getStatusLine().toString()));
+		return response;
+	}
+
+	/**
+	 * Проверка авторизации.
+	 * 
+	 * @return
+	 */
+	public boolean checkAuth() {
+		try {
+			executeRequest(new HttpGet(HOST_URL));
+		} catch (RuntimeException e) {
+			if (e.getCause() instanceof AuthenticationException)
+				return false;
+			throw new RuntimeException(e);
+		}
+		return true;
+	}
+
+	/**
 	 * Импорт данных.
 	 */
 	public void importData() {
 		DatabaseHelper.getInstance().clear();
+		HttpResponse response = executeRequest(new HttpGet(IMPORT_URL));
 
 		WarehouseTable.getInstance().add("z", "Основной склад", "");
 		MyCompanyTable.getInstance().add("a", "Моя организация", "");

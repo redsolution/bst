@@ -27,7 +27,7 @@
 
     <string name="create">Создать</string>
 
-    <string name="good_title">Добавление товара</string>
+    <string name="verify_title">Проверка товара</string>
     <string name="name_title">Наименование</string>
     <string name="barcode_title">Штрих код</string>
     <string name="code_title">Код</string>

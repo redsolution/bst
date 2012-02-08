@@ -27,11 +27,11 @@
 
     <string name="create">Create</string>
 
-    <string name="good_title">Add good</string>
+    <string name="verify_title">Verify good</string>
     <string name="name_title">Name</string>
     <string name="barcode_title">Barcode</string>
     <string name="code_title">Code</string>
-    <string name="article_title">Article</string>
+    <string name="product_code_title">Product code</string>
     <string name="quantity_title">Quantity</string>
     <string name="rest_text">%d + </string>
     <string name="more">More</string>

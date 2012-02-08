@@ -4,7 +4,7 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
-import ru.redsolution.dialogs.ConfirmDialogBuilder;
+import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.view.View;
-import android.widget.EditText;
 
 /**
  * Окно настроет.
@@ -30,8 +28,6 @@ public class SettingsActivity extends PreferenceActivity implements
 	private static final int DIALOG_AUTH_ID = 1;
 	private static final int DIALOG_WAREHOUSE_ID = 2;
 	private static final int DIALOG_MY_COMPANY_ID = 3;
-	private EditText loginView;
-	private EditText passwordView;
 	private Preference loginPreference;
 
 	@Override
@@ -74,15 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_AUTH_ID:
-			View dialogLayout = getLayoutInflater().inflate(R.layout.auth,
-					null, false);
-			loginView = (EditText) dialogLayout.findViewById(R.id.login);
-			passwordView = (EditText) dialogLayout.findViewById(R.id.password);
-			loginView.setText(BST.getInstance().getLogin());
-			passwordView.setText(BST.getInstance().getPassword());
-			return new ConfirmDialogBuilder(this, DIALOG_AUTH_ID, this)
-					.setView(dialogLayout).setTitle(R.string.auth_title)
-					.create();
+			return new AuthorizationDialog(this, id, this).create();
 		case DIALOG_WAREHOUSE_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
 					.getInstance().list(), BST.getInstance()
@@ -102,9 +90,6 @@ public class SettingsActivity extends PreferenceActivity implements
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_AUTH_ID:
-			BST.getInstance().setLoginAndPassword(
-					loginView.getText().toString(),
-					passwordView.getText().toString());
 			break;
 		case DIALOG_WAREHOUSE_ID:
 			BST.getInstance().setDefaultWarehouse(

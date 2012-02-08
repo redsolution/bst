@@ -6,7 +6,9 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.BST.State;
 import ru.redsolution.bst.data.OperationListener;
+import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.DialogBuilder;
+import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -25,7 +27,9 @@ import android.widget.Toast;
  * 
  */
 public class MainActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, OperationListener {
+		OnPreferenceClickListener, OperationListener, DialogListener {
+
+	private static final int DIALOG_AUTH_ID = 1;
 
 	private ProgressDialog progressDialog;
 
@@ -70,7 +74,10 @@ public class MainActivity extends PreferenceActivity implements
 	@Override
 	public boolean onPreferenceClick(Preference paramPreference) {
 		if (paramPreference.getKey().equals(getString(R.string.import_action))) {
-			BST.getInstance().importData();
+			if ("".equals(BST.getInstance().getLogin()))
+				showDialog(DIALOG_AUTH_ID);
+			else
+				BST.getInstance().importData();
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.inventory_action))) {
 			startActivity(new Intent(this, InventoryActivity.class));
@@ -79,6 +86,36 @@ public class MainActivity extends PreferenceActivity implements
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return true;
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_AUTH_ID:
+			return new AuthorizationDialog(this, id, this).create();
+		default:
+			return super.onCreateDialog(id);
+		}
+	}
+
+	@Override
+	public void onAccept(DialogBuilder dialogBuilder) {
+		switch (dialogBuilder.getDialogId()) {
+		case DIALOG_AUTH_ID:
+			BST.getInstance().importData();
+			break;
+		default:
+			break;
+		}
+		updateView();
+	}
+
+	@Override
+	public void onDecline(DialogBuilder dialogBuilder) {
+	}
+
+	@Override
+	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

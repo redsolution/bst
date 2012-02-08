@@ -22,10 +22,17 @@ import android.widget.Button;
 public class InventoryActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, DialogListener, OnClickListener {
 
+	public static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.InventoryActivity.SAVED_INITIALIZED";
+
 	private static final int DIALOG_WAREHOUSE_ID = 2;
 	private static final int DIALOG_MY_COMPANY_ID = 3;
 	private static final int DIALOG_DEFAULTS_ID = 4;
 	private static final int DIALOG_NOT_COMPLITED_ID = 5;
+
+	/**
+	 * Значения по умолчанию были введены.
+	 */
+	private boolean initialized;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,8 @@ public class InventoryActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.my_company_key))
 				.setOnPreferenceClickListener(this);
+		initialized = savedInstanceState != null
+				&& savedInstanceState.getBoolean(SAVED_INITIALIZED, false);
 	}
 
 	/**
@@ -54,11 +63,22 @@ public class InventoryActivity extends PreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		BST.getInstance().setWarehouse(BST.getInstance().getDefaultWarehouse());
-		BST.getInstance().setMyCompany(BST.getInstance().getDefaultMyCompany());
+		if (!initialized) {
+			initialized = true;
+			BST.getInstance().setWarehouse(
+					BST.getInstance().getDefaultWarehouse());
+			BST.getInstance().setMyCompany(
+					BST.getInstance().getDefaultMyCompany());
+		}
 		if (!isComplited())
 			showDialog(DIALOG_DEFAULTS_ID);
 		updateView();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(SAVED_INITIALIZED, initialized);
 	}
 
 	@Override
@@ -108,6 +128,7 @@ public class InventoryActivity extends PreferenceActivity implements
 					((CursorChoiceDialogBuilder) dialogBuilder).getCheckedId());
 			break;
 		case DIALOG_DEFAULTS_ID:
+			initialized = false;
 			Intent intent = new Intent(this, SettingsActivity.class);
 			intent.putExtra(SettingsActivity.EXTRA_SET_DEFAULTS, true);
 			startActivity(intent);

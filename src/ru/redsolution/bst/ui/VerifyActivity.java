@@ -92,7 +92,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	protected void onResume() {
 		super.onResume();
 		updateView();
-		if (barcode == null)
+		if (barcode == null && !isFinishing())
 			scan();
 	}
 
@@ -130,6 +130,16 @@ public class VerifyActivity extends PreferenceActivity implements
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			scan();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_INSTALL_ID:
@@ -159,16 +169,6 @@ public class VerifyActivity extends PreferenceActivity implements
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			scan();
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

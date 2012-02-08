@@ -204,6 +204,7 @@ public class BST extends Application {
 		editor.putString(getString(R.string.login_key), login);
 		editor.putString(getString(R.string.password_key), password);
 		editor.commit();
+		httpClient.getCookieStore().clear();
 	}
 
 	public String getDefaultWarehouse() {

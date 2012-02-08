@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Barcode Scanner Terminal</string>
+    <string name="app_name">MoySklad Barcode Scanner Terminal</string>
     <string name="import_action">Import</string>
     <string name="import_summary">Load data</string>
     <string name="inventory_action">Inventory</string>
@@ -15,6 +15,8 @@
     <string name="password_title">password</string>
 
     <string name="wait">Please, wait &#8230;</string>
+    <string name="auth_error">Authorization error</string>
+    <string name="connection_error">Connection error</string>
 
     <string name="warehouse_title">Ware house</string>
     <string name="my_company_title">Company</string>

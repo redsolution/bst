@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Barcode Scanner Terminal</string>
+    <string name="app_name">МойСклад - Терминал ввода данных</string>
     <string name="import_action">Импорт данных</string>
     <string name="import_summary">Загрузка справочников</string>
     <string name="inventory_action">Инвентаризация</string>
@@ -15,6 +15,8 @@
     <string name="password_title">Пароль</string>
 
     <string name="wait">Пожалуйста, подождите &#8230;</string>
+    <string name="auth_error">Ошибка авторизации</string>
+    <string name="connection_error">Ошибка подключения</string>
 
     <string name="warehouse_title">Склад</string>
     <string name="my_company_title">Организация</string>

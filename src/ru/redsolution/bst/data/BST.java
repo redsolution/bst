@@ -81,6 +81,7 @@ public class BST extends Application {
 	private SharedPreferences settings;
 	private State state;
 	private AbstractTask task;
+	private OperationListener operationListener;
 
 	private String warehouse;
 	private String myCompany;
@@ -97,6 +98,7 @@ public class BST extends Application {
 		httpClient = new TrustedHttpClient(this);
 		state = State.idle;
 		task = null;
+		operationListener = null;
 	}
 
 	@Override
@@ -117,6 +119,10 @@ public class BST extends Application {
 
 	public State getState() {
 		return state;
+	}
+
+	public void setOperationListener(OperationListener operationListener) {
+		this.operationListener = operationListener;
 	}
 
 	/**
@@ -261,6 +267,8 @@ public class BST extends Application {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			if (operationListener != null)
+				operationListener.onBegin();
 		}
 
 		@Override
@@ -268,6 +276,8 @@ public class BST extends Application {
 			super.onCancelled();
 			task = null;
 			state = State.idle;
+			if (operationListener != null)
+				operationListener.onDone();
 		}
 
 		@Override
@@ -275,6 +285,12 @@ public class BST extends Application {
 			super.onPostExecute(result);
 			task = null;
 			state = State.idle;
+			if (operationListener != null)
+				if (result == null)
+					operationListener.onDone();
+				else {
+					operationListener.onError(result);
+				}
 		}
 
 	}

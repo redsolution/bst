@@ -42,9 +42,11 @@
 
     <string name="scan_action">Scan</string>
     <string name="list_action">List of goods</string>
-    <string name="remove_action">Remove</string>
+    <string name="list_summary">Goods: %1$d, items: %2$d</string>
     <string name="header_action">Change header</string>
     <string name="send_action">Send document</string>
     <string name="cancel_action">Remove document</string>
     <string name="cancel_confirm">Do you realy want to remove document?</string>
+
+    <string name="remove_action">Remove</string>
 </resources>

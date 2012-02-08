@@ -16,9 +16,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -38,6 +40,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final int DIALOG_NO_MARKET_ID = 2;
 
 	private View quantityView;
+	private TextView restView;
 	private String barcode;
 
 	@Override
@@ -46,6 +49,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		View view = getLayoutInflater().inflate(R.layout.quantity,
 				getListView(), false);
 		((Button) view.findViewById(R.id.more)).setOnClickListener(this);
+		restView = (TextView) view.findViewById(R.id.rest);
 		quantityView = view.findViewById(R.id.quantity);
 		if (quantityView instanceof NumberPicker)
 			((NumberPicker) quantityView).setRange(1, 100000);
@@ -158,6 +162,16 @@ public class VerifyActivity extends PreferenceActivity implements
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			scan();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	public void onCancel(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_INSTALL_ID:
@@ -180,11 +194,13 @@ public class VerifyActivity extends PreferenceActivity implements
 	}
 
 	private void updateView() {
+		int rest = 0;
 		if (barcode == null) {
 			findPreference(getString(R.string.barcode_title)).setTitle("");
 		} else {
 			findPreference(getString(R.string.barcode_title)).setTitle(barcode);
 		}
+		restView.setText(String.valueOf(rest));
 	}
 
 }

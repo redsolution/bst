@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceScreen
+        android:key="@string/scan_action"
+        android:title="@string/scan_action"
+        />
+    <PreferenceScreen
+        android:key="@string/list_action"
+        android:title="@string/list_action"
+        android:summary="@string/list_summary"
+        />
+    <PreferenceScreen
+        android:key="@string/header_action"
+        android:title="@string/header_action"
+        />
+    <PreferenceScreen
+        android:key="@string/send_action"
+        android:title="@string/send_action"
+        />
+    <PreferenceScreen
+        android:key="@string/cancel_action"
+        android:title="@string/cancel_action"
+        />
+</PreferenceScreen>

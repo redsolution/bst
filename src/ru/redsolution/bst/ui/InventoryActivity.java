@@ -130,9 +130,10 @@ public class InventoryActivity extends PreferenceActivity implements
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.create:
-			if (isComplited())
-				startActivity(new Intent(this, VerifyActivity.class));
-			else
+			if (isComplited()) {
+				startActivity(new Intent(this, DocumentActivity.class));
+				finish();
+			} else
 				showDialog(DIALOG_NOT_COMPLITED_ID);
 			break;
 		default:

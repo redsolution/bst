@@ -1,6 +1,11 @@
 package ru.redsolution.bst.data;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Date;
 
 import net.iharder.base64.Base64;
 
@@ -27,6 +32,8 @@ import ru.redsolution.bst.data.tables.WarehouseTable;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 /**
@@ -41,6 +48,28 @@ public class BST extends Application {
 	private static final String IMPORT_URL = HOST_URL
 			+ "/exchange/xml/export?name=Dictionary";
 
+	public enum State {
+		/**
+		 * Простой.
+		 */
+		idle,
+
+		/**
+		 * Импорт данных.
+		 */
+		importing,
+
+		/**
+		 * Проверка авторизации.
+		 */
+		auth,
+
+		/**
+		 * Отправка документа.
+		 */
+		sending;
+	}
+
 	private static BST instance;
 
 	public static BST getInstance() {
@@ -50,6 +79,8 @@ public class BST extends Application {
 	}
 
 	private SharedPreferences settings;
+	private State state;
+	private AbstractTask task;
 
 	private String warehouse;
 	private String myCompany;
@@ -64,6 +95,8 @@ public class BST extends Application {
 		warehouse = "";
 		myCompany = "";
 		httpClient = new TrustedHttpClient(this);
+		state = State.idle;
+		task = null;
 	}
 
 	@Override
@@ -80,6 +113,10 @@ public class BST extends Application {
 		MyCompanyTable.getInstance();
 		UomTable.getInstance();
 		WarehouseTable.getInstance();
+	}
+
+	public State getState() {
+		return state;
 	}
 
 	/**
@@ -128,30 +165,20 @@ public class BST extends Application {
 	 * Импорт данных.
 	 */
 	public void importData() {
-		DatabaseHelper.getInstance().clear();
-		HttpResponse response = executeRequest(new HttpGet(IMPORT_URL));
-		XmlPullParser parser;
-		try {
-			parser = XmlPullParserFactory.newInstance().newPullParser();
-			parser.setInput(response.getEntity().getContent(), "UTF-8");
-		} catch (IllegalStateException e) {
-			throw new RuntimeException(e);
-		} catch (XmlPullParserException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		try {
-			new DocumentImporter().parse(parser);
-		} catch (XmlPullParserException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		if (state != State.idle)
+			throw new IllegalStateException();
+		task = new ImportTask();
+		state = State.importing;
+		task.execute();
+	}
 
-		Editor editor = settings.edit();
-		editor.putBoolean(getString(R.string.imported_key), true);
-		editor.commit();
+	/**
+	 * Отмена текущей операции.
+	 */
+	public void cancel() {
+		if (state == State.idle)
+			return;
+		task.cancel(true);
 	}
 
 	public boolean isImported() {
@@ -207,6 +234,90 @@ public class BST extends Application {
 
 	public void setMyCompany(String myCompany) {
 		this.myCompany = myCompany;
+	}
+
+	/**
+	 * Абстрактная асинхронная задача, которая может завершиться успешно, либо
+	 * вернуть ошибку.
+	 * 
+	 * @author alexander.ivanov
+	 * 
+	 */
+	public abstract class AbstractTask extends
+			AsyncTask<Void, Void, RuntimeException> {
+
+		protected abstract void executeInBackground();
+
+		@Override
+		protected final RuntimeException doInBackground(Void... params) {
+			try {
+				executeInBackground();
+			} catch (RuntimeException e) {
+				return e;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			task = null;
+			state = State.idle;
+		}
+
+		@Override
+		protected void onPostExecute(RuntimeException result) {
+			super.onPostExecute(result);
+			task = null;
+			state = State.idle;
+		}
+
+	}
+
+	/**
+	 * Задача импорта данных.
+	 * 
+	 * @author alexander.ivanov
+	 * 
+	 */
+	private class ImportTask extends AbstractTask {
+
+		@Override
+		protected void executeInBackground() {
+			DatabaseHelper.getInstance().clear();
+			Editor editor = settings.edit();
+			editor.putBoolean(getString(R.string.imported_key), false);
+			editor.commit();
+			HttpResponse response = executeRequest(new HttpGet(IMPORT_URL));
+			XmlPullParser parser;
+			try {
+				parser = XmlPullParserFactory.newInstance().newPullParser();
+				Reader reader = new BufferedReader(new InputStreamReader(
+						response.getEntity().getContent(), "UTF-8"));
+				parser.setInput(reader);
+			} catch (IllegalStateException e) {
+				throw new RuntimeException(e);
+			} catch (XmlPullParserException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			try {
+				new DocumentImporter().parse(parser);
+			} catch (XmlPullParserException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			editor = settings.edit();
+			editor.putBoolean(getString(R.string.imported_key), true);
+			editor.commit();
+		}
 	}
 
 }

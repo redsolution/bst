@@ -9,7 +9,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 import ru.redsolution.bst.R;
 import android.content.Context;
@@ -28,7 +28,7 @@ public class TrustedHttpClient extends DefaultHttpClient {
 		registry.register(new Scheme("http", PlainSocketFactory
 				.getSocketFactory(), 80));
 		registry.register(new Scheme("https", newSslSocketFactory(), 443));
-		return new SingleClientConnManager(getParams(), registry);
+		return new ThreadSafeClientConnManager(getParams(), registry);
 	}
 
 	private SSLSocketFactory newSslSocketFactory() {

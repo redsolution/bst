@@ -317,6 +317,13 @@ public class BST extends Application {
 				parser = XmlPullParserFactory.newInstance().newPullParser();
 				Reader reader = new BufferedReader(new InputStreamReader(
 						response.getEntity().getContent(), "UTF-8"));
+				if (Debugger.ENABLED) {
+					File dir = new File(
+							Environment.getExternalStorageDirectory(), "bst");
+					dir.mkdirs();
+					File file = new File(dir, new Date().getTime() + ".xml");
+					reader = new DebugReader(reader, file);
+				}
 				parser.setInput(reader);
 			} catch (IllegalStateException e) {
 				throw new RuntimeException(e);

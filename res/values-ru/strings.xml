@@ -20,6 +20,7 @@
 
     <string name="warehouse_title">Склад</string>
     <string name="my_company_title">Организация</string>
+    <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
 
     <string name="defaults_title">Значения, используемые по умолчанию</string>
     <string name="defaults_hint">Не выбраны реквизиты, используемые по умолчанию. Хотите задать их сейчас?</string>

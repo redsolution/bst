@@ -37,7 +37,7 @@ public class ConfirmDialogBuilder extends DialogBuilder implements
 	 * @param activity
 	 *            parent activity.
 	 * @param listener
-	 *            listener of actions.
+	 *            action listener.
 	 * @param dialogId
 	 *            ID of the dialog.
 	 */

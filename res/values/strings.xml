@@ -20,6 +20,7 @@
 
     <string name="warehouse_title">Ware house</string>
     <string name="my_company_title">Company</string>
+    <string name="complite_warning">Please fill the form</string>
     
     <string name="defaults_title">Default values</string>
     <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>

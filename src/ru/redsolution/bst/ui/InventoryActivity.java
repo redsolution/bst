@@ -8,26 +8,32 @@ import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
+import ru.redsolution.dialogs.NotificationDialogBuilder;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class InventoryActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, DialogListener {
+		OnPreferenceClickListener, DialogListener, OnClickListener {
 
 	private static final int DIALOG_WAREHOUSE_ID = 2;
 	private static final int DIALOG_MY_COMPANY_ID = 3;
 	private static final int DIALOG_DEFAULTS_ID = 4;
+	private static final int DIALOG_NOT_COMPLITED_ID = 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getListView().addFooterView(
-				getLayoutInflater().inflate(R.layout.ok, getListView(), false),
-				null, false);
+		View view = getLayoutInflater().inflate(R.layout.create, getListView(),
+				false);
+		((Button) view.findViewById(R.id.create)).setOnClickListener(this);
+		getListView().addFooterView(view, null, false);
 		addPreferencesFromResource(R.xml.inventory);
 		findPreference(getString(R.string.warehouse_key))
 				.setOnPreferenceClickListener(this);
@@ -35,17 +41,23 @@ public class InventoryActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 	}
 
+	/**
+	 * @return заполнена ли шапка.
+	 */
+	private boolean isComplited() {
+		return WarehouseTable.getInstance().getName(
+				BST.getInstance().getWarehouse()) != null
+				&& MyCompanyTable.getInstance().getName(
+						BST.getInstance().getMyCompany()) != null;
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		BST.getInstance().setWarehouse(BST.getInstance().getDefaultWarehouse());
 		BST.getInstance().setMyCompany(BST.getInstance().getDefaultMyCompany());
-		if (WarehouseTable.getInstance().getName(
-				BST.getInstance().getWarehouse()) == null
-				|| MyCompanyTable.getInstance().getName(
-						BST.getInstance().getMyCompany()) == null) {
+		if (!isComplited())
 			showDialog(DIALOG_DEFAULTS_ID);
-		}
 		updateView();
 	}
 
@@ -76,6 +88,9 @@ public class InventoryActivity extends PreferenceActivity implements
 		case DIALOG_DEFAULTS_ID:
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.defaults_hint).create();
+		case DIALOG_NOT_COMPLITED_ID:
+			return new NotificationDialogBuilder(this, id, this).setMessage(
+					R.string.complite_warning).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -109,6 +124,17 @@ public class InventoryActivity extends PreferenceActivity implements
 
 	@Override
 	public void onCancel(DialogBuilder dialogBuilder) {
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.create:
+				showDialog(DIALOG_NOT_COMPLITED_ID);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void updateView() {

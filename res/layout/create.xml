@@ -5,7 +5,7 @@
     android:padding="8dip"
     >
     <Button
-        android:id="@android:id/button1"
+        android:id="@+id/create"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/create"

@@ -21,11 +21,15 @@
     <string name="warehouse_title">Ware house</string>
     <string name="my_company_title">Company</string>
     <string name="complite_warning">Please fill the form</string>
-    
+
     <string name="defaults_title">Default values</string>
     <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>
 
     <string name="create">Create</string>
+
+    <string name="install_title">Install Barcode Scanner?</string>
+    <string name="install_message">This application requires Barcode Scanner. Would you like to install it?</string>
+    <string name="install_fail">There is no Android Market. Please install Barcode Scanner manually.</string>
 
     <string name="verify_title">Verify good</string>
     <string name="name_title">Name</string>

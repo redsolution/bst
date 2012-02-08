@@ -27,11 +27,15 @@
 
     <string name="create">Создать</string>
 
+    <string name="install_title">Установить сканер штрих кодов?</string>
+    <string name="install_message">Для работы необходим Сканер штрих кодов. Вы хотите установить его?</string>
+    <string name="install_fail">Android Market не найден. Пожалуйста, самостоятельно установите Сканер штрих кодов.</string>
+
     <string name="verify_title">Проверка товара</string>
     <string name="name_title">Наименование</string>
     <string name="barcode_title">Штрих код</string>
     <string name="code_title">Код</string>
-    <string name="article_title">Артикул</string>
+    <string name="product_code_title">Артикул</string>
     <string name="quantity_title">Количество</string>
     <string name="rest_text">%d + </string>
     <string name="more">Ещё</string>

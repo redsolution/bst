@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private final ArrayList<DatabaseTable> tables;
 
-	public DatabaseHelper(Context context) {
+	private DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		tables = new ArrayList<DatabaseTable>();
 	}

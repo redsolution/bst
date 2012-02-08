@@ -289,6 +289,8 @@ public class BST extends Application {
 				if (result == null)
 					operationListener.onDone();
 				else {
+					if (Debugger.ENABLED)
+						result.printStackTrace();
 					operationListener.onError(result);
 				}
 		}

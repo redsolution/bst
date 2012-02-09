@@ -37,7 +37,7 @@ public class TrustedHttpClient extends DefaultHttpClient {
 			InputStream in = context.getResources()
 					.openRawResource(R.raw.store);
 			try {
-				trusted.load(in, "store".toCharArray());
+				trusted.load(in, "".toCharArray());
 			} finally {
 				in.close();
 			}

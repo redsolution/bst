@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import net.iharder.base64.Base64;
@@ -13,7 +14,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,6 +24,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.parse.DocumentImporter;
+import ru.redsolution.bst.data.serializer.InventorySerializer;
 import ru.redsolution.bst.data.tables.CompanyFolderTable;
 import ru.redsolution.bst.data.tables.CompanyTable;
 import ru.redsolution.bst.data.tables.DatabaseHelper;
@@ -49,6 +53,8 @@ public class BST extends Application {
 	private static final String HOST_URL = "https://online.moysklad.ru";
 	private static final String IMPORT_URL = HOST_URL
 			+ "/exchange/xml/export?name=Dictionary";
+	private static final String INVENTORY_URL = HOST_URL
+			+ "/exchange/rest/ms/xml/Inventory";
 
 	private static BST instance;
 
@@ -402,7 +408,26 @@ public class BST extends Application {
 
 		@Override
 		protected void executeInBackground() {
-			executeRequest(new HttpGet(HOST_URL));
+			HttpPut request = new HttpPut(INVENTORY_URL);
+			String body;
+			try {
+				body = new InventorySerializer().getXml();
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalStateException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			StringEntity entity;
+			try {
+				entity = new StringEntity(body, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			entity.setContentType("application/xml");
+			request.setEntity(entity);
+			executeRequest(request);
 			BST.getInstance().setDocumentType(null);
 		}
 

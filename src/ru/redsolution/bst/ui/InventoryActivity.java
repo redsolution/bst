@@ -23,7 +23,11 @@ import android.widget.Button;
 public class InventoryActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, DialogListener, OnClickListener {
 
-	public static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.InventoryActivity.SAVED_INITIALIZED";
+	public static final String ACTION_UPDATE = "ru.redsolution.bst.ui.InventoryActivity.ACTION_UPDATE";
+
+	private static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.InventoryActivity.SAVED_INITIALIZED";
+	private static final String SAVED_WAREHOUSE = "ru.redsolution.bst.ui.InventoryActivity.SAVED_WAREHOUSE";
+	private static final String SAVED_MY_COMPANY = "ru.redsolution.bst.ui.InventoryActivity.SAVED_MY_COMPANY";
 
 	private static final int DIALOG_WAREHOUSE_ID = 2;
 	private static final int DIALOG_MY_COMPANY_ID = 3;
@@ -31,34 +35,49 @@ public class InventoryActivity extends PreferenceActivity implements
 	private static final int DIALOG_NOT_COMPLITED_ID = 5;
 
 	/**
-	 * Значения по умолчанию были введены.
+	 * Значения были введены.
 	 */
 	private boolean initialized;
+
+	private String warehouse;
+	private String myCompany;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View view = getLayoutInflater().inflate(R.layout.create, getListView(),
 				false);
-		((Button) view.findViewById(R.id.create)).setOnClickListener(this);
+		Button createButton = (Button) view.findViewById(R.id.create);
+		createButton.setOnClickListener(this);
 		getListView().addFooterView(view, null, false);
 		addPreferencesFromResource(R.xml.inventory);
 		findPreference(getString(R.string.selected_warehouse_key))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.selected_my_company_key))
 				.setOnPreferenceClickListener(this);
-		initialized = savedInstanceState != null
-				&& savedInstanceState.getBoolean(SAVED_INITIALIZED, false);
+
+		if (savedInstanceState != null) {
+			initialized = savedInstanceState.getBoolean(SAVED_INITIALIZED,
+					false);
+			warehouse = savedInstanceState.getString(SAVED_WAREHOUSE);
+			myCompany = savedInstanceState.getString(SAVED_MY_COMPANY);
+		} else {
+			initialized = false;
+			warehouse = BST.getInstance().getSelectedWarehouse();
+			myCompany = BST.getInstance().getSelectedMyCompany();
+		}
+		if (ACTION_UPDATE.equals(getIntent().getAction())) {
+			createButton.setText(android.R.string.ok);
+			initialized = true;
+		}
 	}
 
 	/**
-	 * @return заполнена ли шапка.
+	 * @return Заполнена ли шапка.
 	 */
 	private boolean isComplited() {
-		return WarehouseTable.getInstance().getName(
-				BST.getInstance().getSelectedWarehouse()) != null
-				&& MyCompanyTable.getInstance().getName(
-						BST.getInstance().getSelectedMyCompany()) != null;
+		return WarehouseTable.getInstance().getName(warehouse) != null
+				&& MyCompanyTable.getInstance().getName(myCompany) != null;
 	}
 
 	@Override
@@ -66,10 +85,8 @@ public class InventoryActivity extends PreferenceActivity implements
 		super.onResume();
 		if (!initialized) {
 			initialized = true;
-			BST.getInstance().setSelectedWarehouse(
-					BST.getInstance().getDefaultWarehouse());
-			BST.getInstance().setSelectedMyCompany(
-					BST.getInstance().getDefaultMyCompany());
+			warehouse = BST.getInstance().getDefaultWarehouse();
+			myCompany = BST.getInstance().getDefaultMyCompany();
 		}
 		if (!isComplited())
 			showDialog(DIALOG_DEFAULTS_ID);
@@ -80,6 +97,8 @@ public class InventoryActivity extends PreferenceActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(SAVED_INITIALIZED, initialized);
+		outState.putString(SAVED_WAREHOUSE, warehouse);
+		outState.putString(SAVED_MY_COMPANY, myCompany);
 	}
 
 	@Override
@@ -99,14 +118,14 @@ public class InventoryActivity extends PreferenceActivity implements
 		switch (id) {
 		case DIALOG_WAREHOUSE_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
-					.getInstance().list(), BST.getInstance()
-					.getSelectedWarehouse(), WarehouseTable.Fields.NAME)
-					.setTitle(R.string.warehouse_title).create();
+					.getInstance().list(), warehouse,
+					WarehouseTable.Fields.NAME).setTitle(
+					R.string.warehouse_title).create();
 		case DIALOG_MY_COMPANY_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, MyCompanyTable
-					.getInstance().list(), BST.getInstance()
-					.getSelectedMyCompany(), MyCompanyTable.Fields.NAME)
-					.setTitle(R.string.my_company_title).create();
+					.getInstance().list(), myCompany,
+					MyCompanyTable.Fields.NAME).setTitle(
+					R.string.my_company_title).create();
 		case DIALOG_DEFAULTS_ID:
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.defaults_hint).create();
@@ -122,12 +141,12 @@ public class InventoryActivity extends PreferenceActivity implements
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_WAREHOUSE_ID:
-			BST.getInstance().setSelectedWarehouse(
-					((CursorChoiceDialogBuilder) dialogBuilder).getCheckedId());
+			warehouse = ((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId();
 			break;
 		case DIALOG_MY_COMPANY_ID:
-			BST.getInstance().setSelectedMyCompany(
-					((CursorChoiceDialogBuilder) dialogBuilder).getCheckedId());
+			myCompany = ((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId();
 			break;
 		case DIALOG_DEFAULTS_ID:
 			initialized = false;
@@ -154,8 +173,12 @@ public class InventoryActivity extends PreferenceActivity implements
 		switch (view.getId()) {
 		case R.id.create:
 			if (isComplited()) {
-				BST.getInstance().setDocumentType(DocumentType.inventory);
-				startActivity(new Intent(this, DocumentActivity.class));
+				BST.getInstance().setSelectedWarehouse(warehouse);
+				BST.getInstance().setSelectedMyCompany(myCompany);
+				if (!ACTION_UPDATE.equals(getIntent().getAction())) {
+					BST.getInstance().setDocumentType(DocumentType.inventory);
+					startActivity(new Intent(this, DocumentActivity.class));
+				}
 				finish();
 			} else
 				showDialog(DIALOG_NOT_COMPLITED_ID);
@@ -167,10 +190,8 @@ public class InventoryActivity extends PreferenceActivity implements
 
 	private void updateView() {
 		findPreference(getString(R.string.selected_warehouse_key)).setSummary(
-				WarehouseTable.getInstance().getName(
-						BST.getInstance().getSelectedWarehouse()));
+				WarehouseTable.getInstance().getName(warehouse));
 		findPreference(getString(R.string.selected_my_company_key)).setSummary(
-				MyCompanyTable.getInstance().getName(
-						BST.getInstance().getSelectedMyCompany()));
+				MyCompanyTable.getInstance().getName(myCompany));
 	}
 }

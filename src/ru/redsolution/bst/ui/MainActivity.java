@@ -130,6 +130,11 @@ public class MainActivity extends PreferenceActivity implements
 	}
 
 	@Override
+	public void onCancelled() {
+		dismissProgressDialog();
+	}
+
+	@Override
 	public void onError(RuntimeException exception) {
 		dismissProgressDialog();
 		if (exception.getCause() instanceof AuthenticationException) {

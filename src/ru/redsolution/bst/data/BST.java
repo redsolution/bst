@@ -306,7 +306,7 @@ public class BST extends Application {
 		protected void onCancelled() {
 			super.onCancelled();
 			if (operationListener != null)
-				operationListener.onDone();
+				operationListener.onCancelled();
 		}
 
 		@Override

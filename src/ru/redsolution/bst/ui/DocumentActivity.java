@@ -50,8 +50,8 @@ public class DocumentActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.list_action)).setEnabled(false);
 		// TODO .setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.header_action)).setEnabled(false);
-		// TODO .setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.header_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.send_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.cancel_action))
@@ -112,7 +112,9 @@ public class DocumentActivity extends PreferenceActivity implements
 			// TODO
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.header_action))) {
-			// TODO
+			Intent intent = new Intent(this, InventoryActivity.class);
+			intent.setAction(InventoryActivity.ACTION_UPDATE);
+			startActivity(intent);
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.send_action))) {
 			BST.getInstance().sendData();
@@ -180,6 +182,11 @@ public class DocumentActivity extends PreferenceActivity implements
 	public void onDone() {
 		dismissProgressDialog();
 		finish();
+	}
+
+	@Override
+	public void onCancelled() {
+		dismissProgressDialog();
 	}
 
 	@Override

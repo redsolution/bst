@@ -251,6 +251,8 @@ public class BST extends Application {
 	/**
 	 * Устанавливает тип документа.
 	 * 
+	 * <b>Приводит к удалению списка выбранных товаров.</b>
+	 * 
 	 * @param documentType
 	 *            Может быть <code>null</code>.
 	 */
@@ -259,6 +261,7 @@ public class BST extends Application {
 			setValue(R.string.document_type, "");
 		else
 			setValue(R.string.document_type, documentType.name());
+		SelectedTable.getInstance().clear();
 	}
 
 	public String getSelectedWarehouse() {

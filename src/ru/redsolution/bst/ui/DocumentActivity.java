@@ -5,6 +5,7 @@ import org.apache.http.auth.AuthenticationException;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.OperationListener;
+import ru.redsolution.bst.data.tables.SelectedTable;
 import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
@@ -207,9 +208,9 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	private void updateView() {
 		setTitle(R.string.inventory_action);
-		// TODO:
 		findPreference(getString(R.string.list_action)).setSummary(
-				String.format(getString(R.string.list_summary), 0, 0));
+				String.format(getString(R.string.list_summary), SelectedTable
+						.getInstance().getGoodsCount(), SelectedTable
+						.getInstance().getTotalQuantity()));
 	}
-
 }

@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "testE.db";
+	private static final String DATABASE_NAME = "testF.db";
 	private static final int DATABASE_VERSION = 1;
 
 	private static final DatabaseHelper instance;

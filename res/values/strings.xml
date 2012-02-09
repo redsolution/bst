@@ -40,6 +40,10 @@
     <string name="rest_text">%d + </string>
     <string name="more">More</string>
 
+    <string name="barcode_error">Good can`t be added.</string>
+    <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>
+    <string name="object_does_not_exist">There is no goods with such barcode. Please fix it in MoySklad.</string>
+
     <string name="scan_action">Scan</string>
     <string name="list_action">List of goods</string>
     <string name="list_summary">Goods: %1$d, items: %2$d</string>

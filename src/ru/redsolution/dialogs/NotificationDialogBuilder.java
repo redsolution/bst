@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 public class NotificationDialogBuilder extends DialogBuilder implements
 		DialogInterface.OnClickListener {
 	private final DialogListener listener;
+	private boolean confirmed;
 
 	/**
 	 * Notification dialog builder.
@@ -27,6 +28,7 @@ public class NotificationDialogBuilder extends DialogBuilder implements
 			DialogListener listener) {
 		super(activity, dialogId);
 		this.listener = listener;
+		confirmed = false;
 		setPositiveButton(activity.getString(android.R.string.ok), this);
 	}
 
@@ -34,6 +36,7 @@ public class NotificationDialogBuilder extends DialogBuilder implements
 	public void onClick(DialogInterface dialog, int id) {
 		switch (id) {
 		case DialogInterface.BUTTON_POSITIVE:
+			confirmed = true;
 			dialog.dismiss();
 			break;
 		}
@@ -42,6 +45,9 @@ public class NotificationDialogBuilder extends DialogBuilder implements
 	@Override
 	public void onDismiss(DialogInterface dialog) {
 		super.onDismiss(dialog);
-		listener.onAccept(this);
+		if (confirmed)
+			listener.onAccept(this);
+		else
+			listener.onCancel(this);
 	}
 }

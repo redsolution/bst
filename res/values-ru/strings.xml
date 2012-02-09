@@ -40,11 +40,15 @@
     <string name="rest_text">%d + </string>
     <string name="more">Ещё</string>
 
+    <string name="barcode_error">Невозможно добавить товар</string>
+    <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
+    <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Пожалуйста, исправьте это на сервисе МойСклад.</string>
+
     <string name="scan_action">Сканировать</string>
     <string name="list_action">Список товаров</string>
     <string name="list_summary">Наименований: %1$d, товаров: %2$d</string>
     <string name="header_action">Изменить шапку</string>
-    <string name="send_action">Отпрака документа</string>
+    <string name="send_action">Отправка документа</string>
     <string name="cancel_action">Удалить документ</string>
     <string name="cancel_confirm">Вы действительно хотите удалить документ?</string>
 

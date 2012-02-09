@@ -2,6 +2,7 @@ package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.tables.BaseDatabaseException;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
@@ -116,11 +117,21 @@ public class SettingsActivity extends PreferenceActivity implements
 	private void updateView() {
 		if (loginPreference != null)
 			loginPreference.setSummary(BST.getInstance().getLogin());
+		String warehouse = "";
+		try {
+			warehouse = WarehouseTable.getInstance().getName(
+					BST.getInstance().getDefaultWarehouse());
+		} catch (BaseDatabaseException e) {
+		}
+		String myCompany = "";
+		try {
+			myCompany = MyCompanyTable.getInstance().getName(
+					BST.getInstance().getDefaultMyCompany());
+		} catch (BaseDatabaseException e) {
+		}
 		findPreference(getString(R.string.default_warehouse_key)).setSummary(
-				WarehouseTable.getInstance().getName(
-						BST.getInstance().getDefaultWarehouse()));
+				warehouse);
 		findPreference(getString(R.string.default_my_company_key)).setSummary(
-				MyCompanyTable.getInstance().getName(
-						BST.getInstance().getDefaultMyCompany()));
+				myCompany);
 	}
 }

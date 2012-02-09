@@ -49,8 +49,8 @@ public class DocumentActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.document);
 		findPreference(getString(R.string.scan_action))
 				.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.list_action)).setEnabled(false);
-		// TODO .setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.list_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.header_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.send_action))
@@ -110,7 +110,7 @@ public class DocumentActivity extends PreferenceActivity implements
 			startActivity(new Intent(this, VerifyActivity.class));
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.list_action))) {
-			// TODO
+			startActivity(new Intent(this, GoodsActivity.class));
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.header_action))) {
 			Intent intent = new Intent(this, InventoryActivity.class);

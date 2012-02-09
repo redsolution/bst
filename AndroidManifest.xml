@@ -37,5 +37,9 @@
             android:name=".ui.VerifyActivity"
             android:label="@string/verify_title"
             />
+        <activity
+            android:name=".ui.GoodsActivity"
+            android:label="@string/list_action"
+            />
     </application>
 </manifest>

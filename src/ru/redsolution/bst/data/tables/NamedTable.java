@@ -25,14 +25,13 @@ public abstract class NamedTable extends BaseTable {
 
 	/**
 	 * @param id
-	 * @return Имя объекта по его идентификатору или <code>null</code>.
+	 * @return Имя объекта по его идентификатору.
+	 * @throws MultipleObjectsReturnedException
+	 * @throws ObjectDoesNotExistException
 	 */
-	public String getName(String id) {
-		try {
-			return getById(id).getAsString(Fields.NAME);
-		} catch (BaseDatabaseException e) {
-			return null;
-		}
+	public String getName(String id) throws ObjectDoesNotExistException,
+			MultipleObjectsReturnedException {
+		return getById(id).getAsString(Fields.NAME);
 	}
 
 	/**

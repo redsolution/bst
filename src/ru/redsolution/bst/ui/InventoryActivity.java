@@ -3,6 +3,7 @@ package ru.redsolution.bst.ui;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
+import ru.redsolution.bst.data.tables.BaseDatabaseException;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -76,8 +77,13 @@ public class InventoryActivity extends PreferenceActivity implements
 	 * @return Заполнена ли шапка.
 	 */
 	private boolean isComplited() {
-		return WarehouseTable.getInstance().getName(warehouse) != null
-				&& MyCompanyTable.getInstance().getName(myCompany) != null;
+		try {
+			WarehouseTable.getInstance().getName(warehouse);
+			MyCompanyTable.getInstance().getName(myCompany);
+		} catch (BaseDatabaseException e) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -189,9 +195,19 @@ public class InventoryActivity extends PreferenceActivity implements
 	}
 
 	private void updateView() {
+		String warehouse = "";
+		try {
+			warehouse = WarehouseTable.getInstance().getName(this.warehouse);
+		} catch (BaseDatabaseException e) {
+		}
+		String myCompany = "";
+		try {
+			myCompany = MyCompanyTable.getInstance().getName(this.myCompany);
+		} catch (BaseDatabaseException e) {
+		}
 		findPreference(getString(R.string.selected_warehouse_key)).setSummary(
-				WarehouseTable.getInstance().getName(warehouse));
+				warehouse);
 		findPreference(getString(R.string.selected_my_company_key)).setSummary(
-				MyCompanyTable.getInstance().getName(myCompany));
+				myCompany);
 	}
 }

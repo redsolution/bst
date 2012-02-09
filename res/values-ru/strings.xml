@@ -37,8 +37,9 @@
     <string name="code_title">Код</string>
     <string name="product_code_title">Артикул</string>
     <string name="quantity_title">Количество</string>
-    <string name="rest_text">%d + </string>
+    <string name="rest_text">%1$d + </string>
     <string name="more">Ещё</string>
+    <string name="good_with_uom">%1$s (%2$s)</string>
 
     <string name="barcode_error">Невозможно добавить товар</string>
     <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
@@ -52,5 +53,8 @@
     <string name="cancel_action">Удалить документ</string>
     <string name="cancel_confirm">Вы действительно хотите удалить документ?</string>
 
+    <string name="summary_text">%1$d %2$s</string>
+    <string name="quantity_action">Изменить количество</string>
     <string name="remove_action">Удалить</string>
+    <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
 </resources>

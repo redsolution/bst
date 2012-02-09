@@ -79,7 +79,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		restView = (TextView) view.findViewById(R.id.rest);
 		quantityView = view.findViewById(R.id.quantity);
 		if (quantityView instanceof NumberPicker)
-			((NumberPicker) quantityView).setRange(1, 100000);
+			((NumberPicker) quantityView).setRange(1, 99999999);
 		getListView().addHeaderView(view, null, false);
 		addPreferencesFromResource(R.xml.verify);
 
@@ -142,6 +142,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (scanResult != null) {
 			barcode = scanResult.getContents();
 			type = CODE_TYPES.get(scanResult.getFormatName());
+			setQuantity(1);
 			if (barcode == null)
 				finish();
 		}

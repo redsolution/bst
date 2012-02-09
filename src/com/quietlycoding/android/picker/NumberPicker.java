@@ -225,9 +225,9 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
         // Wrap around the values if we go past the start or end
         if (current > mEnd) {
-            current = mStart;
-        } else if (current < mStart) {
             current = mEnd;
+        } else if (current < mStart) {
+            current = mStart;
         }
         mPrevious = mCurrent;
         mCurrent = current;

@@ -21,6 +21,9 @@ public class GoodBarcodeTable extends BaseBarcodeTable {
 		return instance;
 	}
 
+	private GoodBarcodeTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

@@ -21,6 +21,9 @@ public class WarehouseTable extends ParentableTable {
 		return instance;
 	}
 
+	private WarehouseTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

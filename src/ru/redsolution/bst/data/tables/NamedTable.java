@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 /**
  * Таблица с именен объекта и его идентификатором.
@@ -29,14 +28,11 @@ public abstract class NamedTable extends BaseTable {
 	 * @return Имя объекта по его идентификатору или <code>null</code>.
 	 */
 	public String getName(String id) {
-		Cursor cursor = filter(Fields._ID + " = ?", new String[] { id });
 		try {
-			if (cursor.moveToFirst())
-				return cursor.getString(cursor.getColumnIndex(Fields.NAME));
-		} finally {
-			cursor.close();
+			return getById(id).getAsString(Fields.NAME);
+		} catch (BaseDatabaseException e) {
+			return null;
 		}
-		return null;
 	}
 
 	/**

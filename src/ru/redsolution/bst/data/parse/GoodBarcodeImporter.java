@@ -10,7 +10,7 @@ public class GoodBarcodeImporter extends BaseBarcodeImporter {
 
 	@Override
 	protected void save(String id) {
-		GoodBarcodeTable.getInstance().add(id, value);
+		GoodBarcodeTable.getInstance().add(id, type, value);
 	}
 
 }

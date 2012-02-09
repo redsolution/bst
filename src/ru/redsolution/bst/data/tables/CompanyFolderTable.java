@@ -21,6 +21,9 @@ public class CompanyFolderTable extends ParentableTable {
 		return instance;
 	}
 
+	private CompanyFolderTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

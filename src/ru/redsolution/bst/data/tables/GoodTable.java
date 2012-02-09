@@ -34,6 +34,9 @@ public class GoodTable extends NamedTable {
 		return instance;
 	}
 
+	private GoodTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

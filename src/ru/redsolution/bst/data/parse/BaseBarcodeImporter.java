@@ -13,6 +13,7 @@ import android.util.Log;
 public abstract class BaseBarcodeImporter extends BaseImporter implements
 		ValidatableImporter {
 
+	protected String type = null;
 	protected String value = null;
 	protected final BarcodeContainerImporter importer;
 
@@ -24,6 +25,7 @@ public abstract class BaseBarcodeImporter extends BaseImporter implements
 	@Override
 	protected void preProcess(XmlPullParser parser) {
 		super.preProcess(parser);
+		type = parser.getAttributeValue(null, "barcodeType");
 		value = parser.getAttributeValue(null, "barcode");
 	}
 
@@ -36,6 +38,10 @@ public abstract class BaseBarcodeImporter extends BaseImporter implements
 
 	@Override
 	public boolean isValid() {
+		if (type == null) {
+			Log.w(this.getClass().toString(), "type is null");
+			return false;
+		}
 		if (value == null) {
 			Log.w(this.getClass().toString(), "value is null");
 			return false;

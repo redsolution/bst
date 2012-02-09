@@ -32,6 +32,9 @@ public class CompanyTable extends NamedTable {
 		return instance;
 	}
 
+	private CompanyTable() {
+	}
+
 	@Override
 	protected String getTableName() {
 		return NAME;

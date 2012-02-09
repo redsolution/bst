@@ -1,6 +1,5 @@
 package ru.redsolution.bst.data.tables;
 
-
 /**
  * Список собственных организаций.
  * 
@@ -20,6 +19,9 @@ public class MyCompanyTable extends ParentableTable {
 
 	public static MyCompanyTable getInstance() {
 		return instance;
+	}
+
+	private MyCompanyTable() {
 	}
 
 	@Override

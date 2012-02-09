@@ -28,6 +28,7 @@ import ru.redsolution.bst.data.tables.GoodBarcodeTable;
 import ru.redsolution.bst.data.tables.GoodFolderTable;
 import ru.redsolution.bst.data.tables.GoodTable;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
+import ru.redsolution.bst.data.tables.SelectedTable;
 import ru.redsolution.bst.data.tables.UomTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import android.app.Application;
@@ -80,6 +81,8 @@ public class BST extends Application {
 		super.onCreate();
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
+
+		// Создает singleton-ы
 		DatabaseHelper.getInstance();
 		CompanyFolderTable.getInstance();
 		CompanyTable.getInstance();
@@ -89,6 +92,7 @@ public class BST extends Application {
 		MyCompanyTable.getInstance();
 		UomTable.getInstance();
 		WarehouseTable.getInstance();
+		SelectedTable.getInstance();
 	}
 
 	public void setOperationListener(OperationListener operationListener) {

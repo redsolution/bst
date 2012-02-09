@@ -14,7 +14,7 @@ import android.provider.BaseColumns;
  * @author alexander.ivanov
  * 
  */
-public abstract class BaseTable implements DatabaseTable, ListableTable {
+public abstract class BaseTable implements DatabaseTable {
 	public static interface Fields extends BaseColumns {
 	}
 
@@ -38,9 +38,6 @@ public abstract class BaseTable implements DatabaseTable, ListableTable {
 	 * @return Тип поля.
 	 */
 	public String getFieldType(String name) {
-		// if (Fields._ID.equals(name))
-		// return "INTEGER PRIMARY KEY";
-		// else
 		return "TEXT";
 	}
 
@@ -76,7 +73,7 @@ public abstract class BaseTable implements DatabaseTable, ListableTable {
 	/**
 	 * @param selection
 	 * @param selectionArgs
-	 * @return фильтрованный курсор.
+	 * @return Фильтрованный курсор.
 	 */
 	protected Cursor filter(String selection, String[] selectionArgs) {
 		String[] projection = new String[] {};
@@ -88,9 +85,49 @@ public abstract class BaseTable implements DatabaseTable, ListableTable {
 						null, null, null);
 	}
 
-	@Override
+	/**
+	 * @param selection
+	 * @param selectionArgs
+	 * @return Строковые значения полей объекта.
+	 * @throws ObjectDoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	protected ContentValues get(String selection, String[] selectionArgs)
+			throws ObjectDoesNotExistException,
+			MultipleObjectsReturnedException {
+		Cursor cursor = filter(selection, selectionArgs);
+		try {
+			if (cursor.getCount() > 1)
+				throw new MultipleObjectsReturnedException();
+			if (cursor.moveToFirst()) {
+				ContentValues values = new ContentValues();
+				for (String name : getFields())
+					values.put(name,
+							cursor.getString(cursor.getColumnIndex(name)));
+				return values;
+			}
+		} finally {
+			cursor.close();
+		}
+		throw new ObjectDoesNotExistException();
+	}
+
+	/**
+	 * @return Список всех объетов.
+	 */
 	public Cursor list() {
 		return filter(null, null);
+	}
+
+	/**
+	 * @param id
+	 * @return Строковые значения полей объекта.
+	 * @throws MultipleObjectsReturnedException
+	 * @throws ObjectDoesNotExistException
+	 */
+	public ContentValues getById(String id) throws ObjectDoesNotExistException,
+			MultipleObjectsReturnedException {
+		return get(Fields._ID + " = ?", new String[] { id });
 	}
 
 	/**

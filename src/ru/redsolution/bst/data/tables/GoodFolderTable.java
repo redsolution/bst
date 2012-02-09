@@ -21,6 +21,9 @@ public class GoodFolderTable extends ParentableTable {
 		return instance;
 	}
 
+	private GoodFolderTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

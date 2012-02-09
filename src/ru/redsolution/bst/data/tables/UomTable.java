@@ -21,6 +21,9 @@ public class UomTable extends NamedTable {
 		return instance;
 	}
 
+	private UomTable() {
+	}
+
 	@Override
 	public String getTableName() {
 		return NAME;

@@ -78,6 +78,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		View view = getLayoutInflater().inflate(R.layout.quantity,
 				getListView(), false);
 		((Button) view.findViewById(R.id.more)).setOnClickListener(this);
+		((Button) view.findViewById(R.id.finish)).setOnClickListener(this);
 		restView = (TextView) view.findViewById(R.id.rest);
 		quantityView = view.findViewById(R.id.quantity);
 		if (quantityView instanceof NumberPicker)
@@ -234,18 +235,29 @@ public class VerifyActivity extends PreferenceActivity implements
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.more:
-			String id = null;
-			try {
-				id = GoodBarcodeTable.getInstance().getId(type, barcode);
-			} catch (BaseDatabaseException e) {
-			}
-			if (id != null)
-				SelectedTable.getInstance().set(id, getQuantity() + getRest());
+			save();
 			scan();
+			break;
+		case R.id.finish:
+			save();
+			finish();
 			break;
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * Сохранить результат.
+	 */
+	private void save() {
+		String id = null;
+		try {
+			id = GoodBarcodeTable.getInstance().getId(type, barcode);
+		} catch (BaseDatabaseException e) {
+		}
+		if (id != null)
+			SelectedTable.getInstance().set(id, getQuantity() + getRest());
 	}
 
 	/**

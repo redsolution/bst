@@ -39,6 +39,7 @@
     <string name="quantity_title">Количество</string>
     <string name="rest_text">%1$d + </string>
     <string name="more">Ещё</string>
+    <string name="finish">Готово</string>
     <string name="good_with_uom">%1$s (%2$s)</string>
 
     <string name="barcode_error">Невозможно добавить товар</string>

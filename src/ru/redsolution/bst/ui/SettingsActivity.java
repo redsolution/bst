@@ -40,9 +40,9 @@ public class SettingsActivity extends PreferenceActivity implements
 		loginPreference = findPreference(getString(R.string.login_key));
 		if (loginPreference != null)
 			loginPreference.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.warehouse_key))
+		findPreference(getString(R.string.default_warehouse_key))
 				.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.my_company_key))
+		findPreference(getString(R.string.default_my_company_key))
 				.setOnPreferenceClickListener(this);
 	}
 
@@ -57,10 +57,10 @@ public class SettingsActivity extends PreferenceActivity implements
 		if (paramPreference.getKey().equals(getString(R.string.login_key))) {
 			showDialog(DIALOG_AUTH_ID);
 		} else if (paramPreference.getKey().equals(
-				getString(R.string.warehouse_key))) {
+				getString(R.string.default_warehouse_key))) {
 			showDialog(DIALOG_WAREHOUSE_ID);
 		} else if (paramPreference.getKey().equals(
-				getString(R.string.my_company_key))) {
+				getString(R.string.default_my_company_key))) {
 			showDialog(DIALOG_MY_COMPANY_ID);
 		}
 		return true;
@@ -116,10 +116,10 @@ public class SettingsActivity extends PreferenceActivity implements
 	private void updateView() {
 		if (loginPreference != null)
 			loginPreference.setSummary(BST.getInstance().getLogin());
-		findPreference(getString(R.string.warehouse_key)).setSummary(
+		findPreference(getString(R.string.default_warehouse_key)).setSummary(
 				WarehouseTable.getInstance().getName(
 						BST.getInstance().getDefaultWarehouse()));
-		findPreference(getString(R.string.my_company_key)).setSummary(
+		findPreference(getString(R.string.default_my_company_key)).setSummary(
 				MyCompanyTable.getInstance().getName(
 						BST.getInstance().getDefaultMyCompany()));
 	}

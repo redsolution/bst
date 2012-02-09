@@ -2,6 +2,7 @@ package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -42,9 +43,9 @@ public class InventoryActivity extends PreferenceActivity implements
 		((Button) view.findViewById(R.id.create)).setOnClickListener(this);
 		getListView().addFooterView(view, null, false);
 		addPreferencesFromResource(R.xml.inventory);
-		findPreference(getString(R.string.warehouse_key))
+		findPreference(getString(R.string.selected_warehouse_key))
 				.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.my_company_key))
+		findPreference(getString(R.string.selected_my_company_key))
 				.setOnPreferenceClickListener(this);
 		initialized = savedInstanceState != null
 				&& savedInstanceState.getBoolean(SAVED_INITIALIZED, false);
@@ -55,9 +56,9 @@ public class InventoryActivity extends PreferenceActivity implements
 	 */
 	private boolean isComplited() {
 		return WarehouseTable.getInstance().getName(
-				BST.getInstance().getWarehouse()) != null
+				BST.getInstance().getSelectedWarehouse()) != null
 				&& MyCompanyTable.getInstance().getName(
-						BST.getInstance().getMyCompany()) != null;
+						BST.getInstance().getSelectedMyCompany()) != null;
 	}
 
 	@Override
@@ -65,9 +66,9 @@ public class InventoryActivity extends PreferenceActivity implements
 		super.onResume();
 		if (!initialized) {
 			initialized = true;
-			BST.getInstance().setWarehouse(
+			BST.getInstance().setSelectedWarehouse(
 					BST.getInstance().getDefaultWarehouse());
-			BST.getInstance().setMyCompany(
+			BST.getInstance().setSelectedMyCompany(
 					BST.getInstance().getDefaultMyCompany());
 		}
 		if (!isComplited())
@@ -83,10 +84,11 @@ public class InventoryActivity extends PreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceClick(Preference paramPreference) {
-		if (paramPreference.getKey().equals(getString(R.string.warehouse_key))) {
+		if (paramPreference.getKey().equals(
+				getString(R.string.selected_warehouse_key))) {
 			showDialog(DIALOG_WAREHOUSE_ID);
 		} else if (paramPreference.getKey().equals(
-				getString(R.string.my_company_key))) {
+				getString(R.string.selected_my_company_key))) {
 			showDialog(DIALOG_MY_COMPANY_ID);
 		}
 		return true;
@@ -97,14 +99,14 @@ public class InventoryActivity extends PreferenceActivity implements
 		switch (id) {
 		case DIALOG_WAREHOUSE_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
-					.getInstance().list(), BST.getInstance().getWarehouse(),
-					WarehouseTable.Fields.NAME).setTitle(
-					R.string.warehouse_title).create();
+					.getInstance().list(), BST.getInstance()
+					.getSelectedWarehouse(), WarehouseTable.Fields.NAME)
+					.setTitle(R.string.warehouse_title).create();
 		case DIALOG_MY_COMPANY_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, MyCompanyTable
-					.getInstance().list(), BST.getInstance().getMyCompany(),
-					MyCompanyTable.Fields.NAME).setTitle(
-					R.string.my_company_title).create();
+					.getInstance().list(), BST.getInstance()
+					.getSelectedMyCompany(), MyCompanyTable.Fields.NAME)
+					.setTitle(R.string.my_company_title).create();
 		case DIALOG_DEFAULTS_ID:
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.defaults_hint).create();
@@ -120,11 +122,11 @@ public class InventoryActivity extends PreferenceActivity implements
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_WAREHOUSE_ID:
-			BST.getInstance().setWarehouse(
+			BST.getInstance().setSelectedWarehouse(
 					((CursorChoiceDialogBuilder) dialogBuilder).getCheckedId());
 			break;
 		case DIALOG_MY_COMPANY_ID:
-			BST.getInstance().setMyCompany(
+			BST.getInstance().setSelectedMyCompany(
 					((CursorChoiceDialogBuilder) dialogBuilder).getCheckedId());
 			break;
 		case DIALOG_DEFAULTS_ID:
@@ -152,6 +154,7 @@ public class InventoryActivity extends PreferenceActivity implements
 		switch (view.getId()) {
 		case R.id.create:
 			if (isComplited()) {
+				BST.getInstance().setDocumentType(DocumentType.inventory);
 				startActivity(new Intent(this, DocumentActivity.class));
 				finish();
 			} else
@@ -163,11 +166,11 @@ public class InventoryActivity extends PreferenceActivity implements
 	}
 
 	private void updateView() {
-		findPreference(getString(R.string.warehouse_key)).setSummary(
+		findPreference(getString(R.string.selected_warehouse_key)).setSummary(
 				WarehouseTable.getInstance().getName(
-						BST.getInstance().getWarehouse()));
-		findPreference(getString(R.string.my_company_key)).setSummary(
+						BST.getInstance().getSelectedWarehouse()));
+		findPreference(getString(R.string.selected_my_company_key)).setSummary(
 				MyCompanyTable.getInstance().getName(
-						BST.getInstance().getMyCompany()));
+						BST.getInstance().getSelectedMyCompany()));
 	}
 }

@@ -14,6 +14,7 @@ import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -48,28 +49,6 @@ public class BST extends Application {
 	private static final String IMPORT_URL = HOST_URL
 			+ "/exchange/xml/export?name=Dictionary";
 
-	public enum State {
-		/**
-		 * Простой.
-		 */
-		idle,
-
-		/**
-		 * Импорт данных.
-		 */
-		importing,
-
-		/**
-		 * Проверка авторизации.
-		 */
-		auth,
-
-		/**
-		 * Отправка документа.
-		 */
-		sending;
-	}
-
 	private static BST instance;
 
 	public static BST getInstance() {
@@ -79,25 +58,20 @@ public class BST extends Application {
 	}
 
 	private SharedPreferences settings;
-	private State state;
-	private AbstractTask task;
+	private ImportTask importTask;
+	private SendTask sendTask;
 	private OperationListener operationListener;
 
-	private String warehouse;
-	private String myCompany;
-
-	private final TrustedHttpClient httpClient;
+	private final AbstractHttpClient httpClient;
 
 	public BST() {
 		super();
 		if (instance != null)
 			throw new IllegalStateException();
 		instance = this;
-		warehouse = "";
-		myCompany = "";
 		httpClient = new TrustedHttpClient(this);
-		state = State.idle;
-		task = null;
+		importTask = null;
+		sendTask = null;
 		operationListener = null;
 	}
 
@@ -115,10 +89,6 @@ public class BST extends Application {
 		MyCompanyTable.getInstance();
 		UomTable.getInstance();
 		WarehouseTable.getInstance();
-	}
-
-	public State getState() {
-		return state;
 	}
 
 	public void setOperationListener(OperationListener operationListener) {
@@ -152,51 +122,90 @@ public class BST extends Application {
 	}
 
 	/**
-	 * Проверка авторизации.
-	 * 
-	 * @return
+	 * @return Происходит ли сейчас импорт данных.
 	 */
-	public boolean checkAuth() {
-		try {
-			executeRequest(new HttpGet(HOST_URL));
-		} catch (RuntimeException e) {
-			if (e.getCause() instanceof AuthenticationException)
-				return false;
-			throw new RuntimeException(e);
-		}
-		return true;
+	public boolean isImporting() {
+		return importTask != null;
 	}
 
 	/**
 	 * Импорт данных.
 	 */
 	public void importData() {
-		if (state != State.idle)
-			throw new IllegalStateException();
-		task = new ImportTask();
-		state = State.importing;
-		task.execute();
+		if (isImporting())
+			return;
+		importTask = new ImportTask();
+		importTask.execute();
 	}
 
 	/**
-	 * Отмена текущей операции.
+	 * Отмена импорта данных.
 	 */
-	public void cancel() {
-		if (state == State.idle)
+	public void cancelImport() {
+		if (!isImporting())
 			return;
-		task.cancel(true);
+		importTask.cancel(true);
 	}
 
+	/**
+	 * @return Происходит ли сейчас отправка данных.
+	 */
+	public boolean isSending() {
+		return sendTask != null;
+	}
+
+	/**
+	 * Отправка данных.
+	 */
+	public void sendData() {
+		if (isSending())
+			return;
+		sendTask = new SendTask();
+		sendTask.execute();
+	}
+
+	/**
+	 * Отмена импорта данных.
+	 */
+	public void cancelSend() {
+		if (!isSending())
+			return;
+		sendTask.cancel(true);
+	}
+
+	/**
+	 * @return Производился ли импорт.
+	 */
 	public boolean isImported() {
 		return settings.getBoolean(getString(R.string.imported_key), false);
 	}
 
+	/**
+	 * @param resourceId
+	 * @return Значение поля настройки.
+	 */
+	private String getValue(int resourceId) {
+		return settings.getString(getString(resourceId), "");
+	}
+
+	/**
+	 * Устанавливает значение поля настройки.
+	 * 
+	 * @param resourceId
+	 * @param value
+	 */
+	private void setValue(int resourceId, String value) {
+		Editor editor = settings.edit();
+		editor.putString(getString(resourceId), value);
+		editor.commit();
+	}
+
 	public String getLogin() {
-		return settings.getString(getString(R.string.login_key), "");
+		return getValue(R.string.login_key);
 	}
 
 	public String getPassword() {
-		return settings.getString(getString(R.string.password_key), "");
+		return getValue(R.string.password_key);
 	}
 
 	public void setLoginAndPassword(String login, String password) {
@@ -208,39 +217,60 @@ public class BST extends Application {
 	}
 
 	public String getDefaultWarehouse() {
-		return settings.getString(getString(R.string.warehouse_key), "");
+		return getValue(R.string.default_warehouse_key);
 	}
 
 	public void setDefaultWarehouse(String value) {
-		Editor editor = settings.edit();
-		editor.putString(getString(R.string.warehouse_key), value);
-		editor.commit();
+		setValue(R.string.default_warehouse_key, value);
 	}
 
 	public String getDefaultMyCompany() {
-		return settings.getString(getString(R.string.my_company_key), "");
+		return getValue(R.string.default_my_company_key);
 	}
 
 	public void setDefaultMyCompany(String value) {
-		Editor editor = settings.edit();
-		editor.putString(getString(R.string.my_company_key), value);
-		editor.commit();
+		setValue(R.string.default_my_company_key, value);
 	}
 
-	public String getWarehouse() {
-		return warehouse;
+	/**
+	 * @return Тип редактируемого документа. <code>null</code>, если тип не
+	 *         выбран.
+	 */
+	public DocumentType getDocumentType() {
+		try {
+			return DocumentType.valueOf(getValue(R.string.document_type));
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
-	public void setWarehouse(String warehouse) {
-		this.warehouse = warehouse;
+	/**
+	 * Устанавливает тип документа.
+	 * 
+	 * @param documentType
+	 *            Может быть <code>null</code>.
+	 */
+	public void setDocumentType(DocumentType documentType) {
+		if (documentType == null)
+			setValue(R.string.document_type, "");
+		else
+			setValue(R.string.document_type, documentType.name());
 	}
 
-	public String getMyCompany() {
-		return myCompany;
+	public String getSelectedWarehouse() {
+		return getValue(R.string.selected_warehouse_key);
 	}
 
-	public void setMyCompany(String myCompany) {
-		this.myCompany = myCompany;
+	public void setSelectedWarehouse(String value) {
+		setValue(R.string.selected_warehouse_key, value);
+	}
+
+	public String getSelectedMyCompany() {
+		return getValue(R.string.selected_my_company_key);
+	}
+
+	public void setSelectedMyCompany(String value) {
+		setValue(R.string.selected_my_company_key, value);
 	}
 
 	/**
@@ -250,7 +280,7 @@ public class BST extends Application {
 	 * @author alexander.ivanov
 	 * 
 	 */
-	public abstract class AbstractTask extends
+	private abstract class AbstractTask extends
 			AsyncTask<Void, Void, RuntimeException> {
 
 		protected abstract void executeInBackground();
@@ -275,8 +305,6 @@ public class BST extends Application {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			task = null;
-			state = State.idle;
 			if (operationListener != null)
 				operationListener.onDone();
 		}
@@ -284,8 +312,6 @@ public class BST extends Application {
 		@Override
 		protected void onPostExecute(RuntimeException result) {
 			super.onPostExecute(result);
-			task = null;
-			state = State.idle;
 			if (operationListener != null)
 				if (result == null)
 					operationListener.onDone();
@@ -344,6 +370,47 @@ public class BST extends Application {
 			editor.putBoolean(getString(R.string.imported_key), true);
 			editor.commit();
 		}
+
+		@Override
+		protected void onCancelled() {
+			importTask = null;
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(RuntimeException result) {
+			importTask = null;
+			super.onPostExecute(result);
+		}
+
+	}
+
+	/**
+	 * Задача отправки документа.
+	 * 
+	 * @author alexander.ivanov
+	 * 
+	 */
+	private class SendTask extends AbstractTask {
+
+		@Override
+		protected void executeInBackground() {
+			executeRequest(new HttpGet(HOST_URL));
+			BST.getInstance().setDocumentType(null);
+		}
+
+		@Override
+		protected void onCancelled() {
+			sendTask = null;
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(RuntimeException result) {
+			sendTask = null;
+			super.onPostExecute(result);
+		}
+
 	}
 
 }

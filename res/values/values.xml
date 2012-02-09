@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="login_key">login</string>
-    <string name="password_key">password</string>
-    <string name="warehouse_key">warehouse</string>
-    <string name="my_company_key">wy_company</string>
-    <string name="imported_key">imported</string>
-</resources>

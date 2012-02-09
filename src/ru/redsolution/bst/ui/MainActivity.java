@@ -4,7 +4,6 @@ import org.apache.http.auth.AuthenticationException;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
-import ru.redsolution.bst.data.BST.State;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.DialogBuilder;
@@ -46,11 +45,12 @@ public class MainActivity extends PreferenceActivity implements
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(true);
+		progressDialog.setTitle(R.string.import_action);
 		progressDialog.setMessage(getString(R.string.wait));
 		progressDialog.setOnCancelListener(new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				BST.getInstance().cancel();
+				BST.getInstance().cancelImport();
 			}
 		});
 	}
@@ -60,7 +60,7 @@ public class MainActivity extends PreferenceActivity implements
 		super.onResume();
 		updateView();
 		BST.getInstance().setOperationListener(this);
-		if (BST.getInstance().getState() != BST.State.idle)
+		if (BST.getInstance().isImporting())
 			onBegin();
 	}
 
@@ -68,7 +68,7 @@ public class MainActivity extends PreferenceActivity implements
 	protected void onPause() {
 		super.onPause();
 		BST.getInstance().setOperationListener(null);
-		onDone();
+		dismissProgressDialog();
 	}
 
 	@Override
@@ -121,26 +121,28 @@ public class MainActivity extends PreferenceActivity implements
 	@Override
 	public void onBegin() {
 		updateView();
-		if (BST.getInstance().getState() == State.importing)
-			progressDialog.setTitle(R.string.import_action);
 		progressDialog.show();
 	}
 
 	@Override
 	public void onDone() {
-		updateView();
-		progressDialog.dismiss();
+		dismissProgressDialog();
 	}
 
 	@Override
 	public void onError(RuntimeException exception) {
-		onDone();
+		dismissProgressDialog();
 		if (exception.getCause() instanceof AuthenticationException) {
 			showDialog(DIALOG_AUTH_ID);
 			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
 		} else
 			Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG)
 					.show();
+	}
+
+	private void dismissProgressDialog() {
+		updateView();
+		progressDialog.dismiss();
 	}
 
 	private void updateView() {

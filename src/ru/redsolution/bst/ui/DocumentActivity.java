@@ -1,16 +1,25 @@
 package ru.redsolution.bst.ui;
 
+import org.apache.http.auth.AuthenticationException;
+
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.OperationListener;
+import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 /**
  * Просмотр документа.
@@ -19,11 +28,14 @@ import android.view.KeyEvent;
  * 
  */
 public class DocumentActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, DialogListener {
+		OnPreferenceClickListener, DialogListener, OperationListener {
 
 	public static final String SAVED_SCANNED = "ru.redsolution.bst.ui.DocumentActivity.SAVED_SCANNED";
 
-	private static final int DIALOG_CANCEL_ID = 1;
+	private static final int DIALOG_AUTH_ID = 1;
+	private static final int DIALOG_CANCEL_ID = 2;
+
+	private ProgressDialog progressDialog;
 
 	/**
 	 * Производилось сканирование.
@@ -40,22 +52,49 @@ public class DocumentActivity extends PreferenceActivity implements
 		// TODO .setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.header_action)).setEnabled(false);
 		// TODO .setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.send_action)).setEnabled(false);
-		// TODO .setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.send_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.cancel_action))
 				.setOnPreferenceClickListener(this);
 		scanned = savedInstanceState != null
 				&& savedInstanceState.getBoolean(SAVED_SCANNED, false);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setTitle(R.string.send_action);
+		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				BST.getInstance().cancelSend();
+			}
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		updateView();
-		if (!scanned) {
-			startActivity(new Intent(this, VerifyActivity.class));
-			scanned = true;
+		if (BST.getInstance().getDocumentType() == null) {
+			// Документ не существует (отправка завершена).
+			finish();
+		} else {
+			if (!scanned) {
+				startActivity(new Intent(this, VerifyActivity.class));
+				scanned = true;
+			} else {
+				BST.getInstance().setOperationListener(this);
+				if (BST.getInstance().isSending())
+					onBegin();
+			}
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		BST.getInstance().setOperationListener(null);
+		dismissProgressDialog();
 	}
 
 	@Override
@@ -76,7 +115,7 @@ public class DocumentActivity extends PreferenceActivity implements
 			// TODO
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.send_action))) {
-			// TODO
+			BST.getInstance().sendData();
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.cancel_action))) {
 			showDialog(DIALOG_CANCEL_ID);
@@ -100,6 +139,8 @@ public class DocumentActivity extends PreferenceActivity implements
 		case DIALOG_CANCEL_ID:
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.cancel_confirm).create();
+		case DIALOG_AUTH_ID:
+			return new AuthorizationDialog(this, id, this).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -109,7 +150,11 @@ public class DocumentActivity extends PreferenceActivity implements
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_CANCEL_ID:
+			BST.getInstance().setDocumentType(null);
 			finish();
+			break;
+		case DIALOG_AUTH_ID:
+			BST.getInstance().sendData();
 			break;
 		default:
 			break;
@@ -123,6 +168,34 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	@Override
 	public void onCancel(DialogBuilder dialogBuilder) {
+	}
+
+	@Override
+	public void onBegin() {
+		updateView();
+		progressDialog.show();
+	}
+
+	@Override
+	public void onDone() {
+		dismissProgressDialog();
+		finish();
+	}
+
+	@Override
+	public void onError(RuntimeException exception) {
+		dismissProgressDialog();
+		if (exception.getCause() instanceof AuthenticationException) {
+			showDialog(DIALOG_AUTH_ID);
+			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
+		} else
+			Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG)
+					.show();
+	}
+
+	private void dismissProgressDialog() {
+		updateView();
+		progressDialog.dismiss();
 	}
 
 	private void updateView() {

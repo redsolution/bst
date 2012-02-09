@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_key">login</string>
+    <string name="password_key">password</string>
+    <string name="default_warehouse_key">default_warehouse</string>
+    <string name="default_my_company_key">default_wy_company</string>
+    <string name="document_type">document_type</string>
+    <string name="selected_warehouse_key">selected_warehouse</string>
+    <string name="selected_my_company_key">selected_wy_company</string>
+    <string name="imported_key">imported</string>
+</resources>

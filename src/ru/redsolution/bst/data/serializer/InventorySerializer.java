@@ -20,11 +20,14 @@ public class InventorySerializer extends BaseSerializer {
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		String myCompany = BST.getInstance().getSelectedMyCompany();
 		String warehouse = BST.getInstance().getSelectedWarehouse();
+		serializer.attribute("", "applicable", "true");
+		serializer.attribute("", "payerVat", "true");
+		serializer.attribute("", "vatIncluded", "true");
 		serializer.attribute("", "targetRequisiteId", myCompany);
 		serializer.attribute("", "sourceRequisiteId", myCompany);
+		serializer.attribute("", "sourceStoreId", warehouse);
 		serializer.attribute("", "sourceAgentId", myCompany);
 		serializer.attribute("", "targetAgentId", myCompany);
-		serializer.attribute("", "sourceStoreId", warehouse);
 	}
 
 	@Override

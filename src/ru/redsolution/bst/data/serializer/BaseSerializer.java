@@ -31,7 +31,7 @@ public abstract class BaseSerializer {
 		renderContainerBody(serializer);
 		serializer.endTag("", getContainerName());
 		serializer.endDocument();
-		return serializer.toString();
+		return writer.toString();
 	}
 
 	/**

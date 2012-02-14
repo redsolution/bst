@@ -8,9 +8,12 @@
     <string name="import_summary">Load data</string>
     <string name="inventory_action">Inventory</string>
     <string name="shipment_action">Shipment</string>
-    <string name="retail_action">Retial</string>
+    <string name="retail_action">Retail</string>
     <string name="movement_action">Movement</string>
     <string name="settings_action">Settings</string>
+
+    <string name="another_title">New document</string>
+    <string name="another_confirm">Do you really want to remove previous document and create new one?</string>
 
     <string name="auth_title">Authorization</string>
     <string name="login_title">Login or email</string>
@@ -63,5 +66,5 @@
     <string name="summary_text">%1$d %2$s</string>
     <string name="quantity_action">Change quantity</string>
     <string name="remove_action">Remove</string>
-    <string name="remove_confirm">Do you realy want to remove good?</string>
+    <string name="remove_confirm">Do you really want to remove good?</string>
 </resources>

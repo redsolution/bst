@@ -12,6 +12,9 @@
     <string name="movement_action">Перемещение</string>
     <string name="settings_action">Настройки</string>
 
+    <string name="another_title">Новый документ</string>
+    <string name="another_confirm">Вы действительно хотите удалить предыдущий документ и создать новый?</string>
+
     <string name="auth_title">Настройки авторизации</string>
     <string name="login_title">Имя пользователя или email</string>
     <string name="login_hint">имя@организация</string>

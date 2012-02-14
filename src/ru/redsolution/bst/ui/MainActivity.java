@@ -7,6 +7,7 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
+import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
@@ -29,7 +30,12 @@ import android.widget.Toast;
 public class MainActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, OperationListener, DialogListener {
 
+	private static final String SAVED_INTENT = "ru.redsolution.bst.ui.MainActivity.SAVED_INTENT";
+
 	private static final int DIALOG_AUTH_ID = 1;
+	private static final int DIALOG_ANOTHER_CONFIRM_ID = 2;
+
+	private DocumentType intent;
 
 	private ProgressDialog progressDialog;
 
@@ -56,6 +62,17 @@ public class MainActivity extends PreferenceActivity implements
 				BST.getInstance().cancelImport();
 			}
 		});
+
+		if (savedInstanceState != null) {
+			String value = savedInstanceState.getString(SAVED_INTENT);
+			try {
+				intent = DocumentType.valueOf(value);
+			} catch (IllegalArgumentException e) {
+				intent = null;
+			}
+		} else {
+			intent = null;
+		}
 	}
 
 	@Override
@@ -65,6 +82,13 @@ public class MainActivity extends PreferenceActivity implements
 		BST.getInstance().setOperationListener(this);
 		if (BST.getInstance().isImporting())
 			onBegin();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (intent != null)
+			outState.putString(SAVED_INTENT, intent.toString());
 	}
 
 	@Override
@@ -87,7 +111,7 @@ public class MainActivity extends PreferenceActivity implements
 				BST.getInstance().importData();
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.inventory_action))) {
-			startActivity(new Intent(this, InventoryActivity.class));
+			checkAndCreateDocument(DocumentType.inventory);
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.settings_action))) {
 			startActivity(new Intent(this, SettingsActivity.class));
@@ -95,11 +119,39 @@ public class MainActivity extends PreferenceActivity implements
 		return true;
 	}
 
+	/**
+	 * Создать документ, при необходимости отобразить диалог подтверждения.
+	 * 
+	 * @param intent
+	 */
+	private void checkAndCreateDocument(DocumentType intent) {
+		this.intent = intent;
+		if (BST.getInstance().getDocumentType() == null)
+			createDocument();
+		else
+			showDialog(DIALOG_ANOTHER_CONFIRM_ID);
+	}
+
+	/**
+	 * Открыть окно создания документа.
+	 */
+	private void createDocument() {
+		switch (intent) {
+		case inventory:
+			startActivity(new Intent(this, InventoryActivity.class));
+			break;
+		}
+	}
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_AUTH_ID:
 			return new AuthorizationDialog(this, id, this).create();
+		case DIALOG_ANOTHER_CONFIRM_ID:
+			return new ConfirmDialogBuilder(this, id, this)
+					.setTitle(R.string.another_title)
+					.setMessage(R.string.another_confirm).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -110,6 +162,9 @@ public class MainActivity extends PreferenceActivity implements
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_AUTH_ID:
 			BST.getInstance().importData();
+			break;
+		case DIALOG_ANOTHER_CONFIRM_ID:
+			createDocument();
 			break;
 		default:
 			break;

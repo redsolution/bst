@@ -114,4 +114,21 @@ public abstract class BaseSerializer {
 		return SelectedTable.getInstance().list();
 	}
 
+	/**
+	 * Записывает тег с текстовым значением.
+	 * 
+	 * @param serializer
+	 * @param tag
+	 * @param text
+	 * @throws IllegalArgumentException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	protected void renderTag(XmlSerializer serializer, String tag, String text)
+			throws IllegalArgumentException, IllegalStateException, IOException {
+		serializer.startTag("", tag);
+		serializer.text(text);
+		serializer.endTag("", tag);
+	}
+
 }

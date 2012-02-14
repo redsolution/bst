@@ -54,6 +54,18 @@ public class GoodTable extends NamedTable {
 		return collection;
 	}
 
+	/**
+	 * @param productCode
+	 * @return Товар.
+	 * @throws ObjectDoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public ContentValues getByProductCode(String productCode)
+			throws ObjectDoesNotExistException,
+			MultipleObjectsReturnedException {
+		return get(Fields.PRODUCT_CODE + " = ?", new String[] { productCode });
+	}
+
 	@Override
 	public void add(String id, String name) {
 		throw new UnsupportedOperationException();

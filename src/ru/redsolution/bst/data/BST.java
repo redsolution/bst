@@ -32,6 +32,7 @@ import ru.redsolution.bst.data.tables.GoodBarcodeTable;
 import ru.redsolution.bst.data.tables.GoodFolderTable;
 import ru.redsolution.bst.data.tables.GoodTable;
 import ru.redsolution.bst.data.tables.MyCompanyTable;
+import ru.redsolution.bst.data.tables.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.tables.SelectedTable;
 import ru.redsolution.bst.data.tables.UomTable;
 import ru.redsolution.bst.data.tables.WarehouseTable;
@@ -99,6 +100,7 @@ public class BST extends Application {
 		UomTable.getInstance();
 		WarehouseTable.getInstance();
 		SelectedTable.getInstance();
+		SelectedProductCodeForBarcodeTable.getInstance();
 	}
 
 	public void setOperationListener(OperationListener operationListener) {
@@ -268,6 +270,7 @@ public class BST extends Application {
 		else
 			setValue(R.string.document_type, documentType.name());
 		SelectedTable.getInstance().clear();
+		SelectedProductCodeForBarcodeTable.getInstance().clear();
 	}
 
 	public String getSelectedWarehouse() {

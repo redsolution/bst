@@ -232,6 +232,14 @@ public class BST extends Application {
 		httpClient.getCookieStore().clear();
 	}
 
+	public String getDefaultMyCompany() {
+		return getValue(R.string.default_my_company_key);
+	}
+
+	public void setDefaultMyCompany(String value) {
+		setValue(R.string.default_my_company_key, value);
+	}
+
 	public String getDefaultWarehouse() {
 		return getValue(R.string.default_warehouse_key);
 	}
@@ -240,12 +248,28 @@ public class BST extends Application {
 		setValue(R.string.default_warehouse_key, value);
 	}
 
-	public String getDefaultMyCompany() {
-		return getValue(R.string.default_my_company_key);
+	public String getDefaultCompany() {
+		return getValue(R.string.default_company_key);
 	}
 
-	public void setDefaultMyCompany(String value) {
-		setValue(R.string.default_my_company_key, value);
+	public void setDefaultCompany(String value) {
+		setValue(R.string.default_company_key, value);
+	}
+
+	public String getDefaultContract() {
+		return getValue(R.string.default_contract_key);
+	}
+
+	public void setDefaultContract(String value) {
+		setValue(R.string.default_contract_key, value);
+	}
+
+	public String getDefaultProject() {
+		return getValue(R.string.default_project_key);
+	}
+
+	public void setDefaultProject(String value) {
+		setValue(R.string.default_project_key, value);
 	}
 
 	/**

@@ -66,6 +66,23 @@ public class ContractTable extends NamedTable {
 				new String[] { company, myCompany });
 	}
 
+	/**
+	 * @param id
+	 * @param company
+	 * @param myCompany
+	 * @return Относится ли контракт к указанному контрагенту и организации.
+	 */
+	public boolean acceptable(String id, String company, String myCompany) {
+		ContentValues values;
+		try {
+			values = getById(id);
+		} catch (BaseDatabaseException e) {
+			return false;
+		}
+		return values.getAsString(Fields.COMPANY).equals(company)
+				&& values.getAsString(Fields.MY_COMPANY).equals(myCompany);
+	}
+
 	@Override
 	public void add(String id, String name) {
 		throw new UnsupportedOperationException();

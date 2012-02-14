@@ -42,8 +42,9 @@ import com.quietlycoding.android.picker.NumberPicker;
 public class VerifyActivity extends PreferenceActivity implements
 		OnClickListener, DialogListener {
 
-	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
+	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
+	private static final String SAVED_PRODUCT_CODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_PRODUCT_CODE";
 	private static final String SAVED_QUANTITY = "ru.redsolution.bst.ui.VerifyActivity.SAVED_QUANTITY";
 	private static final String SAVED_DIALOG_DISPLAYED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_DIALOG_DISPLAYED";
 
@@ -75,8 +76,11 @@ public class VerifyActivity extends PreferenceActivity implements
 
 	private View quantityView;
 	private TextView restView;
+
 	private String type;
 	private String barcode;
+	private String productCode;
+
 	private TextView productCodeView;
 	private boolean dialogDisplayed;
 	private boolean visible;
@@ -100,12 +104,14 @@ public class VerifyActivity extends PreferenceActivity implements
 			quantity = savedInstanceState.getInt(SAVED_QUANTITY, 1);
 			type = savedInstanceState.getString(SAVED_TYPE);
 			barcode = savedInstanceState.getString(SAVED_BARCODE);
+			productCode = savedInstanceState.getString(SAVED_PRODUCT_CODE);
 			dialogDisplayed = savedInstanceState.getBoolean(
 					SAVED_DIALOG_DISPLAYED, false);
 		} else {
 			quantity = 1;
 			type = null;
 			barcode = null;
+			productCode = null;
 			dialogDisplayed = false;
 		}
 		setQuantity(quantity);
@@ -167,6 +173,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putInt(SAVED_QUANTITY, getQuantity());
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
+		outState.putString(SAVED_PRODUCT_CODE, productCode);
 		outState.putBoolean(SAVED_DIALOG_DISPLAYED, dialogDisplayed);
 	}
 
@@ -177,6 +184,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (scanResult != null) {
 			barcode = scanResult.getContents();
 			type = CODE_TYPES.get(scanResult.getFormatName());
+			productCode = null;
 			setQuantity(1);
 			if (barcode == null)
 				finish();
@@ -262,7 +270,7 @@ public class VerifyActivity extends PreferenceActivity implements
 				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
 				return;
 			}
-			SelectedProductCodeForBarcodeTable.getInstance().add(value, type, barcode);
+			productCode = value;
 			updateView();
 			break;
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
@@ -336,9 +344,13 @@ public class VerifyActivity extends PreferenceActivity implements
 			values = getGood();
 		} catch (BaseDatabaseException e) {
 		}
-		if (values != null)
-			SelectedTable.getInstance().set(values.getAsString(Fields._ID),
-					getQuantity() + getRest());
+		if (values == null)
+			return;
+		if (productCode != null)
+			SelectedProductCodeForBarcodeTable.getInstance().add(productCode,
+					type, barcode);
+		SelectedTable.getInstance().set(values.getAsString(Fields._ID),
+				getQuantity() + getRest());
 	}
 
 	/**
@@ -373,9 +385,17 @@ public class VerifyActivity extends PreferenceActivity implements
 		try {
 			id = GoodBarcodeTable.getInstance().getId(type, barcode);
 		} catch (ObjectDoesNotExistException e) {
+			String productCode;
+			if (this.productCode == null)
+				try {
+					productCode = SelectedProductCodeForBarcodeTable
+							.getInstance().getId(type, barcode);
+				} catch (BaseDatabaseException e1) {
+					throw e;
+				}
+			else
+				productCode = this.productCode;
 			try {
-				String productCode = SelectedProductCodeForBarcodeTable.getInstance().getId(
-						type, barcode);
 				return GoodTable.getInstance().getByProductCode(productCode);
 			} catch (BaseDatabaseException e1) {
 				throw e;

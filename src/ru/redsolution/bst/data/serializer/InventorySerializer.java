@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
-import ru.redsolution.bst.data.tables.SelectedProductCodeForBarcodeTable;
-import ru.redsolution.bst.data.tables.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
+import ru.redsolution.bst.data.table.SelectedTable;
 import android.database.Cursor;
 
 public class InventorySerializer extends BaseSerializer {

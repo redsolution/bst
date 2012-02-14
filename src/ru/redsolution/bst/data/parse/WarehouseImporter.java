@@ -1,6 +1,6 @@
 package ru.redsolution.bst.data.parse;
 
-import ru.redsolution.bst.data.tables.WarehouseTable;
+import ru.redsolution.bst.data.table.WarehouseTable;
 
 public class WarehouseImporter extends ParentableImporter {
 

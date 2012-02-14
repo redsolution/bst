@@ -1,4 +1,4 @@
-package ru.redsolution.bst.data.tables;
+package ru.redsolution.bst.data.table;
 
 /**
  * Список групп организаций.

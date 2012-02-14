@@ -1,6 +1,6 @@
 package ru.redsolution.bst.data.parse;
 
-import ru.redsolution.bst.data.tables.GoodFolderTable;
+import ru.redsolution.bst.data.table.GoodFolderTable;
 
 public class GoodFolderImporter extends ParentableImporter {
 

@@ -1,6 +1,6 @@
 package ru.redsolution.bst.data.parse;
 
-import ru.redsolution.bst.data.tables.GoodBarcodeTable;
+import ru.redsolution.bst.data.table.GoodBarcodeTable;
 
 public class GoodBarcodeImporter extends BaseBarcodeImporter {
 

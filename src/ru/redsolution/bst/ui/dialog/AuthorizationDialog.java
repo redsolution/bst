@@ -1,4 +1,4 @@
-package ru.redsolution.bst.ui.dialogs;
+package ru.redsolution.bst.ui.dialog;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;

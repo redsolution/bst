@@ -6,7 +6,7 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.OperationListener;
-import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
+import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;

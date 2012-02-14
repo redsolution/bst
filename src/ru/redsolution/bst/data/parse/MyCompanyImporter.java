@@ -1,6 +1,6 @@
 package ru.redsolution.bst.data.parse;
 
-import ru.redsolution.bst.data.tables.MyCompanyTable;
+import ru.redsolution.bst.data.table.MyCompanyTable;
 
 public class MyCompanyImporter extends ParentableImporter {
 

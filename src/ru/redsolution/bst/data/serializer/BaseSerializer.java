@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import ru.redsolution.bst.data.tables.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedTable;
 import android.database.Cursor;
 import android.util.Xml;
 

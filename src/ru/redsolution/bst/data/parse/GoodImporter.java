@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import ru.redsolution.bst.data.tables.GoodTable;
+import ru.redsolution.bst.data.table.GoodTable;
 
 public class GoodImporter extends BaseBarcodeContainerImporter {
 

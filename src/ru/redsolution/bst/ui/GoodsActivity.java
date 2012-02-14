@@ -1,10 +1,10 @@
 package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
-import ru.redsolution.bst.data.tables.BaseDatabaseException;
-import ru.redsolution.bst.data.tables.GoodTable;
-import ru.redsolution.bst.data.tables.SelectedTable;
-import ru.redsolution.bst.data.tables.UomTable;
+import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.GoodTable;
+import ru.redsolution.bst.data.table.SelectedTable;
+import ru.redsolution.bst.data.table.UomTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.InventoryActivity"
+            android:name=".ui.HeaderActivity"
             android:label="@string/inventory_action"
             />
         <activity

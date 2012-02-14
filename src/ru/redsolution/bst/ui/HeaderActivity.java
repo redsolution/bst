@@ -7,41 +7,35 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
-import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import ru.redsolution.dialogs.NotificationDialogBuilder;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class InventoryActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, DialogListener, OnClickListener {
+public class HeaderActivity extends BaseSettingsActivity implements
+		OnClickListener {
 
-	public static final String ACTION_UPDATE = "ru.redsolution.bst.ui.InventoryActivity.ACTION_UPDATE";
+	public static final String ACTION_UPDATE = "ru.redsolution.bst.ui.HeaderActivity.ACTION_UPDATE";
+	public static final String EXTRA_TYPE = "ru.redsolution.bst.ui.HeaderActivity.EXTRA_TYPE";
 
 	private static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.InventoryActivity.SAVED_INITIALIZED";
 	private static final String SAVED_WAREHOUSE = "ru.redsolution.bst.ui.InventoryActivity.SAVED_WAREHOUSE";
 	private static final String SAVED_MY_COMPANY = "ru.redsolution.bst.ui.InventoryActivity.SAVED_MY_COMPANY";
 
-	private static final int DIALOG_WAREHOUSE_ID = 2;
-	private static final int DIALOG_MY_COMPANY_ID = 3;
-	private static final int DIALOG_DEFAULTS_ID = 4;
-	private static final int DIALOG_NOT_COMPLITED_ID = 5;
+	private static final int DIALOG_DEFAULTS_ID = 0x10;
+	private static final int DIALOG_NOT_COMPLITED_ID = 0x11;
 
 	/**
 	 * Значения были введены.
 	 */
 	private boolean initialized;
 
-	private String warehouse;
 	private String myCompany;
+	private String warehouse;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +46,6 @@ public class InventoryActivity extends PreferenceActivity implements
 		createButton.setOnClickListener(this);
 		getListView().addFooterView(view, null, false);
 		addPreferencesFromResource(R.xml.inventory);
-		findPreference(getString(R.string.selected_warehouse_key))
-				.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.selected_my_company_key))
-				.setOnPreferenceClickListener(this);
 
 		if (savedInstanceState != null) {
 			initialized = savedInstanceState.getBoolean(SAVED_INITIALIZED,
@@ -88,15 +78,14 @@ public class InventoryActivity extends PreferenceActivity implements
 
 	@Override
 	protected void onResume() {
-		super.onResume();
 		if (!initialized) {
 			initialized = true;
 			warehouse = BST.getInstance().getDefaultWarehouse();
 			myCompany = BST.getInstance().getDefaultMyCompany();
 		}
+		super.onResume();
 		if (!isComplited())
 			showDialog(DIALOG_DEFAULTS_ID);
-		updateView();
 	}
 
 	@Override
@@ -108,30 +97,8 @@ public class InventoryActivity extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onPreferenceClick(Preference paramPreference) {
-		if (paramPreference.getKey().equals(
-				getString(R.string.selected_warehouse_key))) {
-			showDialog(DIALOG_WAREHOUSE_ID);
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.selected_my_company_key))) {
-			showDialog(DIALOG_MY_COMPANY_ID);
-		}
-		return true;
-	}
-
-	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case DIALOG_WAREHOUSE_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
-					.getInstance().list(), warehouse,
-					WarehouseTable.Fields.NAME).setTitle(
-					R.string.warehouse_title).create();
-		case DIALOG_MY_COMPANY_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, MyCompanyTable
-					.getInstance().list(), myCompany,
-					MyCompanyTable.Fields.NAME).setTitle(
-					R.string.my_company_title).create();
 		case DIALOG_DEFAULTS_ID:
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.defaults_hint).create();
@@ -146,14 +113,6 @@ public class InventoryActivity extends PreferenceActivity implements
 	@Override
 	public void onAccept(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
-		case DIALOG_WAREHOUSE_ID:
-			warehouse = ((CursorChoiceDialogBuilder) dialogBuilder)
-					.getCheckedId();
-			break;
-		case DIALOG_MY_COMPANY_ID:
-			myCompany = ((CursorChoiceDialogBuilder) dialogBuilder)
-					.getCheckedId();
-			break;
 		case DIALOG_DEFAULTS_ID:
 			initialized = false;
 			Intent intent = new Intent(this, SettingsActivity.class);
@@ -161,17 +120,9 @@ public class InventoryActivity extends PreferenceActivity implements
 			startActivity(intent);
 			break;
 		default:
+			super.onAccept(dialogBuilder);
 			break;
 		}
-		updateView();
-	}
-
-	@Override
-	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	@Override
@@ -194,20 +145,56 @@ public class InventoryActivity extends PreferenceActivity implements
 		}
 	}
 
-	private void updateView() {
-		String warehouse = "";
-		try {
-			warehouse = WarehouseTable.getInstance().getName(this.warehouse);
-		} catch (BaseDatabaseException e) {
-		}
-		String myCompany = "";
-		try {
-			myCompany = MyCompanyTable.getInstance().getName(this.myCompany);
-		} catch (BaseDatabaseException e) {
-		}
-		findPreference(getString(R.string.selected_warehouse_key)).setSummary(
-				warehouse);
-		findPreference(getString(R.string.selected_my_company_key)).setSummary(
-				myCompany);
+	@Override
+	protected String getMyCompany() {
+		return myCompany;
+	}
+
+	@Override
+	protected String getWarehouse() {
+		return warehouse;
+	}
+
+	@Override
+	protected String getCompany() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	protected String getContract() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	protected String getProject() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	protected void setMyCompany(String value) {
+		myCompany = value;
+	}
+
+	@Override
+	protected void setWarehouse(String value) {
+		warehouse = value;
+	}
+
+	@Override
+	protected void setCompany(String value) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected void setContract(String value) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected void setProject(String value) {
+		// TODO Auto-generated method stub
 	}
 }

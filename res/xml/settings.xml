@@ -15,23 +15,23 @@
         android:title="@string/defaults_title"
         >
         <PreferenceScreen
-            android:key="@string/default_my_company_key"
+            android:key="@string/my_company_title"
             android:title="@string/my_company_title"
             />
         <PreferenceScreen
-            android:key="@string/default_warehouse_key"
+            android:key="@string/warehouse_title"
             android:title="@string/warehouse_title"
             />
         <PreferenceScreen
-            android:key="@string/default_company_key"
+            android:key="@string/company_title"
             android:title="@string/company_title"
             />
         <PreferenceScreen
-            android:key="@string/default_contract_key"
+            android:key="@string/contract_title"
             android:title="@string/contract_title"
             />
         <PreferenceScreen
-            android:key="@string/default_project_key"
+            android:key="@string/project_title"
             android:title="@string/project_title"
             />
     </PreferenceCategory>

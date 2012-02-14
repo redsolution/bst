@@ -3,11 +3,11 @@
     android:title="@string/inventory_action"
     >
     <PreferenceScreen
-        android:key="@string/selected_my_company_key"
+        android:key="@string/my_company_title"
         android:title="@string/my_company_title"
         />
     <PreferenceScreen
-        android:key="@string/selected_warehouse_key"
+        android:key="@string/warehouse_title"
         android:title="@string/warehouse_title"
         />
 </PreferenceScreen>

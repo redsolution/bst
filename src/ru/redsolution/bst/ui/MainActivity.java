@@ -136,11 +136,8 @@ public class MainActivity extends PreferenceActivity implements
 	 * Открыть окно создания документа.
 	 */
 	private void createDocument() {
-		switch (intent) {
-		case inventory:
-			startActivity(new Intent(this, InventoryActivity.class));
-			break;
-		}
+		Intent intent = new Intent(this, HeaderActivity.class);
+		startActivity(intent);
 	}
 
 	@Override

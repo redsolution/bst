@@ -112,8 +112,8 @@ public class DocumentActivity extends PreferenceActivity implements
 			startActivity(new Intent(this, GoodsActivity.class));
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.header_action))) {
-			Intent intent = new Intent(this, InventoryActivity.class);
-			intent.setAction(InventoryActivity.ACTION_UPDATE);
+			Intent intent = new Intent(this, HeaderActivity.class);
+			intent.setAction(HeaderActivity.ACTION_UPDATE);
 			startActivity(intent);
 		} else if (paramPreference.getKey().equals(
 				getString(R.string.send_action))) {

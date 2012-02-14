@@ -27,11 +27,13 @@ import ru.redsolution.bst.data.parse.DocumentImporter;
 import ru.redsolution.bst.data.serializer.InventorySerializer;
 import ru.redsolution.bst.data.table.CompanyFolderTable;
 import ru.redsolution.bst.data.table.CompanyTable;
+import ru.redsolution.bst.data.table.ContractTable;
 import ru.redsolution.bst.data.table.DatabaseHelper;
 import ru.redsolution.bst.data.table.GoodBarcodeTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
+import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
@@ -99,6 +101,8 @@ public class BST extends Application {
 		MyCompanyTable.getInstance();
 		UomTable.getInstance();
 		WarehouseTable.getInstance();
+		ProjectTable.getInstance();
+		ContractTable.getInstance();
 		SelectedTable.getInstance();
 		SelectedProductCodeForBarcodeTable.getInstance();
 	}
@@ -358,6 +362,8 @@ public class BST extends Application {
 			MyCompanyTable.getInstance().clear();
 			UomTable.getInstance().clear();
 			WarehouseTable.getInstance().clear();
+			ProjectTable.getInstance().clear();
+			ContractTable.getInstance().clear();
 			Editor editor = settings.edit();
 			editor.putBoolean(getString(R.string.imported_key), false);
 			editor.commit();

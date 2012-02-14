@@ -30,24 +30,24 @@ public class ExchangeImporter extends BaseImporter {
 		} else if (parser.getName().equals("myCompany")) {
 			new MyCompaniesImporter().parse(parser);
 			return true;
-			// } else if (parser.getName().equals("agent")) {
-			// new AgentImporter().parse(parser);
-			// return true;
-			// } else if (parser.getName().equals("companies")) {
-			// new CompanyImporter().parse(parser);
-			// return true;
+		} else if (parser.getName().equals("agent")) {
+			new CompanyFoldersImporter().parse(parser);
+			return true;
+		} else if (parser.getName().equals("companies")) {
+			new CompaniesImporter().parse(parser);
+			return true;
 		} else if (parser.getName().equals("warehouses")) {
 			new WarehousesImporter().parse(parser);
 			return true;
 			// } else if (parser.getName().equals("consignments")) {
 			// new ConsignmentsImporter().parse(parser);
 			// return true;
-			// } else if (parser.getName().equals("project")) {
-			// new ProjectsImporter().parse(parser);
-			// return true;
-			// } else if (parser.getName().equals("contract")) {
-			// new ContractsImporter().parse(parser);
-			// return true;
+		} else if (parser.getName().equals("project")) {
+			new ProjectsImporter().parse(parser);
+			return true;
+		} else if (parser.getName().equals("contract")) {
+			new ContractsImporter().parse(parser);
+			return true;
 		}
 		return false;
 	}

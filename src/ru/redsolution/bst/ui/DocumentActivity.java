@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 /**
@@ -124,16 +123,6 @@ public class DocumentActivity extends PreferenceActivity implements
 			showDialog(DIALOG_CANCEL_ID);
 		}
 		return true;
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			showDialog(DIALOG_CANCEL_ID);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

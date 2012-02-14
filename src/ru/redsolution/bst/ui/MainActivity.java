@@ -4,6 +4,7 @@ import org.apache.http.auth.AuthenticationException;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.ui.dialogs.AuthorizationDialog;
 import ru.redsolution.dialogs.DialogBuilder;
@@ -36,6 +37,8 @@ public class MainActivity extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.main);
+		findPreference(getString(R.string.continue_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.import_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.inventory_action))
@@ -73,7 +76,11 @@ public class MainActivity extends PreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceClick(Preference paramPreference) {
-		if (paramPreference.getKey().equals(getString(R.string.import_action))) {
+		if (paramPreference.getKey()
+				.equals(getString(R.string.continue_action))) {
+			startActivity(new Intent(this, DocumentActivity.class));
+		} else if (paramPreference.getKey().equals(
+				getString(R.string.import_action))) {
 			if ("".equals(BST.getInstance().getLogin()))
 				showDialog(DIALOG_AUTH_ID);
 			else
@@ -140,9 +147,10 @@ public class MainActivity extends PreferenceActivity implements
 		if (exception.getCause() instanceof AuthenticationException) {
 			showDialog(DIALOG_AUTH_ID);
 			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
-		} else
+		} else {
 			Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG)
 					.show();
+		}
 	}
 
 	private void dismissProgressDialog() {
@@ -151,10 +159,21 @@ public class MainActivity extends PreferenceActivity implements
 	}
 
 	private void updateView() {
+		boolean isImported = BST.getInstance().isImported();
+		DocumentType documentType = BST.getInstance().getDocumentType();
+		findPreference(getString(R.string.continue_action)).setEnabled(
+				isImported && documentType != null);
+		if (documentType == DocumentType.inventory) {
+			findPreference(getString(R.string.continue_action)).setSummary(
+					R.string.continue_inventory_summary);
+		} else {
+			findPreference(getString(R.string.continue_action)).setSummary(
+					R.string.continue_summary);
+		}
 		findPreference(getString(R.string.inventory_action)).setEnabled(
-				BST.getInstance().isImported());
+				isImported);
 		findPreference(getString(R.string.settings_action)).setEnabled(
-				BST.getInstance().isImported());
+				isImported);
 	}
 
 }

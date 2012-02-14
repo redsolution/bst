@@ -350,7 +350,14 @@ public class BST extends Application {
 
 		@Override
 		protected void executeInBackground() {
-			DatabaseHelper.getInstance().clear();
+			CompanyFolderTable.getInstance().clear();
+			CompanyTable.getInstance().clear();
+			GoodTable.getInstance().clear();
+			GoodFolderTable.getInstance().clear();
+			GoodBarcodeTable.getInstance().clear();
+			MyCompanyTable.getInstance().clear();
+			UomTable.getInstance().clear();
+			WarehouseTable.getInstance().clear();
 			Editor editor = settings.edit();
 			editor.putBoolean(getString(R.string.imported_key), false);
 			editor.commit();

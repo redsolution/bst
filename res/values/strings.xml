@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MoySklad Barcode Scanner Terminal</string>
+    <string name="continue_action">Continue</string>
+    <string name="continue_summary">There is no document</string>
+    <string name="continue_inventory_summary">Continue inventory</string>
     <string name="import_action">Import</string>
     <string name="import_summary">Load data</string>
     <string name="inventory_action">Inventory</string>

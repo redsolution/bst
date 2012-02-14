@@ -42,7 +42,10 @@
     <string name="finish">Finish</string>
     <string name="good_with_uom">%1$s (%2$s)</string>
 
-    <string name="barcode_error">Good can`t be added.</string>
+    <string name="good_not_found">Good was not found</string>
+    <string name="product_code_confirm">Add good by product code and store barcode?</string>
+
+    <string name="verification_error">Good can`t be added.</string>
     <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>
     <string name="object_does_not_exist">There is no goods with such barcode. Please fix it in MoySklad.</string>
 

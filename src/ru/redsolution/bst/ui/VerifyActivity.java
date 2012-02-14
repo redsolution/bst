@@ -8,11 +8,13 @@ import java.util.Map;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.tables.BaseDatabaseException;
+import ru.redsolution.bst.data.tables.BaseTable.Fields;
 import ru.redsolution.bst.data.tables.GoodBarcodeTable;
 import ru.redsolution.bst.data.tables.GoodFolderTable;
 import ru.redsolution.bst.data.tables.GoodTable;
 import ru.redsolution.bst.data.tables.MultipleObjectsReturnedException;
 import ru.redsolution.bst.data.tables.ObjectDoesNotExistException;
+import ru.redsolution.bst.data.tables.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.tables.SelectedTable;
 import ru.redsolution.bst.data.tables.UomTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -43,6 +45,8 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
 	private static final String SAVED_QUANTITY = "ru.redsolution.bst.ui.VerifyActivity.SAVED_QUANTITY";
+	private static final String SAVED_DIALOG_DISPLAYED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_DIALOG_DISPLAYED";
+
 	private static final String ZXING_EAN_8 = "EAN_8";
 	private static final String ZXING_EAN_13 = "EAN_13";
 	private static final String ZXING_CODE_128 = "CODE_128";
@@ -66,11 +70,16 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final int DIALOG_NO_MARKET_ID = 2;
 	private static final int DIALOG_OBJECT_DOES_NOT_EXIST_ID = 3;
 	private static final int DIALOG_MULTIPLE_OBJECTS_RETURNED_ID = 4;
+	private static final int DIALOG_SEARCH_BY_REQUEST_ID = 5;
+	private static final int DIALOG_PRODUCT_CODE_REQUEST_ID = 6;
 
 	private View quantityView;
 	private TextView restView;
 	private String type;
 	private String barcode;
+	private TextView productCodeView;
+	private boolean dialogDisplayed;
+	private boolean visible;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +100,16 @@ public class VerifyActivity extends PreferenceActivity implements
 			quantity = savedInstanceState.getInt(SAVED_QUANTITY, 1);
 			type = savedInstanceState.getString(SAVED_TYPE);
 			barcode = savedInstanceState.getString(SAVED_BARCODE);
+			dialogDisplayed = savedInstanceState.getBoolean(
+					SAVED_DIALOG_DISPLAYED, false);
 		} else {
 			quantity = 1;
 			type = null;
 			barcode = null;
+			dialogDisplayed = false;
 		}
 		setQuantity(quantity);
+		visible = false;
 	}
 
 	private void setQuantity(int value) {
@@ -118,16 +131,34 @@ public class VerifyActivity extends PreferenceActivity implements
 		AlertDialog alertDialog = integrator.initiateScan(SUPPORTED_CODE_TYPES);
 		if (alertDialog != null) {
 			alertDialog.dismiss();
-			showDialog(DIALOG_INSTALL_ID);
+			checkAndShowDialog(DIALOG_INSTALL_ID);
+		}
+	}
+
+	/**
+	 * Открывает диалог, если он не был пересоздан после перезапуска активити
+	 * (смены ориентации).
+	 */
+	private void checkAndShowDialog(int id) {
+		if (!dialogDisplayed) {
+			dialogDisplayed = true;
+			showDialog(id);
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		visible = true;
 		updateView();
 		if (barcode == null && !isFinishing())
 			scan();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		visible = false;
 	}
 
 	@Override
@@ -136,6 +167,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putInt(SAVED_QUANTITY, getQuantity());
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
+		outState.putBoolean(SAVED_DIALOG_DISPLAYED, dialogDisplayed);
 	}
 
 	@Override
@@ -161,13 +193,24 @@ public class VerifyActivity extends PreferenceActivity implements
 		case DIALOG_NO_MARKET_ID:
 			return new NotificationDialogBuilder(this, id, this).setMessage(
 					R.string.install_fail).create();
+		case DIALOG_SEARCH_BY_REQUEST_ID:
+			return new ConfirmDialogBuilder(this, id, this)
+					.setTitle(R.string.good_not_found)
+					.setMessage(R.string.product_code_confirm).create();
+		case DIALOG_PRODUCT_CODE_REQUEST_ID:
+			View view = getLayoutInflater().inflate(R.layout.product_code,
+					null, false);
+			productCodeView = (TextView) view.findViewById(R.id.value);
+			return new ConfirmDialogBuilder(this, id, this)
+					.setTitle(R.string.product_code_title).setView(view)
+					.create();
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 			return new NotificationDialogBuilder(this, id, this)
-					.setTitle(R.string.barcode_error)
+					.setTitle(R.string.verification_error)
 					.setMessage(R.string.object_does_not_exist).create();
 		case DIALOG_MULTIPLE_OBJECTS_RETURNED_ID:
 			return new NotificationDialogBuilder(this, id, this)
-					.setTitle(R.string.barcode_error)
+					.setTitle(R.string.verification_error)
 					.setMessage(R.string.multiple_objects_returned).create();
 		default:
 			return super.onCreateDialog(id);
@@ -195,10 +238,32 @@ public class VerifyActivity extends PreferenceActivity implements
 				startActivity(intent);
 			} catch (ActivityNotFoundException anfe) {
 				showDialog(DIALOG_NO_MARKET_ID);
+				break;
 			}
-			break;
+			return;
 		case DIALOG_NO_MARKET_ID:
 			finish();
+			break;
+		case DIALOG_SEARCH_BY_REQUEST_ID:
+			showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
+			return;
+		case DIALOG_PRODUCT_CODE_REQUEST_ID:
+			if ("".equals(productCodeView.getText())) {
+				showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
+				return;
+			}
+			String value = productCodeView.getText().toString();
+			try {
+				GoodTable.getInstance().getByProductCode(value);
+			} catch (ObjectDoesNotExistException e) {
+				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+				return;
+			} catch (MultipleObjectsReturnedException e) {
+				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
+				return;
+			}
+			SelectedProductCodeForBarcodeTable.getInstance().add(value, type, barcode);
+			updateView();
 			break;
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 		case DIALOG_MULTIPLE_OBJECTS_RETURNED_ID:
@@ -207,28 +272,43 @@ public class VerifyActivity extends PreferenceActivity implements
 		default:
 			break;
 		}
+		dialogDisplayed = false;
 	}
 
 	@Override
 	public void onDecline(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
+		case DIALOG_SEARCH_BY_REQUEST_ID:
+			if (visible)
+				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
+			return;
+		case DIALOG_PRODUCT_CODE_REQUEST_ID:
+			if (visible)
+				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			return;
 		case DIALOG_INSTALL_ID:
 			finish();
 			break;
 		default:
 			break;
 		}
+		dialogDisplayed = false;
 	}
 
 	@Override
 	public void onCancel(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
+		case DIALOG_SEARCH_BY_REQUEST_ID:
+			if (visible)
+				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
+			return;
 		case DIALOG_INSTALL_ID:
 			finish();
 			break;
 		default:
 			break;
 		}
+		dialogDisplayed = false;
 	}
 
 	@Override
@@ -251,13 +331,14 @@ public class VerifyActivity extends PreferenceActivity implements
 	 * Сохранить результат.
 	 */
 	private void save() {
-		String id = null;
+		ContentValues values = null;
 		try {
-			id = GoodBarcodeTable.getInstance().getId(type, barcode);
+			values = getGood();
 		} catch (BaseDatabaseException e) {
 		}
-		if (id != null)
-			SelectedTable.getInstance().set(id, getQuantity() + getRest());
+		if (values != null)
+			SelectedTable.getInstance().set(values.getAsString(Fields._ID),
+					getQuantity() + getRest());
 	}
 
 	/**
@@ -266,33 +347,54 @@ public class VerifyActivity extends PreferenceActivity implements
 	 * @return
 	 */
 	private int getRest() {
-		if (barcode == null)
+		ContentValues values = null;
+		try {
+			values = getGood();
+		} catch (BaseDatabaseException e) {
+		}
+		if (values == null)
 			return 0;
+		else
+			return SelectedTable.getInstance().getQuantity(
+					values.getAsString(Fields._ID));
+	}
+
+	/**
+	 * @return Товар по штрих коду либо <code>null</code> если штрих код не
+	 *         задан. При необходимости используется артикул продукта.
+	 * @throws MultipleObjectsReturnedException
+	 * @throws ObjectDoesNotExistException
+	 */
+	private ContentValues getGood() throws ObjectDoesNotExistException,
+			MultipleObjectsReturnedException {
+		if (barcode == null)
+			return null;
 		String id;
 		try {
 			id = GoodBarcodeTable.getInstance().getId(type, barcode);
-		} catch (BaseDatabaseException e) {
-			return 0;
+		} catch (ObjectDoesNotExistException e) {
+			try {
+				String productCode = SelectedProductCodeForBarcodeTable.getInstance().getId(
+						type, barcode);
+				return GoodTable.getInstance().getByProductCode(productCode);
+			} catch (BaseDatabaseException e1) {
+				throw e;
+			}
+		} catch (MultipleObjectsReturnedException e) {
+			throw e;
 		}
-		return SelectedTable.getInstance().getQuantity(id);
+		return GoodTable.getInstance().getById(id);
 	}
 
 	private void updateView() {
-		String id = null;
-		if (barcode != null)
-			try {
-				id = GoodBarcodeTable.getInstance().getId(type, barcode);
-			} catch (ObjectDoesNotExistException e) {
-				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
-			} catch (MultipleObjectsReturnedException e) {
-				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
-			}
 		ContentValues values = null;
-		if (id != null)
-			try {
-				values = GoodTable.getInstance().getById(id);
-			} catch (BaseDatabaseException e) {
-			}
+		try {
+			values = getGood();
+		} catch (ObjectDoesNotExistException e) {
+			checkAndShowDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+		} catch (MultipleObjectsReturnedException e) {
+			checkAndShowDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
+		}
 		String folder = "";
 		if (values == null) {
 			findPreference(getString(R.string.name_title)).setTitle("");

@@ -42,7 +42,10 @@
     <string name="finish">Готово</string>
     <string name="good_with_uom">%1$s (%2$s)</string>
 
-    <string name="barcode_error">Невозможно добавить товар</string>
+    <string name="good_not_found">Товар не найден</string>
+    <string name="product_code_confirm">Добавить товар по артикулу и запомнить этот штрих код?</string>
+
+    <string name="verification_error">Невозможно добавить товар</string>
     <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
     <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Пожалуйста, исправьте это на сервисе МойСклад.</string>
 

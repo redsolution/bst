@@ -21,8 +21,14 @@ public class SupplySerializer extends BaseSerializer {
 		String myCompany = BST.getInstance().getSelectedMyCompany();
 		String warehouse = BST.getInstance().getSelectedWarehouse();
 		String company = BST.getInstance().getSelectedCompany();
+		String contract = BST.getInstance().getSelectedContract();
+		String project = BST.getInstance().getSelectedProject();
 		serializer.attribute("", "targetRequisiteId", myCompany);
 		serializer.attribute("", "sourceRequisiteId", company);
+		if (!"".equals(contract))
+			serializer.attribute("", "contractId", contract);
+		if (!"".equals(project))
+			serializer.attribute("", "projectId", project);
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");

@@ -219,7 +219,10 @@ public class MainActivity extends PreferenceActivity implements
 		DocumentType documentType = BST.getInstance().getDocumentType();
 		findPreference(getString(R.string.continue_action)).setEnabled(
 				isImported && documentType != null);
-		if (documentType == DocumentType.inventory) {
+		if (documentType == DocumentType.supply) {
+			findPreference(getString(R.string.continue_action)).setSummary(
+					R.string.continue_supply_summary);
+		} else if (documentType == DocumentType.inventory) {
 			findPreference(getString(R.string.continue_action)).setSummary(
 					R.string.continue_inventory_summary);
 		} else {

@@ -3,6 +3,7 @@
     <string name="app_name">МойСклад - Терминал ввода данных</string>
     <string name="continue_action">Продолжить работу</string>
     <string name="continue_summary">Нет созданного документа</string>
+    <string name="continue_supply_summary">Идет приемка товара</string>
     <string name="continue_inventory_summary">Идет инвентаризация</string>
     <string name="import_action">Импорт данных</string>
     <string name="import_summary">Загрузка справочников</string>

@@ -250,20 +250,36 @@ public class BST extends Application {
 		setValue(R.string.default_warehouse_key, value);
 	}
 
-	public String getDefaultCompany() {
-		return getValue(R.string.default_company_key);
+	public String getDefaultSupplyCompany() {
+		return getValue(R.string.default_supply_company_key);
 	}
 
-	public void setDefaultCompany(String value) {
-		setValue(R.string.default_company_key, value);
+	public void setDefaultSupplyCompany(String value) {
+		setValue(R.string.default_supply_company_key, value);
 	}
 
-	public String getDefaultContract() {
-		return getValue(R.string.default_contract_key);
+	public String getDefaultSupplyContract() {
+		return getValue(R.string.default_supply_contract_key);
 	}
 
-	public void setDefaultContract(String value) {
-		setValue(R.string.default_contract_key, value);
+	public void setDefaultSupplyContract(String value) {
+		setValue(R.string.default_supply_contract_key, value);
+	}
+
+	public String getDefaultDemandCompany() {
+		return getValue(R.string.default_demand_company_key);
+	}
+
+	public void setDefaultDemandCompany(String value) {
+		setValue(R.string.default_demand_company_key, value);
+	}
+
+	public String getDefaultDemandContract() {
+		return getValue(R.string.default_demand_contract_key);
+	}
+
+	public void setDefaultDemandContract(String value) {
+		setValue(R.string.default_demand_contract_key, value);
 	}
 
 	public String getDefaultProject() {

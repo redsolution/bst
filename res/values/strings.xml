@@ -28,8 +28,10 @@
 
     <string name="my_company_title">My company</string>
     <string name="warehouse_title">Ware house</string>
-    <string name="company_title">Company</string>
-    <string name="contract_title">Contract</string>
+    <string name="supply_company_title">Supplier company</string>
+    <string name="supply_contract_title">Supplier contract</string>
+    <string name="demand_company_title">Customer company</string>
+    <string name="demand_contract_title">Customer contract</string>
     <string name="project_title">Project</string>
     <string name="complite_warning">Please fill the form</string>
 

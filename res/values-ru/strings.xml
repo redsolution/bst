@@ -28,8 +28,10 @@
 
     <string name="my_company_title">Организация</string>
     <string name="warehouse_title">Склад</string>
-    <string name="company_title">Контрагент</string>
-    <string name="contract_title">Контракт</string>
+    <string name="supply_company_title">Контрагент закупок</string>
+    <string name="supply_contract_title">Контракт закупок</string>
+    <string name="demand_company_title">Контрагент продаж</string>
+    <string name="demand_contract_title">Контракт продаж</string>
     <string name="project_title">Проект</string>
     <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
 

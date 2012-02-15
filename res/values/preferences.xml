@@ -4,8 +4,10 @@
     <string name="password_key">password</string>
     <string name="default_my_company_key">default_my_company</string>
     <string name="default_warehouse_key">default_warehouse</string>
-    <string name="default_company_key">default_company</string>
-    <string name="default_contract_key">default_contract</string>
+    <string name="default_supply_company_key">default_supply_company</string>
+    <string name="default_supply_contract_key">default_supply_contract</string>
+    <string name="default_demand_company_key">default_demand_company</string>
+    <string name="default_demand_contract_key">default_demand_contract</string>
     <string name="default_project_key">default_project</string>
     <string name="document_type">document_type</string>
     <string name="selected_my_company_key">selected_my_company</string>

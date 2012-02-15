@@ -16,7 +16,7 @@ import android.preference.Preference;
  */
 public class SettingsActivity extends BaseSettingsActivity {
 
-	private static final int DIALOG_AUTH_ID = 1;
+	private static final int DIALOG_AUTH_ID = 0x10;
 	private Preference loginPreference;
 
 	@Override
@@ -72,13 +72,23 @@ public class SettingsActivity extends BaseSettingsActivity {
 	}
 
 	@Override
-	protected String getCompany() {
-		return BST.getInstance().getDefaultCompany();
+	protected String getSupplyCompany() {
+		return BST.getInstance().getDefaultSupplyCompany();
 	}
 
 	@Override
-	protected String getContract() {
-		return BST.getInstance().getDefaultContract();
+	protected String getSupplyContract() {
+		return BST.getInstance().getDefaultSupplyContract();
+	}
+
+	@Override
+	protected String getDemandCompany() {
+		return BST.getInstance().getDefaultDemandCompany();
+	}
+
+	@Override
+	protected String getDemandContract() {
+		return BST.getInstance().getDefaultDemandContract();
 	}
 
 	@Override
@@ -97,13 +107,23 @@ public class SettingsActivity extends BaseSettingsActivity {
 	}
 
 	@Override
-	protected void setCompany(String value) {
-		BST.getInstance().setDefaultCompany(value);
+	protected void setSupplyCompany(String value) {
+		BST.getInstance().setDefaultSupplyCompany(value);
 	}
 
 	@Override
-	protected void setContract(String value) {
-		BST.getInstance().setDefaultContract(value);
+	protected void setSupplyContract(String value) {
+		BST.getInstance().setDefaultSupplyContract(value);
+	}
+
+	@Override
+	protected void setDemandCompany(String value) {
+		BST.getInstance().setDefaultDemandCompany(value);
+	}
+
+	@Override
+	protected void setDemandContract(String value) {
+		BST.getInstance().setDefaultDemandContract(value);
 	}
 
 	@Override

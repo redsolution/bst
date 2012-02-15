@@ -21,19 +21,23 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	public static final String EXTRA_TYPE = "ru.redsolution.bst.ui.BaseSettingsActivity.EXTRA_TYPE";
 
-	private static final int DIALOG_MY_COMPANY_ID = 2;
-	private static final int DIALOG_WAREHOUSE_ID = 3;
-	private static final int DIALOG_COMPANY_ID = 4;
-	private static final int DIALOG_CONTRACT_ID = 5;
-	private static final int DIALOG_PROJECT_ID = 6;
+	private static final int DIALOG_MY_COMPANY_ID = 0x01;
+	private static final int DIALOG_WAREHOUSE_ID = 0x02;
+	private static final int DIALOG_SUPPLY_COMPANY_ID = 0x03;
+	private static final int DIALOG_SUPPLY_CONTRACT_ID = 0x04;
+	private static final int DIALOG_DEMAND_COMPANY_ID = 0x05;
+	private static final int DIALOG_DEMAND_CONTRACT_ID = 0x06;
+	private static final int DIALOG_PROJECT_ID = 0x07;
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		registerOnPreferenceClickListener(R.string.warehouse_title);
 		registerOnPreferenceClickListener(R.string.my_company_title);
-		registerOnPreferenceClickListener(R.string.company_title);
-		registerOnPreferenceClickListener(R.string.contract_title);
+		registerOnPreferenceClickListener(R.string.supply_company_title);
+		registerOnPreferenceClickListener(R.string.supply_contract_title);
+		registerOnPreferenceClickListener(R.string.demand_company_title);
+		registerOnPreferenceClickListener(R.string.demand_contract_title);
 		registerOnPreferenceClickListener(R.string.project_title);
 	}
 
@@ -50,12 +54,18 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.warehouse_title))) {
 			showDialog(DIALOG_WAREHOUSE_ID);
-		} else if (preference.getKey()
-				.equals(getString(R.string.company_title))) {
-			showDialog(DIALOG_COMPANY_ID);
 		} else if (preference.getKey().equals(
-				getString(R.string.contract_title))) {
-			showDialog(DIALOG_CONTRACT_ID);
+				getString(R.string.supply_company_title))) {
+			showDialog(DIALOG_SUPPLY_COMPANY_ID);
+		} else if (preference.getKey().equals(
+				getString(R.string.supply_contract_title))) {
+			showDialog(DIALOG_SUPPLY_CONTRACT_ID);
+		} else if (preference.getKey().equals(
+				getString(R.string.demand_company_title))) {
+			showDialog(DIALOG_DEMAND_COMPANY_ID);
+		} else if (preference.getKey().equals(
+				getString(R.string.demand_contract_title))) {
+			showDialog(DIALOG_DEMAND_CONTRACT_ID);
 		} else if (preference.getKey()
 				.equals(getString(R.string.project_title))) {
 			showDialog(DIALOG_PROJECT_ID);
@@ -74,14 +84,22 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
 					.getInstance().list(), getWarehouse(),
 					WarehouseTable.Fields.NAME).create();
-		case DIALOG_COMPANY_ID:
+		case DIALOG_SUPPLY_COMPANY_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, CompanyTable
-					.getInstance().list(), getCompany(),
+					.getInstance().list(), getSupplyCompany(),
 					CompanyTable.Fields.NAME).create();
-		case DIALOG_CONTRACT_ID:
+		case DIALOG_SUPPLY_CONTRACT_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, ContractTable
-					.getInstance().list(getCompany(), getMyCompany()),
-					getContract(), ContractTable.Fields.NAME).create();
+					.getInstance().list(getSupplyCompany(), getMyCompany()),
+					getSupplyContract(), ContractTable.Fields.NAME).create();
+		case DIALOG_DEMAND_COMPANY_ID:
+			return new CursorChoiceDialogBuilder(this, id, this, CompanyTable
+					.getInstance().list(), getDemandCompany(),
+					CompanyTable.Fields.NAME).create();
+		case DIALOG_DEMAND_CONTRACT_ID:
+			return new CursorChoiceDialogBuilder(this, id, this, ContractTable
+					.getInstance().list(getDemandCompany(), getMyCompany()),
+					getDemandContract(), ContractTable.Fields.NAME).create();
 		case DIALOG_PROJECT_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, ProjectTable
 					.getInstance().list(), getProject(),
@@ -97,19 +115,29 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		case DIALOG_MY_COMPANY_ID:
 			setMyCompany(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
-			checkContract();
+			checkSupplyContract();
+			checkDemandContract();
 			break;
 		case DIALOG_WAREHOUSE_ID:
 			setWarehouse(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
 			break;
-		case DIALOG_COMPANY_ID:
-			setCompany(((CursorChoiceDialogBuilder) dialogBuilder)
+		case DIALOG_SUPPLY_COMPANY_ID:
+			setSupplyCompany(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
-			checkContract();
+			checkSupplyContract();
 			break;
-		case DIALOG_CONTRACT_ID:
-			setContract(((CursorChoiceDialogBuilder) dialogBuilder)
+		case DIALOG_SUPPLY_CONTRACT_ID:
+			setSupplyContract(((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId());
+			break;
+		case DIALOG_DEMAND_COMPANY_ID:
+			setDemandCompany(((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId());
+			checkDemandContract();
+			break;
+		case DIALOG_DEMAND_CONTRACT_ID:
+			setDemandContract(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
 			break;
 		case DIALOG_PROJECT_ID:
@@ -134,10 +162,20 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 	 * Обнуляет контакт, если он не соответствует выбранному контрагенту и
 	 * организации.
 	 */
-	private void checkContract() {
-		if (!ContractTable.getInstance().acceptable(getContract(),
-				getMyCompany(), getMyCompany()))
-			setContract("");
+	private void checkSupplyContract() {
+		if (!ContractTable.getInstance().acceptable(getSupplyContract(),
+				getSupplyCompany(), getMyCompany()))
+			setSupplyContract("");
+	}
+
+	/**
+	 * Обнуляет контакт, если он не соответствует выбранному контрагенту и
+	 * организации.
+	 */
+	private void checkDemandContract() {
+		if (!ContractTable.getInstance().acceptable(getDemandContract(),
+				getDemandCompany(), getMyCompany()))
+			setDemandContract("");
 	}
 
 	/**
@@ -148,10 +186,14 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 				getMyCompany());
 		setSummary(R.string.warehouse_title, WarehouseTable.getInstance(),
 				getWarehouse());
-		setSummary(R.string.company_title, CompanyTable.getInstance(),
-				getCompany());
-		setSummary(R.string.contract_title, ContractTable.getInstance(),
-				getContract());
+		setSummary(R.string.supply_company_title, CompanyTable.getInstance(),
+				getSupplyCompany());
+		setSummary(R.string.supply_contract_title, ContractTable.getInstance(),
+				getSupplyContract());
+		setSummary(R.string.demand_company_title, CompanyTable.getInstance(),
+				getDemandCompany());
+		setSummary(R.string.demand_contract_title, ContractTable.getInstance(),
+				getDemandContract());
 		setSummary(R.string.project_title, ProjectTable.getInstance(),
 				getProject());
 	}
@@ -190,9 +232,13 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	protected abstract String getWarehouse();
 
-	protected abstract String getCompany();
+	protected abstract String getSupplyCompany();
 
-	protected abstract String getContract();
+	protected abstract String getSupplyContract();
+
+	protected abstract String getDemandCompany();
+
+	protected abstract String getDemandContract();
 
 	protected abstract String getProject();
 
@@ -200,9 +246,13 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	protected abstract void setWarehouse(String value);
 
-	protected abstract void setCompany(String value);
+	protected abstract void setSupplyCompany(String value);
 
-	protected abstract void setContract(String value);
+	protected abstract void setSupplyContract(String value);
+
+	protected abstract void setDemandCompany(String value);
+
+	protected abstract void setDemandContract(String value);
 
 	protected abstract void setProject(String value);
 

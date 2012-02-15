@@ -107,8 +107,13 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			initialized = true;
 			myCompany = BST.getInstance().getDefaultMyCompany();
 			warehouse = BST.getInstance().getDefaultWarehouse();
-			company = BST.getInstance().getDefaultCompany();
-			contract = BST.getInstance().getDefaultContract();
+			if (type == DocumentType.supply) {
+				company = BST.getInstance().getDefaultSupplyCompany();
+				contract = BST.getInstance().getDefaultSupplyContract();
+			} else {
+				company = BST.getInstance().getDefaultDemandCompany();
+				contract = BST.getInstance().getDefaultDemandContract();
+			}
 			project = BST.getInstance().getDefaultProject();
 		}
 		super.onResume();
@@ -191,12 +196,22 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
-	protected String getCompany() {
+	protected String getSupplyCompany() {
 		return company;
 	}
 
 	@Override
-	protected String getContract() {
+	protected String getSupplyContract() {
+		return contract;
+	}
+
+	@Override
+	protected String getDemandCompany() {
+		return company;
+	}
+
+	@Override
+	protected String getDemandContract() {
 		return contract;
 	}
 
@@ -216,12 +231,22 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
-	protected void setCompany(String value) {
+	protected void setSupplyCompany(String value) {
 		company = value;
 	}
 
 	@Override
-	protected void setContract(String value) {
+	protected void setSupplyContract(String value) {
+		contract = value;
+	}
+
+	@Override
+	protected void setDemandCompany(String value) {
+		company = value;
+	}
+
+	@Override
+	protected void setDemandContract(String value) {
 		contract = value;
 	}
 

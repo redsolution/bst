@@ -12,12 +12,12 @@
         android:title="@string/warehouse_title"
         />
     <PreferenceScreen
-        android:key="@string/company_title"
-        android:title="@string/company_title"
+        android:key="@string/supply_company_title"
+        android:title="@string/supply_company_title"
         />
     <PreferenceScreen
-        android:key="@string/contract_title"
-        android:title="@string/contract_title"
+        android:key="@string/supply_contract_title"
+        android:title="@string/supply_contract_title"
         />
     <PreferenceScreen
         android:key="@string/project_title"

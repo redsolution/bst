@@ -63,6 +63,10 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			addPreferencesFromResource(R.xml.supply);
 		else if (type == DocumentType.inventory)
 			addPreferencesFromResource(R.xml.inventory);
+		else if (type == DocumentType.demand)
+			addPreferencesFromResource(R.xml.demand);
+		else
+			throw new UnsupportedOperationException();
 
 		if (savedInstanceState != null) {
 			initialized = savedInstanceState.getBoolean(SAVED_INITIALIZED,
@@ -93,7 +97,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		try {
 			WarehouseTable.getInstance().getName(warehouse);
 			MyCompanyTable.getInstance().getName(myCompany);
-			if (type == DocumentType.supply)
+			if (type != DocumentType.inventory)
 				CompanyTable.getInstance().getName(company);
 		} catch (BaseDatabaseException e) {
 			return false;

@@ -64,6 +64,8 @@ public class DocumentActivity extends PreferenceActivity implements
 			setTitle(R.string.supply_action);
 		else if (type == DocumentType.inventory)
 			setTitle(R.string.inventory_action);
+		else if (type == DocumentType.demand)
+			setTitle(R.string.demand_action);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(true);

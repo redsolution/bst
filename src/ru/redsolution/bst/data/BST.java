@@ -25,6 +25,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.parse.DocumentImporter;
 import ru.redsolution.bst.data.serializer.BaseSerializer;
+import ru.redsolution.bst.data.serializer.DemandSerializer;
 import ru.redsolution.bst.data.serializer.InventorySerializer;
 import ru.redsolution.bst.data.serializer.SupplySerializer;
 import ru.redsolution.bst.data.table.CompanyFolderTable;
@@ -496,6 +497,8 @@ public class BST extends Application {
 				serializer = new SupplySerializer();
 			else if (getDocumentType() == DocumentType.inventory)
 				serializer = new InventorySerializer();
+			else if (getDocumentType() == DocumentType.demand)
+				serializer = new DemandSerializer();
 			else
 				throw new UnsupportedOperationException();
 			String body;

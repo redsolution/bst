@@ -16,6 +16,11 @@ public enum DocumentType {
 	/**
 	 * Приемка товара.
 	 */
-	supply;
+	supply,
+
+	/**
+	 * Отгрузка.
+	 */
+	demand;
 
 }

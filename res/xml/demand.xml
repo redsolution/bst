@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/defaults_title"
+    android:title="@string/demand_action"
     >
     <PreferenceScreen
         android:key="@string/my_company_title"
@@ -12,12 +12,12 @@
         android:title="@string/warehouse_title"
         />
     <PreferenceScreen
-        android:key="@string/supply_company_title"
-        android:title="@string/supply_company_title"
+        android:key="@string/demand_company_title"
+        android:title="@string/demand_company_title"
         />
     <PreferenceScreen
-        android:key="@string/supply_contract_title"
-        android:title="@string/supply_contract_title"
+        android:key="@string/demand_contract_title"
+        android:title="@string/demand_contract_title"
         />
     <PreferenceScreen
         android:key="@string/project_title"

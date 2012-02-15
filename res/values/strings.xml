@@ -5,11 +5,12 @@
     <string name="continue_summary">There is no document</string>
     <string name="continue_supply_summary">Continue supply</string>
     <string name="continue_inventory_summary">Continue inventory</string>
+    <string name="continue_demand_summary">Continue demand</string>
     <string name="import_action">Import</string>
     <string name="import_summary">Load data</string>
     <string name="supply_action">Supply</string>
     <string name="inventory_action">Inventory</string>
-    <string name="shipment_action">Shipment</string>
+    <string name="demand_action">Demand</string>
     <string name="retail_action">Retail</string>
     <string name="movement_action">Movement</string>
     <string name="settings_action">Settings</string>

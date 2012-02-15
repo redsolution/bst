@@ -22,14 +22,22 @@ public class SettingsActivity extends BaseSettingsActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String type = getIntent().getStringExtra(
+		String value = getIntent().getStringExtra(
 				BaseSettingsActivity.EXTRA_TYPE);
-		if (DocumentType.supply.toString().equals(type))
-			addPreferencesFromResource(R.xml.supply_defaults);
-		else if (DocumentType.inventory.toString().equals(type))
-			addPreferencesFromResource(R.xml.inventory_defaults);
-		else
+		if (value == null)
 			addPreferencesFromResource(R.xml.settings);
+		else {
+			DocumentType type = DocumentType.valueOf(value);
+			if (type == DocumentType.supply)
+				addPreferencesFromResource(R.xml.supply);
+			else if (type == DocumentType.inventory)
+				addPreferencesFromResource(R.xml.inventory);
+			else if (type == DocumentType.demand)
+				addPreferencesFromResource(R.xml.demand);
+			else
+				throw new UnsupportedOperationException();
+			setTitle(R.string.defaults_title);
+		}
 		loginPreference = findPreference(getString(R.string.login_key));
 		if (loginPreference != null)
 			loginPreference.setOnPreferenceClickListener(this);

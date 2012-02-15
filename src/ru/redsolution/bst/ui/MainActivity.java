@@ -49,6 +49,8 @@ public class MainActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.inventory_action))
 				.setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.demand_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.import_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.settings_action))
@@ -109,6 +111,9 @@ public class MainActivity extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.inventory_action))) {
 			checkAndCreateDocument(DocumentType.inventory);
+		} else if (preference.getKey()
+				.equals(getString(R.string.demand_action))) {
+			checkAndCreateDocument(DocumentType.demand);
 		} else if (preference.getKey()
 				.equals(getString(R.string.import_action))) {
 			if ("".equals(BST.getInstance().getLogin()))
@@ -225,6 +230,9 @@ public class MainActivity extends PreferenceActivity implements
 		} else if (documentType == DocumentType.inventory) {
 			findPreference(getString(R.string.continue_action)).setSummary(
 					R.string.continue_inventory_summary);
+		} else if (documentType == DocumentType.demand) {
+			findPreference(getString(R.string.continue_action)).setSummary(
+					R.string.continue_demand_summary);
 		} else {
 			findPreference(getString(R.string.continue_action)).setSummary(
 					R.string.continue_summary);

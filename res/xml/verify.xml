@@ -18,20 +18,20 @@
             android:title="@string/barcode_title"
             />
     </PreferenceCategory>
-        <PreferenceCategory
-        android:title="@string/code_title"
-        >
-        <PreferenceScreen
-            android:key="@string/code_title"
-            android:title="@string/code_title"
-            />
-    </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/product_code_title"
         >
         <PreferenceScreen
             android:key="@string/product_code_title"
             android:title="@string/product_code_title"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/code_title"
+        >
+        <PreferenceScreen
+            android:key="@string/code_title"
+            android:title="@string/code_title"
             />
     </PreferenceCategory>
 </PreferenceScreen>

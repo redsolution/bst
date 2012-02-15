@@ -14,9 +14,9 @@ import android.provider.BaseColumns;
 public class CursorChoiceDialogBuilder extends DialogBuilder implements
 		DialogInterface.OnClickListener {
 	private final DialogListener listener;
-	private final Cursor cursor;
-	private String checkedId;
-	private boolean selected;
+	protected final Cursor cursor;
+	protected String checkedId;
+	protected boolean selected;
 
 	/**
 	 * @param activity

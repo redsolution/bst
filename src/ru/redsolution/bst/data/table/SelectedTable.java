@@ -98,7 +98,7 @@ public class SelectedTable extends BaseTable {
 				.getReadableDatabase()
 				.rawQuery(
 						"SELECT " + function + "(" + Fields.QUANTITY
-								+ ") FROM " + getTableName() + ";", null);
+								+ ") FROM " + getTableName(), null);
 		try {
 			if (cursor.moveToFirst()) {
 				return cursor.getInt(0);

@@ -36,6 +36,8 @@
     <string name="project_title">Project</string>
     <string name="complite_warning">Please fill the form</string>
 
+    <string name="nothing">&lt; Nothing &gt;</string>
+
     <string name="defaults_title">Default values</string>
     <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>
 

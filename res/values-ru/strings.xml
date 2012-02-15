@@ -36,6 +36,8 @@
     <string name="project_title">Проект</string>
     <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
 
+    <string name="nothing">&lt; Ничего &gt;</string>
+
     <string name="defaults_title">Значения, используемые по умолчанию</string>
     <string name="defaults_hint">Не выбраны реквизиты, используемые по умолчанию. Хотите задать их сейчас?</string>
 

@@ -8,6 +8,7 @@ import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.NamedTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
+import ru.redsolution.bst.ui.dialog.CursorEmptyChoiceDialogBuilder;
 import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
@@ -89,20 +90,22 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 					.getInstance().list(), getSupplyCompany(),
 					CompanyTable.Fields.NAME).create();
 		case DIALOG_SUPPLY_CONTRACT_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, ContractTable
-					.getInstance().list(getSupplyCompany(), getMyCompany()),
-					getSupplyContract(), ContractTable.Fields.NAME).create();
+			return new CursorEmptyChoiceDialogBuilder(this, id, this,
+					ContractTable.getInstance().list(getSupplyCompany(),
+							getMyCompany()), getSupplyContract(),
+					ContractTable.Fields.NAME).create();
 		case DIALOG_DEMAND_COMPANY_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, CompanyTable
 					.getInstance().list(), getDemandCompany(),
 					CompanyTable.Fields.NAME).create();
 		case DIALOG_DEMAND_CONTRACT_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, ContractTable
-					.getInstance().list(getDemandCompany(), getMyCompany()),
-					getDemandContract(), ContractTable.Fields.NAME).create();
+			return new CursorEmptyChoiceDialogBuilder(this, id, this,
+					ContractTable.getInstance().list(getDemandCompany(),
+							getMyCompany()), getDemandContract(),
+					ContractTable.Fields.NAME).create();
 		case DIALOG_PROJECT_ID:
-			return new CursorChoiceDialogBuilder(this, id, this, ProjectTable
-					.getInstance().list(), getProject(),
+			return new CursorEmptyChoiceDialogBuilder(this, id, this,
+					ProjectTable.getInstance().list(), getProject(),
 					ProjectTable.Fields.NAME).create();
 		default:
 			return super.onCreateDialog(id);

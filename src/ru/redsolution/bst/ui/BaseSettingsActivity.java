@@ -19,6 +19,8 @@ import android.preference.PreferenceActivity;
 public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, DialogListener {
 
+	public static final String EXTRA_TYPE = "ru.redsolution.bst.ui.BaseSettingsActivity.EXTRA_TYPE";
+
 	private static final int DIALOG_MY_COMPANY_ID = 2;
 	private static final int DIALOG_WAREHOUSE_ID = 3;
 	private static final int DIALOG_COMPANY_ID = 4;

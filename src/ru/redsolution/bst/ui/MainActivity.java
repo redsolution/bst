@@ -35,7 +35,7 @@ public class MainActivity extends PreferenceActivity implements
 	private static final int DIALOG_AUTH_ID = 1;
 	private static final int DIALOG_ANOTHER_CONFIRM_ID = 2;
 
-	private DocumentType intent;
+	private DocumentType type;
 
 	private ProgressDialog progressDialog;
 
@@ -45,9 +45,11 @@ public class MainActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.main);
 		findPreference(getString(R.string.continue_action))
 				.setOnPreferenceClickListener(this);
-		findPreference(getString(R.string.import_action))
+		findPreference(getString(R.string.supply_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.inventory_action))
+				.setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.import_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.settings_action))
 				.setOnPreferenceClickListener(this);
@@ -63,15 +65,14 @@ public class MainActivity extends PreferenceActivity implements
 			}
 		});
 
+		type = null;
 		if (savedInstanceState != null) {
 			String value = savedInstanceState.getString(SAVED_INTENT);
-			try {
-				intent = DocumentType.valueOf(value);
-			} catch (IllegalArgumentException e) {
-				intent = null;
-			}
-		} else {
-			intent = null;
+			if (value != null)
+				try {
+					type = DocumentType.valueOf(value);
+				} catch (IllegalArgumentException e) {
+				}
 		}
 	}
 
@@ -87,8 +88,8 @@ public class MainActivity extends PreferenceActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (intent != null)
-			outState.putString(SAVED_INTENT, intent.toString());
+		if (type != null)
+			outState.putString(SAVED_INTENT, type.toString());
 	}
 
 	@Override
@@ -99,20 +100,22 @@ public class MainActivity extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onPreferenceClick(Preference paramPreference) {
-		if (paramPreference.getKey()
-				.equals(getString(R.string.continue_action))) {
+	public boolean onPreferenceClick(Preference preference) {
+		if (preference.getKey().equals(getString(R.string.continue_action))) {
 			startActivity(new Intent(this, DocumentActivity.class));
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.import_action))) {
+		} else if (preference.getKey()
+				.equals(getString(R.string.supply_action))) {
+			checkAndCreateDocument(DocumentType.supply);
+		} else if (preference.getKey().equals(
+				getString(R.string.inventory_action))) {
+			checkAndCreateDocument(DocumentType.inventory);
+		} else if (preference.getKey()
+				.equals(getString(R.string.import_action))) {
 			if ("".equals(BST.getInstance().getLogin()))
 				showDialog(DIALOG_AUTH_ID);
 			else
 				BST.getInstance().importData();
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.inventory_action))) {
-			checkAndCreateDocument(DocumentType.inventory);
-		} else if (paramPreference.getKey().equals(
+		} else if (preference.getKey().equals(
 				getString(R.string.settings_action))) {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
@@ -122,10 +125,10 @@ public class MainActivity extends PreferenceActivity implements
 	/**
 	 * Создать документ, при необходимости отобразить диалог подтверждения.
 	 * 
-	 * @param intent
+	 * @param type
 	 */
-	private void checkAndCreateDocument(DocumentType intent) {
-		this.intent = intent;
+	private void checkAndCreateDocument(DocumentType type) {
+		this.type = type;
 		if (BST.getInstance().getDocumentType() == null)
 			createDocument();
 		else
@@ -137,6 +140,7 @@ public class MainActivity extends PreferenceActivity implements
 	 */
 	private void createDocument() {
 		Intent intent = new Intent(this, HeaderActivity.class);
+		intent.putExtra(HeaderActivity.EXTRA_TYPE, this.type.toString());
 		startActivity(intent);
 	}
 
@@ -222,6 +226,8 @@ public class MainActivity extends PreferenceActivity implements
 			findPreference(getString(R.string.continue_action)).setSummary(
 					R.string.continue_summary);
 		}
+		findPreference(getString(R.string.supply_action))
+				.setEnabled(isImported);
 		findPreference(getString(R.string.inventory_action)).setEnabled(
 				isImported);
 		findPreference(getString(R.string.settings_action)).setEnabled(

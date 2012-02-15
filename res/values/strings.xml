@@ -6,6 +6,7 @@
     <string name="continue_inventory_summary">Continue inventory</string>
     <string name="import_action">Import</string>
     <string name="import_summary">Load data</string>
+    <string name="supply_action">Supply</string>
     <string name="inventory_action">Inventory</string>
     <string name="shipment_action">Shipment</string>
     <string name="retail_action">Retail</string>

@@ -301,6 +301,14 @@ public class BST extends Application {
 		SelectedProductCodeForBarcodeTable.getInstance().clear();
 	}
 
+	public String getSelectedMyCompany() {
+		return getValue(R.string.selected_my_company_key);
+	}
+
+	public void setSelectedMyCompany(String value) {
+		setValue(R.string.selected_my_company_key, value);
+	}
+
 	public String getSelectedWarehouse() {
 		return getValue(R.string.selected_warehouse_key);
 	}
@@ -309,12 +317,28 @@ public class BST extends Application {
 		setValue(R.string.selected_warehouse_key, value);
 	}
 
-	public String getSelectedMyCompany() {
-		return getValue(R.string.selected_my_company_key);
+	public String getSelectedCompany() {
+		return getValue(R.string.selected_company_key);
 	}
 
-	public void setSelectedMyCompany(String value) {
-		setValue(R.string.selected_my_company_key, value);
+	public void setSelectedCompany(String value) {
+		setValue(R.string.selected_company_key, value);
+	}
+
+	public String getSelectedContract() {
+		return getValue(R.string.selected_contract_key);
+	}
+
+	public void setSelectedContract(String value) {
+		setValue(R.string.selected_contract_key, value);
+	}
+
+	public String getSelectedProject() {
+		return getValue(R.string.selected_project_key);
+	}
+
+	public void setSelectedProject(String value) {
+		setValue(R.string.selected_project_key, value);
 	}
 
 	/**

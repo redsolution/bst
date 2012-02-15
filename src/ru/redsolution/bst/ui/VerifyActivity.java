@@ -8,6 +8,7 @@ import java.util.Map;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.BaseTable.Fields;
 import ru.redsolution.bst.data.table.GoodBarcodeTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
@@ -16,7 +17,6 @@ import ru.redsolution.bst.data.table.ObjectDoesNotExistException;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
-import ru.redsolution.bst.data.table.BaseTable.Fields;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.DialogListener;
@@ -246,7 +246,6 @@ public class VerifyActivity extends PreferenceActivity implements
 				startActivity(intent);
 			} catch (ActivityNotFoundException anfe) {
 				showDialog(DIALOG_NO_MARKET_ID);
-				break;
 			}
 			return;
 		case DIALOG_NO_MARKET_ID:

@@ -6,6 +6,10 @@
         android:summary="@string/continue_summary"
         />
     <PreferenceScreen
+        android:key="@string/supply_action"
+        android:title="@string/supply_action"
+        />
+    <PreferenceScreen
         android:key="@string/inventory_action"
         android:title="@string/inventory_action"
         />

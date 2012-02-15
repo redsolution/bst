@@ -4,6 +4,7 @@ import org.apache.http.auth.AuthenticationException;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
@@ -58,6 +59,11 @@ public class DocumentActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		scanned = savedInstanceState != null
 				&& savedInstanceState.getBoolean(SAVED_SCANNED, false);
+		DocumentType type = BST.getInstance().getDocumentType();
+		if (type == DocumentType.supply)
+			setTitle(R.string.supply_action);
+		else if (type == DocumentType.inventory)
+			setTitle(R.string.inventory_action);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(true);
@@ -196,7 +202,6 @@ public class DocumentActivity extends PreferenceActivity implements
 	}
 
 	private void updateView() {
-		setTitle(R.string.inventory_action);
 		findPreference(getString(R.string.list_action)).setSummary(
 				String.format(getString(R.string.list_summary), SelectedTable
 						.getInstance().getGoodsCount(), SelectedTable

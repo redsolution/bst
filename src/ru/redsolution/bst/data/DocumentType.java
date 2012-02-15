@@ -8,6 +8,14 @@ package ru.redsolution.bst.data;
  */
 public enum DocumentType {
 
-	inventory;
+	/**
+	 * Инвентаризация.
+	 */
+	inventory,
+
+	/**
+	 * Приемка товара.
+	 */
+	supply;
 
 }

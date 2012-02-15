@@ -2,6 +2,7 @@ package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,16 +16,18 @@ import android.preference.Preference;
  */
 public class SettingsActivity extends BaseSettingsActivity {
 
-	public static final String EXTRA_SET_DEFAULTS = "ru.redsolution.bst.ui.SettingsActivity.EXTRA_SET_DEFAULTS";
-
 	private static final int DIALOG_AUTH_ID = 1;
 	private Preference loginPreference;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (getIntent().getBooleanExtra(EXTRA_SET_DEFAULTS, false))
-			addPreferencesFromResource(R.xml.defaults);
+		String type = getIntent().getStringExtra(
+				BaseSettingsActivity.EXTRA_TYPE);
+		if (DocumentType.supply.toString().equals(type))
+			addPreferencesFromResource(R.xml.supply_defaults);
+		else if (DocumentType.inventory.toString().equals(type))
+			addPreferencesFromResource(R.xml.inventory_defaults);
 		else
 			addPreferencesFromResource(R.xml.settings);
 		loginPreference = findPreference(getString(R.string.login_key));

@@ -4,6 +4,7 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -20,11 +21,13 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		OnClickListener {
 
 	public static final String ACTION_UPDATE = "ru.redsolution.bst.ui.HeaderActivity.ACTION_UPDATE";
-	public static final String EXTRA_TYPE = "ru.redsolution.bst.ui.HeaderActivity.EXTRA_TYPE";
 
-	private static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.InventoryActivity.SAVED_INITIALIZED";
-	private static final String SAVED_WAREHOUSE = "ru.redsolution.bst.ui.InventoryActivity.SAVED_WAREHOUSE";
-	private static final String SAVED_MY_COMPANY = "ru.redsolution.bst.ui.InventoryActivity.SAVED_MY_COMPANY";
+	private static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.HeaderActivity.SAVED_INITIALIZED";
+	private static final String SAVED_MY_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_MY_COMPANY";
+	private static final String SAVED_WAREHOUSE = "ru.redsolution.bst.ui.HeaderActivity.SAVED_WAREHOUSE";
+	private static final String SAVED_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_COMPANY";
+	private static final String SAVED_CONTRACT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_CONTRACT";
+	private static final String SAVED_PROJECT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_PROJECT";
 
 	private static final int DIALOG_DEFAULTS_ID = 0x10;
 	private static final int DIALOG_NOT_COMPLITED_ID = 0x11;
@@ -33,9 +36,13 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	 * Значения были введены.
 	 */
 	private boolean initialized;
+	private DocumentType type;
 
 	private String myCompany;
 	private String warehouse;
+	private String company;
+	private String contract;
+	private String project;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +52,33 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		Button createButton = (Button) view.findViewById(R.id.create);
 		createButton.setOnClickListener(this);
 		getListView().addFooterView(view, null, false);
-		addPreferencesFromResource(R.xml.inventory);
+
+		if (ACTION_UPDATE.equals(getIntent().getAction()))
+			type = BST.getInstance().getDocumentType();
+		else
+			type = DocumentType.valueOf(getIntent().getStringExtra(
+					BaseSettingsActivity.EXTRA_TYPE));
+
+		if (type == DocumentType.supply)
+			addPreferencesFromResource(R.xml.supply);
+		else if (type == DocumentType.inventory)
+			addPreferencesFromResource(R.xml.inventory);
 
 		if (savedInstanceState != null) {
 			initialized = savedInstanceState.getBoolean(SAVED_INITIALIZED,
 					false);
-			warehouse = savedInstanceState.getString(SAVED_WAREHOUSE);
 			myCompany = savedInstanceState.getString(SAVED_MY_COMPANY);
+			warehouse = savedInstanceState.getString(SAVED_WAREHOUSE);
+			company = savedInstanceState.getString(SAVED_COMPANY);
+			contract = savedInstanceState.getString(SAVED_CONTRACT);
+			project = savedInstanceState.getString(SAVED_PROJECT);
 		} else {
 			initialized = false;
-			warehouse = BST.getInstance().getSelectedWarehouse();
 			myCompany = BST.getInstance().getSelectedMyCompany();
+			warehouse = BST.getInstance().getSelectedWarehouse();
+			company = BST.getInstance().getSelectedCompany();
+			contract = BST.getInstance().getSelectedContract();
+			project = BST.getInstance().getSelectedProject();
 		}
 		if (ACTION_UPDATE.equals(getIntent().getAction())) {
 			createButton.setText(android.R.string.ok);
@@ -70,6 +93,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		try {
 			WarehouseTable.getInstance().getName(warehouse);
 			MyCompanyTable.getInstance().getName(myCompany);
+			if (type == DocumentType.supply)
+				CompanyTable.getInstance().getName(company);
 		} catch (BaseDatabaseException e) {
 			return false;
 		}
@@ -80,8 +105,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	protected void onResume() {
 		if (!initialized) {
 			initialized = true;
-			warehouse = BST.getInstance().getDefaultWarehouse();
 			myCompany = BST.getInstance().getDefaultMyCompany();
+			warehouse = BST.getInstance().getDefaultWarehouse();
+			company = BST.getInstance().getDefaultCompany();
+			contract = BST.getInstance().getDefaultContract();
+			project = BST.getInstance().getDefaultProject();
 		}
 		super.onResume();
 		if (!isComplited())
@@ -92,8 +120,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(SAVED_INITIALIZED, initialized);
-		outState.putString(SAVED_WAREHOUSE, warehouse);
 		outState.putString(SAVED_MY_COMPANY, myCompany);
+		outState.putString(SAVED_WAREHOUSE, warehouse);
+		outState.putString(SAVED_COMPANY, company);
+		outState.putString(SAVED_CONTRACT, contract);
+		outState.putString(SAVED_PROJECT, project);
 	}
 
 	@Override
@@ -116,7 +147,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		case DIALOG_DEFAULTS_ID:
 			initialized = false;
 			Intent intent = new Intent(this, SettingsActivity.class);
-			intent.putExtra(SettingsActivity.EXTRA_SET_DEFAULTS, true);
+			intent.putExtra(BaseSettingsActivity.EXTRA_TYPE, getIntent()
+					.getStringExtra(BaseSettingsActivity.EXTRA_TYPE));
 			startActivity(intent);
 			break;
 		default:
@@ -130,10 +162,13 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		switch (view.getId()) {
 		case R.id.create:
 			if (isComplited()) {
-				BST.getInstance().setSelectedWarehouse(warehouse);
 				BST.getInstance().setSelectedMyCompany(myCompany);
+				BST.getInstance().setSelectedWarehouse(warehouse);
+				BST.getInstance().setSelectedCompany(company);
+				BST.getInstance().setSelectedContract(contract);
+				BST.getInstance().setSelectedProject(project);
 				if (!ACTION_UPDATE.equals(getIntent().getAction())) {
-					BST.getInstance().setDocumentType(DocumentType.inventory);
+					BST.getInstance().setDocumentType(type);
 					startActivity(new Intent(this, DocumentActivity.class));
 				}
 				finish();
@@ -157,20 +192,17 @@ public class HeaderActivity extends BaseSettingsActivity implements
 
 	@Override
 	protected String getCompany() {
-		// TODO Auto-generated method stub
-		return "";
+		return company;
 	}
 
 	@Override
 	protected String getContract() {
-		// TODO Auto-generated method stub
-		return "";
+		return contract;
 	}
 
 	@Override
 	protected String getProject() {
-		// TODO Auto-generated method stub
-		return "";
+		return project;
 	}
 
 	@Override
@@ -185,16 +217,17 @@ public class HeaderActivity extends BaseSettingsActivity implements
 
 	@Override
 	protected void setCompany(String value) {
-		// TODO Auto-generated method stub
+		company = value;
 	}
 
 	@Override
 	protected void setContract(String value) {
-		// TODO Auto-generated method stub
+		contract = value;
 	}
 
 	@Override
 	protected void setProject(String value) {
-		// TODO Auto-generated method stub
+		project = value;
 	}
+
 }

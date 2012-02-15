@@ -5,6 +5,9 @@ import java.io.StringWriter;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import android.database.Cursor;
 import android.util.Xml;
@@ -16,6 +19,8 @@ import android.util.Xml;
  * 
  */
 public abstract class BaseSerializer {
+
+	private static final String DESCRIPTION = "description";
 
 	/**
 	 * @return XML для отправки.
@@ -60,7 +65,32 @@ public abstract class BaseSerializer {
 	 */
 	protected void renderContainerBody(XmlSerializer serializer)
 			throws IllegalArgumentException, IllegalStateException, IOException {
-		Cursor cursor = getCursor();
+		serializer.startTag("", DESCRIPTION);
+		Cursor cursor = SelectedProductCodeForBarcodeTable.getInstance().list();
+		try {
+			if (cursor.moveToFirst()) {
+				serializer.text(BST.getInstance().getString(
+						R.string.new_barcode_description));
+				do {
+					serializer
+							.text(cursor.getString(cursor
+									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields._ID)));
+					serializer.text(" ");
+					serializer
+							.text(cursor.getString(cursor
+									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.TYPE)));
+					serializer.text(" ");
+					serializer
+							.text(cursor.getString(cursor
+									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.VALUE)));
+					serializer.text("\n");
+				} while (cursor.moveToNext());
+			}
+		} finally {
+			cursor.close();
+		}
+		serializer.endTag("", DESCRIPTION);
+		cursor = getCursor();
 		try {
 			if (cursor.moveToFirst()) {
 				do {

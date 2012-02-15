@@ -24,7 +24,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.parse.DocumentImporter;
+import ru.redsolution.bst.data.serializer.BaseSerializer;
 import ru.redsolution.bst.data.serializer.InventorySerializer;
+import ru.redsolution.bst.data.serializer.SupplySerializer;
 import ru.redsolution.bst.data.table.CompanyFolderTable;
 import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.ContractTable;
@@ -473,9 +475,16 @@ public class BST extends Application {
 		@Override
 		protected void executeInBackground() {
 			HttpPut request = new HttpPut(INVENTORY_URL);
+			BaseSerializer serializer;
+			if (getDocumentType() == DocumentType.supply)
+				serializer = new SupplySerializer();
+			else if (getDocumentType() == DocumentType.inventory)
+				serializer = new InventorySerializer();
+			else
+				throw new UnsupportedOperationException();
 			String body;
 			try {
-				body = new InventorySerializer().getXml();
+				body = serializer.getXml();
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException(e);
 			} catch (IllegalStateException e) {

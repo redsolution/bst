@@ -8,11 +8,11 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.SelectedTable;
 import android.database.Cursor;
 
-public class InventorySerializer extends BaseSerializer {
+public class SupplySerializer extends BaseSerializer {
 
 	@Override
 	protected String getContainerName() {
-		return "inventory";
+		return "supply";
 	}
 
 	@Override
@@ -20,19 +20,20 @@ public class InventorySerializer extends BaseSerializer {
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		String myCompany = BST.getInstance().getSelectedMyCompany();
 		String warehouse = BST.getInstance().getSelectedWarehouse();
+		String company = BST.getInstance().getSelectedCompany();
+		serializer.attribute("", "targetRequisiteId", myCompany);
+		serializer.attribute("", "sourceRequisiteId", company);
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");
-		serializer.attribute("", "targetRequisiteId", myCompany);
-		serializer.attribute("", "sourceRequisiteId", myCompany);
-		serializer.attribute("", "sourceStoreId", warehouse);
-		serializer.attribute("", "sourceAgentId", myCompany);
+		serializer.attribute("", "sourceAgentId", company);
+		serializer.attribute("", "targetStoreId", warehouse);
 		serializer.attribute("", "targetAgentId", myCompany);
 	}
 
 	@Override
 	protected String getItemName() {
-		return "inventoryPosition";
+		return "shipmentIn";
 	}
 
 	@Override
@@ -44,7 +45,6 @@ public class InventorySerializer extends BaseSerializer {
 				.getColumnIndex(SelectedTable.Fields.QUANTITY));
 		serializer.attribute("", "quantity", String.valueOf(quantity));
 		serializer.attribute("", "goodId", good);
-		serializer.attribute("", "correctionAmount", String.valueOf(quantity));
 	}
 
 }

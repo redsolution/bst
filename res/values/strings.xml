@@ -71,4 +71,6 @@
     <string name="quantity_action">Change quantity</string>
     <string name="remove_action">Remove</string>
     <string name="remove_confirm">Do you really want to remove good?</string>
+
+    <string name="new_barcode_description">New barcodes were found for specified product codes.\nProduct code, Barcode type, Barcode:\n</string>
 </resources>

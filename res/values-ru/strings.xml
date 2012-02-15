@@ -71,4 +71,6 @@
     <string name="quantity_action">Изменить количество</string>
     <string name="remove_action">Удалить</string>
     <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
+
+    <string name="new_barcode_description">Найдены новые штрих коды для следующих артикулов.\nАртикул, Тип штрих кода, Штрих код:\n</string>
 </resources>

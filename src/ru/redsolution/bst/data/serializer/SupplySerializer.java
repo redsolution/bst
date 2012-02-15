@@ -5,10 +5,11 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import android.database.Cursor;
 
-public class SupplySerializer extends BaseSerializer {
+public class SupplySerializer extends PricedSerializer {
 
 	@Override
 	protected String getContainerName() {
@@ -51,6 +52,11 @@ public class SupplySerializer extends BaseSerializer {
 				.getColumnIndex(SelectedTable.Fields.QUANTITY));
 		serializer.attribute("", "quantity", String.valueOf(quantity));
 		serializer.attribute("", "goodId", good);
+	}
+
+	@Override
+	protected String getPriceFieldName() {
+		return GoodTable.Fields.BUY_PRICE;
 	}
 
 }

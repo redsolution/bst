@@ -20,7 +20,7 @@ import android.util.Xml;
  */
 public abstract class BaseSerializer {
 
-	private static final String DESCRIPTION = "description";
+	private static final String DESCRIPTION_TAG = "description";
 
 	/**
 	 * @return XML для отправки.
@@ -65,7 +65,7 @@ public abstract class BaseSerializer {
 	 */
 	protected void renderContainerBody(XmlSerializer serializer)
 			throws IllegalArgumentException, IllegalStateException, IOException {
-		serializer.startTag("", DESCRIPTION);
+		serializer.startTag("", DESCRIPTION_TAG);
 		Cursor cursor = SelectedProductCodeForBarcodeTable.getInstance().list();
 		try {
 			if (cursor.moveToFirst()) {
@@ -89,7 +89,7 @@ public abstract class BaseSerializer {
 		} finally {
 			cursor.close();
 		}
-		serializer.endTag("", DESCRIPTION);
+		serializer.endTag("", DESCRIPTION_TAG);
 		cursor = getCursor();
 		try {
 			if (cursor.moveToFirst()) {

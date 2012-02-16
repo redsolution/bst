@@ -10,6 +10,7 @@ import java.util.Date;
 
 import net.iharder.base64.Base64;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +19,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -134,9 +136,24 @@ public class BST extends Application {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (response.getStatusLine().getStatusCode() != 200)
+		if (response.getStatusLine().getStatusCode() != 200) {
+			if (Debugger.ENABLED) {
+				HttpEntity entity = response.getEntity();
+				try {
+					System.err.println(EntityUtils.toString(entity));
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						entity.consumeContent();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			throw new RuntimeException(new AuthenticationException(response
 					.getStatusLine().toString()));
+		}
 		return response;
 	}
 

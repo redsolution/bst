@@ -5,6 +5,11 @@
         android:title="@string/scan_action"
         />
     <PreferenceScreen
+        android:key="@string/barcode_action"
+        android:title="@string/barcode_action"
+        android:summary="@string/barcode_summary"
+        />
+    <PreferenceScreen
         android:key="@string/list_action"
         android:title="@string/list_action"
         android:summary="@string/list_summary"
@@ -13,11 +18,11 @@
         android:key="@string/header_action"
         android:title="@string/header_action"
         />
-    <PreferenceScreen
+    <Preference
         android:key="@string/send_action"
         android:title="@string/send_action"
         />
-    <PreferenceScreen
+    <Preference
         android:key="@string/cancel_action"
         android:title="@string/cancel_action"
         />

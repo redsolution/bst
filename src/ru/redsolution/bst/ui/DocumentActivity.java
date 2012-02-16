@@ -51,6 +51,8 @@ public class DocumentActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.document);
 		findPreference(getString(R.string.scan_action))
 				.setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.barcode_action))
+				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.list_action))
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.header_action))
@@ -117,6 +119,11 @@ public class DocumentActivity extends PreferenceActivity implements
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference.getKey().equals(getString(R.string.scan_action))) {
 			startActivity(new Intent(this, VerifyActivity.class));
+		} else if (preference.getKey().equals(
+				getString(R.string.barcode_action))) {
+			Intent intent = new Intent(this, VerifyActivity.class);
+			intent.setAction(VerifyActivity.ACTION_MANUAL_BARCODE);
+			startActivity(intent);
 		} else if (preference.getKey().equals(getString(R.string.list_action))) {
 			startActivity(new Intent(this, GoodsActivity.class));
 		} else if (preference.getKey()

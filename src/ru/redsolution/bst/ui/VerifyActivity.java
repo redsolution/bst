@@ -22,6 +22,7 @@ import ru.redsolution.bst.data.table.ParentableTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
+import ru.redsolution.bst.ui.dialog.ValueDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
@@ -47,6 +48,8 @@ import com.quietlycoding.android.picker.NumberPicker;
 public class VerifyActivity extends PreferenceActivity implements
 		OnClickListener, AcceptAndDeclineDialogListener {
 
+	public static final String ACTION_MANUAL_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.ACTION_MANUAL_BARCODE";
+
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
 	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
 	private static final String SAVED_PRODUCT_CODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_PRODUCT_CODE";
@@ -54,10 +57,15 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final String SAVED_INSTALL_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_INSTALL_NOTIFIED";
 	private static final String SAVED_NOT_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_NOT_FOUND_NOTIFIED";
 	private static final String SAVED_MULTIPLE_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_MULTIPLE_FOUND_NOTIFIED";
+	private static final String SAVED_BARCODE_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE_NOTIFIED";
 
 	private static final String ZXING_EAN_8 = "EAN_8";
 	private static final String ZXING_EAN_13 = "EAN_13";
 	private static final String ZXING_CODE_128 = "CODE_128";
+
+	private static final String TYPE_EAN_8 = "EAN8";
+	private static final String TYPE_EAN_13 = "EAN13";
+	private static final String TYPE_CODE_128 = "Code128";
 
 	private static final Collection<String> SUPPORTED_CODE_TYPES = Collections
 			.unmodifiableCollection(Arrays.asList(ZXING_EAN_8, ZXING_EAN_13,
@@ -69,9 +77,9 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final Map<String, String> CODE_TYPES = new HashMap<String, String>();
 
 	static {
-		CODE_TYPES.put(ZXING_EAN_8, "EAN8");
-		CODE_TYPES.put(ZXING_EAN_13, "EAN13");
-		CODE_TYPES.put(ZXING_CODE_128, "Code128");
+		CODE_TYPES.put(ZXING_EAN_8, TYPE_EAN_8);
+		CODE_TYPES.put(ZXING_EAN_13, TYPE_EAN_13);
+		CODE_TYPES.put(ZXING_CODE_128, TYPE_CODE_128);
 	}
 
 	private static final int DIALOG_INSTALL_ID = 1;
@@ -80,6 +88,10 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final int DIALOG_MULTIPLE_OBJECTS_RETURNED_ID = 4;
 	private static final int DIALOG_SEARCH_BY_REQUEST_ID = 5;
 	private static final int DIALOG_PRODUCT_CODE_REQUEST_ID = 6;
+	private static final int DIALOG_MANUAL_BARCODE_ID = 7;
+
+	private static final String RE_EAN_8 = "^\\d{8}$";
+	private static final String RE_EAN_13 = "^\\d{13}$";
 
 	private View quantityView;
 	private TextView restView;
@@ -87,8 +99,6 @@ public class VerifyActivity extends PreferenceActivity implements
 	private String type;
 	private String barcode;
 	private String productCode;
-
-	private TextView productCodeView;
 
 	/**
 	 * Пользователь извещен о необходимости установить сканер.
@@ -105,6 +115,11 @@ public class VerifyActivity extends PreferenceActivity implements
 	 */
 	private boolean multipleFoundNotified;
 
+	/**
+	 * Пользователь извещен о необходимости ввести штрих код.
+	 */
+	private boolean barcodeNotified;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -119,7 +134,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		getListView().addHeaderView(view, null, false);
 		addPreferencesFromResource(R.xml.verify);
 		findPreference(getString(R.string.name_title)).setLayoutResource(
-				R.layout.preference);
+				R.layout.multiline_preference);
 
 		int quantity;
 		if (savedInstanceState != null) {
@@ -133,6 +148,8 @@ public class VerifyActivity extends PreferenceActivity implements
 					SAVED_NOT_FOUND_NOTIFIED, false);
 			multipleFoundNotified = savedInstanceState.getBoolean(
 					SAVED_MULTIPLE_FOUND_NOTIFIED, false);
+			barcodeNotified = savedInstanceState.getBoolean(
+					SAVED_BARCODE_NOTIFIED, false);
 		} else {
 			quantity = 1;
 			type = null;
@@ -141,6 +158,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			installNotified = false;
 			notFoundNotified = false;
 			multipleFoundNotified = false;
+			barcodeNotified = false;
 		}
 		setQuantity(quantity);
 	}
@@ -160,6 +178,12 @@ public class VerifyActivity extends PreferenceActivity implements
 	 * Запуск сканера.
 	 */
 	private void scan() {
+		if (ACTION_MANUAL_BARCODE.equals(getIntent().getAction())
+				&& !barcodeNotified) {
+			barcodeNotified = true;
+			showDialog(DIALOG_MANUAL_BARCODE_ID);
+			return;
+		}
 		IntentIntegrator integrator = new IntentIntegrator(this);
 		AlertDialog alertDialog = integrator.initiateScan(SUPPORTED_CODE_TYPES);
 		if (alertDialog != null) {
@@ -190,6 +214,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putBoolean(SAVED_NOT_FOUND_NOTIFIED, notFoundNotified);
 		outState.putBoolean(SAVED_MULTIPLE_FOUND_NOTIFIED,
 				multipleFoundNotified);
+		outState.putBoolean(SAVED_BARCODE_NOTIFIED, barcodeNotified);
 	}
 
 	@Override
@@ -224,12 +249,9 @@ public class VerifyActivity extends PreferenceActivity implements
 					.setMessage(R.string.product_code_confirm)
 					.setCancelable(false).create();
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
-			View view = getLayoutInflater().inflate(R.layout.product_code,
-					null, false);
-			productCodeView = (TextView) view.findViewById(R.id.value);
-			return new ConfirmDialogBuilder(this, id, this)
-					.setTitle(R.string.product_code_title).setView(view)
-					.setCancelable(false).create();
+			return new ValueDialogBuilder(this, id, this)
+					.setTitle(R.string.product_code_title).setCancelable(false)
+					.create();
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 			return new NotificationDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
@@ -240,6 +262,10 @@ public class VerifyActivity extends PreferenceActivity implements
 					.setTitle(R.string.verification_error)
 					.setMessage(R.string.multiple_objects_returned)
 					.setCancelable(false).create();
+		case DIALOG_MANUAL_BARCODE_ID:
+			return new ValueDialogBuilder(this, id, this)
+					.setTitle(R.string.barcode_title).setCancelable(false)
+					.create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -277,11 +303,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
 			break;
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
-			if ("".equals(productCodeView.getText())) {
-				showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
-				break;
-			}
-			String value = productCodeView.getText().toString();
+			String value = ((ValueDialogBuilder) dialogBuilder).getValue();
 			try {
 				GoodTable.getInstance().getByProductCode(value);
 			} catch (ObjectDoesNotExistException e) {
@@ -303,6 +325,18 @@ public class VerifyActivity extends PreferenceActivity implements
 			multipleFoundNotified = false;
 			scan();
 			break;
+		case DIALOG_MANUAL_BARCODE_ID:
+			barcode = ((ValueDialogBuilder) dialogBuilder).getValue();
+			if (barcode.matches(RE_EAN_13))
+				type = TYPE_EAN_13;
+			else if (barcode.matches(RE_EAN_8))
+				type = TYPE_EAN_8;
+			else
+				type = TYPE_CODE_128;
+			productCode = null;
+			setQuantity(1);
+			updateView();
+			return;
 		default:
 			break;
 		}
@@ -316,6 +350,9 @@ public class VerifyActivity extends PreferenceActivity implements
 			break;
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
 			showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			break;
+		case DIALOG_MANUAL_BARCODE_ID:
+			finish();
 			break;
 		case DIALOG_INSTALL_ID:
 			finish();

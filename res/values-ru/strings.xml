@@ -68,6 +68,8 @@
     <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Пожалуйста, исправьте это на сервисе МойСклад.</string>
 
     <string name="scan_action">Сканировать</string>
+    <string name="barcode_action">Добавить по штрих коду</string>
+    <string name="barcode_summary">Ввести значение с клавиатуры</string>
     <string name="list_action">Список товаров</string>
     <string name="list_summary">Наименований: %1$d, товаров: %2$d</string>
     <string name="header_action">Изменить шапку</string>

@@ -1,12 +1,16 @@
 package ru.redsolution.bst.ui;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.BaseTable.Fields;
 import ru.redsolution.bst.data.table.GoodBarcodeTable;
@@ -14,6 +18,7 @@ import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MultipleObjectsReturnedException;
 import ru.redsolution.bst.data.table.ObjectDoesNotExistException;
+import ru.redsolution.bst.data.table.ParentableTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
@@ -416,35 +421,85 @@ public class VerifyActivity extends PreferenceActivity implements
 		} catch (MultipleObjectsReturnedException e) {
 			checkAndShowDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
 		}
-		String folder = "";
 		if (values == null) {
 			findPreference(getString(R.string.name_title)).setTitle("");
+			findPreference(getString(R.string.name_title)).setSummary("");
 			findPreference(getString(R.string.barcode_title)).setTitle("");
 			findPreference(getString(R.string.code_title)).setTitle("");
 			findPreference(getString(R.string.product_code_title)).setTitle("");
 		} else {
 			String name = values.getAsString(GoodTable.Fields.NAME);
+			String uom = "";
 			try {
-				name = String.format(
-						getString(R.string.good_with_uom),
-						name,
-						UomTable.getInstance().getName(
-								values.getAsString(GoodTable.Fields.UOM)));
+				uom = UomTable.getInstance().getName(
+						values.getAsString(GoodTable.Fields.UOM));
 			} catch (BaseDatabaseException e) {
 			}
+			String price;
+			if (BST.getInstance().getDocumentType().useSalePrice())
+				price = values.getAsString(GoodTable.Fields.SALE_PRICE);
+			else
+				price = values.getAsString(GoodTable.Fields.BUY_PRICE);
+			BigDecimal bigDecimal = null;
 			try {
-				folder = GoodFolderTable.getInstance().getName(
-						values.getAsString(GoodTable.Fields.GOOD_FOLDER));
-			} catch (BaseDatabaseException e) {
+				bigDecimal = new BigDecimal(price);
+			} catch (NumberFormatException e) {
+			}
+			if (bigDecimal != null) {
+				bigDecimal = bigDecimal.movePointLeft(2);
+				bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_EVEN);
+			}
+			if (bigDecimal.longValue() == 0)
+				bigDecimal = null;
+			if (bigDecimal == null)
+				price = "";
+			else
+				price = bigDecimal.toString();
+			if ("".equals(uom)) {
+				if ("".equals(price))
+					;
+				else
+					name = String.format(getString(R.string.good_with_extra),
+							name, price);
+			} else {
+				if ("".equals(price))
+					name = String.format(getString(R.string.good_with_extra),
+							name, uom);
+				else
+					name = String.format(
+							getString(R.string.good_with_price_and_uom), name,
+							price, uom);
+			}
+			LinkedList<String> folders = new LinkedList<String>();
+			String folder = values.getAsString(GoodTable.Fields.GOOD_FOLDER);
+			while (!"".equals(folder)) {
+				ContentValues folderValues;
+				try {
+					folderValues = GoodFolderTable.getInstance()
+							.getById(folder);
+				} catch (BaseDatabaseException e) {
+					break;
+				}
+				folder = folderValues
+						.getAsString(ParentableTable.Fields.PARENT);
+				folders.addFirst(folderValues
+						.getAsString(ParentableTable.Fields.NAME));
+			}
+			StringBuilder builder = new StringBuilder();
+			for (String value : folders) {
+				if (builder.length() != 0)
+					builder.append(" / ");
+				builder.append(value);
 			}
 			findPreference(getString(R.string.name_title)).setTitle(name);
+			findPreference(getString(R.string.name_title)).setSummary(
+					builder.toString());
 			findPreference(getString(R.string.barcode_title)).setTitle(barcode);
 			findPreference(getString(R.string.code_title)).setTitle(
 					values.getAsString(GoodTable.Fields.CODE));
 			findPreference(getString(R.string.product_code_title)).setTitle(
 					values.getAsString(GoodTable.Fields.PRODUCT_CODE));
 		}
-		findPreference(getString(R.string.name_title)).setSummary(folder);
 		restView.setText(String
 				.format(getString(R.string.rest_text), getRest()));
 	}

@@ -56,7 +56,8 @@
     <string name="rest_text">%1$d + </string>
     <string name="more">More</string>
     <string name="finish">Finish</string>
-    <string name="good_with_uom">%1$s (%2$s)</string>
+    <string name="good_with_extra">%1$s (%2$s)</string>
+    <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
 
     <string name="good_not_found">Good was not found</string>
     <string name="product_code_confirm">Add good by product code and store barcode?</string>

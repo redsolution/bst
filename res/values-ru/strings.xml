@@ -29,10 +29,10 @@
 
     <string name="my_company_title">Организация</string>
     <string name="warehouse_title">Склад</string>
-    <string name="supply_company_title">Контрагент закупок</string>
-    <string name="supply_contract_title">Контракт закупок</string>
-    <string name="demand_company_title">Контрагент продаж</string>
-    <string name="demand_contract_title">Контракт продаж</string>
+    <string name="supply_company_title">Контрагент для закупок</string>
+    <string name="supply_contract_title">Договор для закупок</string>
+    <string name="demand_company_title">Контрагент для продаж</string>
+    <string name="demand_contract_title">Договор для продаж</string>
     <string name="project_title">Проект</string>
     <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
 
@@ -56,7 +56,8 @@
     <string name="rest_text">%1$d + </string>
     <string name="more">Ещё</string>
     <string name="finish">Готово</string>
-    <string name="good_with_uom">%1$s (%2$s)</string>
+    <string name="good_with_extra">%1$s (%2$s)</string>
+    <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
 
     <string name="good_not_found">Товар не найден</string>
     <string name="product_code_confirm">Добавить товар по артикулу и запомнить этот штрих код?</string>

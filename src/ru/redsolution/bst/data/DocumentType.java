@@ -23,4 +23,11 @@ public enum DocumentType {
 	 */
 	demand;
 
+	/**
+	 * @return Использовать цены реализации.
+	 */
+	public boolean useSalePrice() {
+		return this == demand;
+	}
+
 }

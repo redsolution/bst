@@ -98,6 +98,8 @@ public class VerifyActivity extends PreferenceActivity implements
 			((NumberPicker) quantityView).setRange(1, 99999999);
 		getListView().addHeaderView(view, null, false);
 		addPreferencesFromResource(R.xml.verify);
+		findPreference(getString(R.string.name_title)).setLayoutResource(
+				R.layout.preference);
 
 		int quantity;
 		if (savedInstanceState != null) {

@@ -25,6 +25,7 @@
 
     <string name="wait">Please, wait &#8230;</string>
     <string name="auth_error">Authorization error</string>
+    <string name="server_error">Server error</string>
     <string name="connection_error">Connection error</string>
 
     <string name="my_company_title">My company</string>

@@ -5,6 +5,7 @@ import org.apache.http.auth.AuthenticationException;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
+import ru.redsolution.bst.data.InternalServerException;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
@@ -193,7 +194,10 @@ public class DocumentActivity extends PreferenceActivity implements
 		if (exception.getCause() instanceof AuthenticationException) {
 			showDialog(DIALOG_AUTH_ID);
 			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
-		} else
+		} else if (exception.getCause() instanceof InternalServerException)
+			Toast.makeText(this, R.string.server_error, Toast.LENGTH_LONG)
+					.show();
+		else
 			Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG)
 					.show();
 	}

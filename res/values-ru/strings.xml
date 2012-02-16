@@ -25,6 +25,7 @@
 
     <string name="wait">Пожалуйста, подождите &#8230;</string>
     <string name="auth_error">Ошибка авторизации</string>
+    <string name="server_error">Ошибка сервера</string>
     <string name="connection_error">Ошибка подключения</string>
 
     <string name="my_company_title">Организация</string>

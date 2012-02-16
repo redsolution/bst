@@ -151,8 +151,14 @@ public class BST extends Application {
 					}
 				}
 			}
-			throw new RuntimeException(new AuthenticationException(response
-					.getStatusLine().toString()));
+			if (response.getStatusLine().getStatusCode() == 401)
+				throw new RuntimeException(new AuthenticationException(response
+						.getStatusLine().toString()));
+			else if (response.getStatusLine().getStatusCode() == 500)
+				throw new RuntimeException(new InternalServerException(response
+						.getStatusLine().toString()));
+			else
+				throw new RuntimeException(response.getStatusLine().toString());
 		}
 		return response;
 	}

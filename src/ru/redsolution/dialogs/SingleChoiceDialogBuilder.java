@@ -14,13 +14,15 @@ import android.content.DialogInterface;
  */
 public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
 		DialogInterface.OnClickListener {
+	private final AcceptDialogListener listener;
 	private final List<T> items;
 	private Integer selected;
 
 	public SingleChoiceDialogBuilder(Activity activity, int dialogId,
-			DialogListener listener, List<T> items, List<String> labels,
+			AcceptDialogListener listener, List<T> items, List<String> labels,
 			Integer selected) {
 		super(activity, dialogId);
+		this.listener = listener;
 		this.items = items;
 		this.selected = selected;
 		String[] array = labels.toArray(new String[labels.size()]);
@@ -31,6 +33,7 @@ public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
 	public void onClick(DialogInterface dialog, int id) {
 		selected = id;
 		dialog.dismiss();
+		listener.onAccept(this);
 	}
 
 	/**

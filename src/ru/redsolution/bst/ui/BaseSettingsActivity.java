@@ -9,16 +9,16 @@ import ru.redsolution.bst.data.table.NamedTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.bst.ui.dialog.CursorEmptyChoiceDialogBuilder;
+import ru.redsolution.dialogs.AcceptDialogListener;
 import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
 public abstract class BaseSettingsActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, DialogListener {
+		OnPreferenceClickListener, AcceptDialogListener {
 
 	public static final String EXTRA_TYPE = "ru.redsolution.bst.ui.BaseSettingsActivity.EXTRA_TYPE";
 
@@ -151,14 +151,6 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 			break;
 		}
 		updateView();
-	}
-
-	@Override
-	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	/**

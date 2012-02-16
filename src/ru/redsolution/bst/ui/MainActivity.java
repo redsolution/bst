@@ -6,10 +6,10 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.OperationListener;
-import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
+import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -28,7 +28,8 @@ import android.widget.Toast;
  * 
  */
 public class MainActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, OperationListener, DialogListener {
+		OnPreferenceClickListener, OperationListener,
+		AcceptAndDeclineDialogListener {
 
 	private static final String SAVED_INTENT = "ru.redsolution.bst.ui.MainActivity.SAVED_INTENT";
 
@@ -153,7 +154,7 @@ public class MainActivity extends PreferenceActivity implements
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_AUTH_ID:
-			return new AuthorizationDialog(this, id, this).create();
+			return new AuthorizationDialogBuilder(this, id, this).create();
 		case DIALOG_ANOTHER_CONFIRM_ID:
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.another_title)
@@ -180,10 +181,6 @@ public class MainActivity extends PreferenceActivity implements
 
 	@Override
 	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

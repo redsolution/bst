@@ -22,9 +22,9 @@ import ru.redsolution.bst.data.table.ParentableTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import ru.redsolution.dialogs.NotificationDialogBuilder;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,13 +45,15 @@ import com.google.zxing.integration.android.IntentResult;
 import com.quietlycoding.android.picker.NumberPicker;
 
 public class VerifyActivity extends PreferenceActivity implements
-		OnClickListener, DialogListener {
+		OnClickListener, AcceptAndDeclineDialogListener {
 
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
 	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
 	private static final String SAVED_PRODUCT_CODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_PRODUCT_CODE";
 	private static final String SAVED_QUANTITY = "ru.redsolution.bst.ui.VerifyActivity.SAVED_QUANTITY";
-	private static final String SAVED_DIALOG_DISPLAYED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_DIALOG_DISPLAYED";
+	private static final String SAVED_INSTALL_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_INSTALL_NOTIFIED";
+	private static final String SAVED_NOT_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_NOT_FOUND_NOTIFIED";
+	private static final String SAVED_MULTIPLE_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_MULTIPLE_FOUND_NOTIFIED";
 
 	private static final String ZXING_EAN_8 = "EAN_8";
 	private static final String ZXING_EAN_13 = "EAN_13";
@@ -87,8 +89,21 @@ public class VerifyActivity extends PreferenceActivity implements
 	private String productCode;
 
 	private TextView productCodeView;
-	private boolean dialogDisplayed;
-	private boolean visible;
+
+	/**
+	 * Пользователь извещен о необходимости установить сканер.
+	 */
+	private boolean installNotified;
+
+	/**
+	 * Пользователь извещен о том, что товар не найден.
+	 */
+	private boolean notFoundNotified;
+
+	/**
+	 * Пользователь извещен о том, что найдено более одной единицы товара.
+	 */
+	private boolean multipleFoundNotified;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,17 +127,22 @@ public class VerifyActivity extends PreferenceActivity implements
 			type = savedInstanceState.getString(SAVED_TYPE);
 			barcode = savedInstanceState.getString(SAVED_BARCODE);
 			productCode = savedInstanceState.getString(SAVED_PRODUCT_CODE);
-			dialogDisplayed = savedInstanceState.getBoolean(
-					SAVED_DIALOG_DISPLAYED, false);
+			installNotified = savedInstanceState.getBoolean(
+					SAVED_INSTALL_NOTIFIED, false);
+			notFoundNotified = savedInstanceState.getBoolean(
+					SAVED_NOT_FOUND_NOTIFIED, false);
+			multipleFoundNotified = savedInstanceState.getBoolean(
+					SAVED_MULTIPLE_FOUND_NOTIFIED, false);
 		} else {
 			quantity = 1;
 			type = null;
 			barcode = null;
 			productCode = null;
-			dialogDisplayed = false;
+			installNotified = false;
+			notFoundNotified = false;
+			multipleFoundNotified = false;
 		}
 		setQuantity(quantity);
-		visible = false;
 	}
 
 	private void setQuantity(int value) {
@@ -144,34 +164,19 @@ public class VerifyActivity extends PreferenceActivity implements
 		AlertDialog alertDialog = integrator.initiateScan(SUPPORTED_CODE_TYPES);
 		if (alertDialog != null) {
 			alertDialog.dismiss();
-			checkAndShowDialog(DIALOG_INSTALL_ID);
-		}
-	}
-
-	/**
-	 * Открывает диалог, если он не был пересоздан после перезапуска активити
-	 * (смены ориентации).
-	 */
-	private void checkAndShowDialog(int id) {
-		if (!dialogDisplayed) {
-			dialogDisplayed = true;
-			showDialog(id);
+			if (!installNotified) {
+				installNotified = true;
+				showDialog(DIALOG_INSTALL_ID);
+			}
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		visible = true;
 		updateView();
 		if (barcode == null && !isFinishing())
 			scan();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		visible = false;
 	}
 
 	@Override
@@ -181,7 +186,10 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
 		outState.putString(SAVED_PRODUCT_CODE, productCode);
-		outState.putBoolean(SAVED_DIALOG_DISPLAYED, dialogDisplayed);
+		outState.putBoolean(SAVED_INSTALL_NOTIFIED, installNotified);
+		outState.putBoolean(SAVED_NOT_FOUND_NOTIFIED, notFoundNotified);
+		outState.putBoolean(SAVED_MULTIPLE_FOUND_NOTIFIED,
+				multipleFoundNotified);
 	}
 
 	@Override
@@ -204,29 +212,34 @@ public class VerifyActivity extends PreferenceActivity implements
 		case DIALOG_INSTALL_ID:
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.install_title)
-					.setMessage(R.string.install_message).create();
+					.setMessage(R.string.install_message).setCancelable(false)
+					.create();
 		case DIALOG_NO_MARKET_ID:
-			return new NotificationDialogBuilder(this, id, this).setMessage(
-					R.string.install_fail).create();
+			return new NotificationDialogBuilder(this, id, this)
+					.setMessage(R.string.install_fail).setCancelable(false)
+					.create();
 		case DIALOG_SEARCH_BY_REQUEST_ID:
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.good_not_found)
-					.setMessage(R.string.product_code_confirm).create();
+					.setMessage(R.string.product_code_confirm)
+					.setCancelable(false).create();
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
 			View view = getLayoutInflater().inflate(R.layout.product_code,
 					null, false);
 			productCodeView = (TextView) view.findViewById(R.id.value);
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.product_code_title).setView(view)
-					.create();
+					.setCancelable(false).create();
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 			return new NotificationDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
-					.setMessage(R.string.object_does_not_exist).create();
+					.setMessage(R.string.object_does_not_exist)
+					.setCancelable(false).create();
 		case DIALOG_MULTIPLE_OBJECTS_RETURNED_ID:
 			return new NotificationDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
-					.setMessage(R.string.multiple_objects_returned).create();
+					.setMessage(R.string.multiple_objects_returned)
+					.setCancelable(false).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -253,76 +266,63 @@ public class VerifyActivity extends PreferenceActivity implements
 				startActivity(intent);
 			} catch (ActivityNotFoundException anfe) {
 				showDialog(DIALOG_NO_MARKET_ID);
+				break;
 			}
-			return;
+			installNotified = false;
+			break;
 		case DIALOG_NO_MARKET_ID:
 			finish();
 			break;
 		case DIALOG_SEARCH_BY_REQUEST_ID:
 			showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
-			return;
+			break;
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
 			if ("".equals(productCodeView.getText())) {
 				showDialog(DIALOG_PRODUCT_CODE_REQUEST_ID);
-				return;
+				break;
 			}
 			String value = productCodeView.getText().toString();
 			try {
 				GoodTable.getInstance().getByProductCode(value);
 			} catch (ObjectDoesNotExistException e) {
 				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
-				return;
+				break;
 			} catch (MultipleObjectsReturnedException e) {
 				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
-				return;
+				break;
 			}
 			productCode = value;
+			notFoundNotified = false;
 			updateView();
 			break;
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
+			notFoundNotified = false;
+			scan();
+			break;
 		case DIALOG_MULTIPLE_OBJECTS_RETURNED_ID:
+			multipleFoundNotified = false;
 			scan();
 			break;
 		default:
 			break;
 		}
-		dialogDisplayed = false;
 	}
 
 	@Override
 	public void onDecline(DialogBuilder dialogBuilder) {
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_SEARCH_BY_REQUEST_ID:
-			if (visible)
-				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
-			return;
+			showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
+			break;
 		case DIALOG_PRODUCT_CODE_REQUEST_ID:
-			if (visible)
-				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
-			return;
+			showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			break;
 		case DIALOG_INSTALL_ID:
 			finish();
 			break;
 		default:
 			break;
 		}
-		dialogDisplayed = false;
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
-		switch (dialogBuilder.getDialogId()) {
-		case DIALOG_SEARCH_BY_REQUEST_ID:
-			if (visible)
-				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
-			return;
-		case DIALOG_INSTALL_ID:
-			finish();
-			break;
-		default:
-			break;
-		}
-		dialogDisplayed = false;
 	}
 
 	@Override
@@ -351,7 +351,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		} catch (BaseDatabaseException e) {
 		}
 		if (values == null)
-			return;
+			throw new IllegalStateException();
 		if (productCode != null)
 			SelectedProductCodeForBarcodeTable.getInstance().add(productCode,
 					type, barcode);
@@ -360,9 +360,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	}
 
 	/**
-	 * Возвращает количество ранее добавленных товаров.
-	 * 
-	 * @return
+	 * @return Количество ранее добавленных товаров.
 	 */
 	private int getRest() {
 		ContentValues values = null;
@@ -417,9 +415,15 @@ public class VerifyActivity extends PreferenceActivity implements
 		try {
 			values = getGood();
 		} catch (ObjectDoesNotExistException e) {
-			checkAndShowDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			if (!notFoundNotified) {
+				notFoundNotified = true;
+				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			}
 		} catch (MultipleObjectsReturnedException e) {
-			checkAndShowDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
+			if (!multipleFoundNotified) {
+				multipleFoundNotified = true;
+				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
+			}
 		}
 		if (values == null) {
 			findPreference(getString(R.string.name_title)).setTitle("");

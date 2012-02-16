@@ -4,48 +4,29 @@ import android.app.Activity;
 import android.content.DialogInterface;
 
 /**
- * Yes / No dailog builder.
+ * Yes / No dialog builder.
  * 
  * @author alexander.ivanov
  * 
  */
 public class ConfirmDialogBuilder extends DialogBuilder implements
 		DialogInterface.OnClickListener {
-	private final DialogListener listener;
-	private State state;
-
-	private static enum State {
-		/**
-		 * Dialog was canceled.
-		 */
-		canceled,
-
-		/**
-		 * Request was accepted.
-		 */
-		accepted,
-
-		/**
-		 * Request was declined.
-		 */
-		declined,
-	}
+	private final AcceptAndDeclineDialogListener listener;
 
 	/**
 	 * Yes / No dialog builder.
 	 * 
 	 * @param activity
-	 *            parent activity.
-	 * @param listener
-	 *            action listener.
+	 *            Parent activity.
 	 * @param dialogId
-	 *            ID of the dialog.
+	 *            Dialog ID to be removed.
+	 * @param listener
+	 *            Action listener.
 	 */
 	public ConfirmDialogBuilder(Activity activity, int dialogId,
-			DialogListener listener) {
+			AcceptAndDeclineDialogListener listener) {
 		super(activity, dialogId);
 		this.listener = listener;
-		state = State.canceled;
 		setPositiveButton(activity.getString(android.R.string.yes), this);
 		setNegativeButton(activity.getString(android.R.string.no), this);
 	}
@@ -54,25 +35,14 @@ public class ConfirmDialogBuilder extends DialogBuilder implements
 	public void onClick(DialogInterface dialog, int id) {
 		switch (id) {
 		case DialogInterface.BUTTON_POSITIVE:
-			state = State.accepted;
 			dialog.dismiss();
+			listener.onAccept(this);
 			break;
 		case DialogInterface.BUTTON_NEGATIVE:
-			state = State.declined;
 			dialog.dismiss();
+			listener.onDecline(this);
 			break;
 		}
 	}
 
-	@Override
-	public void onDismiss(DialogInterface dialog) {
-		super.onDismiss(dialog);
-		if (state == State.accepted) {
-			listener.onAccept(this);
-		} else if (state == State.declined) {
-			listener.onDecline(this);
-		} else { // State.canceled
-			listener.onCancel(this);
-		}
-	}
 }

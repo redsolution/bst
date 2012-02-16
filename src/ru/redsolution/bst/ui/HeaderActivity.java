@@ -7,6 +7,7 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.NotificationDialogBuilder;
@@ -18,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class HeaderActivity extends BaseSettingsActivity implements
-		OnClickListener {
+		OnClickListener, AcceptAndDeclineDialogListener {
 
 	public static final String ACTION_UPDATE = "ru.redsolution.bst.ui.HeaderActivity.ACTION_UPDATE";
 
@@ -28,6 +29,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	private static final String SAVED_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_COMPANY";
 	private static final String SAVED_CONTRACT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_CONTRACT";
 	private static final String SAVED_PROJECT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_PROJECT";
+	private static final String SAVED_DEFAULTS_NOTIFIED = "ru.redsolution.bst.ui.HeaderActivity.SAVED_DEFAULTS_NOTIFIED";
 
 	private static final int DIALOG_DEFAULTS_ID = 0x10;
 	private static final int DIALOG_NOT_COMPLITED_ID = 0x11;
@@ -43,6 +45,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	private String company;
 	private String contract;
 	private String project;
+
+	private boolean defaultsNotified;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			company = savedInstanceState.getString(SAVED_COMPANY);
 			contract = savedInstanceState.getString(SAVED_CONTRACT);
 			project = savedInstanceState.getString(SAVED_PROJECT);
+			defaultsNotified = savedInstanceState.getBoolean(
+					SAVED_DEFAULTS_NOTIFIED, false);
 		} else {
 			initialized = false;
 			myCompany = BST.getInstance().getSelectedMyCompany();
@@ -83,6 +89,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			company = BST.getInstance().getSelectedCompany();
 			contract = BST.getInstance().getSelectedContract();
 			project = BST.getInstance().getSelectedProject();
+			defaultsNotified = false;
 		}
 		if (ACTION_UPDATE.equals(getIntent().getAction())) {
 			createButton.setText(android.R.string.ok);
@@ -121,8 +128,10 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			project = BST.getInstance().getDefaultProject();
 		}
 		super.onResume();
-		if (!isComplited())
+		if (!isComplited() && !defaultsNotified) {
+			defaultsNotified = true;
 			showDialog(DIALOG_DEFAULTS_ID);
+		}
 	}
 
 	@Override
@@ -134,6 +143,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		outState.putString(SAVED_COMPANY, company);
 		outState.putString(SAVED_CONTRACT, contract);
 		outState.putString(SAVED_PROJECT, project);
+		outState.putBoolean(SAVED_DEFAULTS_NOTIFIED, defaultsNotified);
 	}
 
 	@Override
@@ -164,6 +174,10 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			super.onAccept(dialogBuilder);
 			break;
 		}
+	}
+
+	@Override
+	public void onDecline(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

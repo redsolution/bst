@@ -3,7 +3,9 @@ package ru.redsolution.bst.ui;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
-import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
+import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
+import ru.redsolution.dialogs.DialogBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -14,7 +16,8 @@ import android.preference.Preference;
  * @author alexander.ivanov
  * 
  */
-public class SettingsActivity extends BaseSettingsActivity {
+public class SettingsActivity extends BaseSettingsActivity implements
+		AcceptAndDeclineDialogListener {
 
 	private static final int DIALOG_AUTH_ID = 0x10;
 	private Preference loginPreference;
@@ -56,10 +59,14 @@ public class SettingsActivity extends BaseSettingsActivity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_AUTH_ID:
-			return new AuthorizationDialog(this, id, this).create();
+			return new AuthorizationDialogBuilder(this, id, this).create();
 		default:
 			return super.onCreateDialog(id);
 		}
+	}
+
+	@Override
+	public void onDecline(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

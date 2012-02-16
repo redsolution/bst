@@ -8,10 +8,10 @@ import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.InternalServerException;
 import ru.redsolution.bst.data.OperationListener;
 import ru.redsolution.bst.data.table.SelectedTable;
-import ru.redsolution.bst.ui.dialog.AuthorizationDialog;
+import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -30,7 +30,8 @@ import android.widget.Toast;
  * 
  */
 public class DocumentActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, DialogListener, OperationListener {
+		OnPreferenceClickListener, AcceptAndDeclineDialogListener,
+		OperationListener {
 
 	public static final String SAVED_SCANNED = "ru.redsolution.bst.ui.DocumentActivity.SAVED_SCANNED";
 
@@ -113,22 +114,20 @@ public class DocumentActivity extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onPreferenceClick(Preference paramPreference) {
-		if (paramPreference.getKey().equals(getString(R.string.scan_action))) {
+	public boolean onPreferenceClick(Preference preference) {
+		if (preference.getKey().equals(getString(R.string.scan_action))) {
 			startActivity(new Intent(this, VerifyActivity.class));
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.list_action))) {
+		} else if (preference.getKey().equals(getString(R.string.list_action))) {
 			startActivity(new Intent(this, GoodsActivity.class));
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.header_action))) {
+		} else if (preference.getKey()
+				.equals(getString(R.string.header_action))) {
 			Intent intent = new Intent(this, HeaderActivity.class);
 			intent.setAction(HeaderActivity.ACTION_UPDATE);
 			startActivity(intent);
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.send_action))) {
+		} else if (preference.getKey().equals(getString(R.string.send_action))) {
 			BST.getInstance().sendData();
-		} else if (paramPreference.getKey().equals(
-				getString(R.string.cancel_action))) {
+		} else if (preference.getKey()
+				.equals(getString(R.string.cancel_action))) {
 			showDialog(DIALOG_CANCEL_ID);
 		}
 		return true;
@@ -141,7 +140,7 @@ public class DocumentActivity extends PreferenceActivity implements
 			return new ConfirmDialogBuilder(this, id, this).setMessage(
 					R.string.cancel_confirm).create();
 		case DIALOG_AUTH_ID:
-			return new AuthorizationDialog(this, id, this).create();
+			return new AuthorizationDialogBuilder(this, id, this).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -165,10 +164,6 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	@Override
 	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

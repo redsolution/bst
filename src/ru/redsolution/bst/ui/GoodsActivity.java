@@ -5,9 +5,9 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
@@ -24,7 +24,8 @@ import android.widget.TextView;
 
 import com.quietlycoding.android.picker.NumberPicker;
 
-public class GoodsActivity extends ListActivity implements DialogListener {
+public class GoodsActivity extends ListActivity implements
+		AcceptAndDeclineDialogListener {
 
 	private static final int CONTEXT_MENU_CHANGE_QANTITY_ID = 1;
 	private static final int CONTEXT_MENU_REMOVE_ID = 2;
@@ -153,10 +154,6 @@ public class GoodsActivity extends ListActivity implements DialogListener {
 
 	@Override
 	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
-	public void onCancel(DialogBuilder dialogBuilder) {
 	}
 
 	private void updateView() {

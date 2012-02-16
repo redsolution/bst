@@ -2,9 +2,9 @@ package ru.redsolution.bst.ui.dialog;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
-import ru.redsolution.dialogs.DialogListener;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
@@ -17,31 +17,26 @@ import android.widget.EditText;
  * @author alexander.ivanov
  * 
  */
-public class AuthorizationDialog extends ConfirmDialogBuilder {
+public class AuthorizationDialogBuilder extends ConfirmDialogBuilder {
 
 	private final EditText loginView;
 	private final EditText passwordView;
 
-	public AuthorizationDialog(Activity activity, int dialogId,
-			final DialogListener listener) {
-		super(activity, dialogId, new DialogListener() {
+	public AuthorizationDialogBuilder(Activity activity, int dialogId,
+			final AcceptAndDeclineDialogListener listener) {
+		super(activity, dialogId, new AcceptAndDeclineDialogListener() {
 
 			@Override
 			public void onAccept(DialogBuilder dialogBuilder) {
 				BST.getInstance().setLoginAndPassword(
-						((AuthorizationDialog) dialogBuilder).getLogin(),
-						((AuthorizationDialog) dialogBuilder).getPassword());
+						((AuthorizationDialogBuilder) dialogBuilder).getLogin(),
+						((AuthorizationDialogBuilder) dialogBuilder).getPassword());
 				listener.onAccept(dialogBuilder);
 			}
 
 			@Override
 			public void onDecline(DialogBuilder dialogBuilder) {
 				listener.onDecline(dialogBuilder);
-			}
-
-			@Override
-			public void onCancel(DialogBuilder dialogBuilder) {
-				listener.onCancel(dialogBuilder);
 			}
 
 		});
@@ -53,6 +48,7 @@ public class AuthorizationDialog extends ConfirmDialogBuilder {
 		passwordView.setText(BST.getInstance().getPassword());
 		setView(dialogLayout);
 		setTitle(R.string.auth_title);
+		setCancelable(false);
 	}
 
 	public String getLogin() {

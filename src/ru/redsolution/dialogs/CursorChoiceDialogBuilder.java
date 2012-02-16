@@ -13,10 +13,9 @@ import android.provider.BaseColumns;
  */
 public class CursorChoiceDialogBuilder extends DialogBuilder implements
 		DialogInterface.OnClickListener {
-	private final DialogListener listener;
+	protected final AcceptDialogListener listener;
 	protected final Cursor cursor;
 	protected String checkedId;
-	protected boolean selected;
 
 	/**
 	 * @param activity
@@ -27,12 +26,11 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 	 * @param labelColumn
 	 */
 	public CursorChoiceDialogBuilder(Activity activity, int dialogId,
-			DialogListener listener, Cursor cursor, String checkedId,
+			AcceptDialogListener listener, Cursor cursor, String checkedId,
 			String labelColumn) {
 		super(activity, dialogId);
 		this.listener = listener;
 		this.cursor = cursor;
-		this.selected = false;
 		this.checkedId = null;
 		int checkedItem = -1;
 		if (cursor.moveToFirst()) {
@@ -51,17 +49,6 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 	}
 
 	@Override
-	public void onDismiss(DialogInterface dialog) {
-		super.onDismiss(dialog);
-		if (selected) {
-			listener.onAccept(this);
-		} else {
-			listener.onCancel(this);
-		}
-		cursor.close();
-	}
-
-	@Override
 	public void onClick(DialogInterface dialog, int id) {
 		if (cursor.moveToPosition(id)) {
 			checkedId = cursor
@@ -69,8 +56,8 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 		} else {
 			throw new IllegalStateException();
 		}
-		selected = true;
 		dialog.dismiss();
+		listener.onAccept(this);
 	}
 
 	/**

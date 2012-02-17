@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 
 public class ChooseActivity extends ListActivity implements OnItemClickListener {
@@ -19,11 +20,21 @@ public class ChooseActivity extends ListActivity implements OnItemClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose);
-		setListAdapter(new SimpleCursorAdapter(this,
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_list_item_2, GoodTable.getInstance()
 						.list(), new String[] { GoodTable.Fields.NAME,
 						GoodTable.Fields.PRODUCT_CODE }, new int[] {
-						android.R.id.text1, android.R.id.text2 }));
+						android.R.id.text1, android.R.id.text2 });
+		adapter.setFilterQueryProvider(new FilterQueryProvider() {
+			@Override
+			public Cursor runQuery(CharSequence constraint) {
+				Cursor cursor = GoodTable.getInstance().filterByText(
+						constraint.toString());
+				startManagingCursor(cursor);
+				return cursor;
+			}
+		});
+		setListAdapter(adapter);
 		getListView().setOnItemClickListener(this);
 	}
 

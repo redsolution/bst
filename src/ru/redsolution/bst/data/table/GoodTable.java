@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 /**
  * Список складов.
@@ -19,6 +20,7 @@ public class GoodTable extends NamedTable {
 		public static final String GOOD_FOLDER = "good_folder";
 		public static final String PRODUCT_CODE = "product_code";
 		public static final String CODE = "code";
+		public static final String LOWER_CASED_NAME = "lower_cased_name";
 	}
 
 	private static final String NAME = "good";
@@ -51,6 +53,7 @@ public class GoodTable extends NamedTable {
 		collection.add(Fields.GOOD_FOLDER);
 		collection.add(Fields.PRODUCT_CODE);
 		collection.add(Fields.CODE);
+		collection.add(Fields.LOWER_CASED_NAME);
 		return collection;
 	}
 
@@ -92,7 +95,19 @@ public class GoodTable extends NamedTable {
 		values.put(Fields.GOOD_FOLDER, folder);
 		values.put(Fields.PRODUCT_CODE, productCode);
 		values.put(Fields.CODE, code);
+		values.put(Fields.LOWER_CASED_NAME, name.toLowerCase());
 		add(values);
+	}
+
+	/**
+	 * @param text
+	 * @return Товары, содержащие текст в наименовании или артикуле.
+	 */
+	public Cursor filterByText(String text) {
+		text = "%" + text + "%";
+		return filter(Fields.PRODUCT_CODE + " LIKE ? OR "
+				+ Fields.LOWER_CASED_NAME + " LIKE ?", new String[] { text,
+				text, }, Fields.NAME);
 	}
 
 }

@@ -23,6 +23,8 @@
     <string name="login_hint">имя@организация</string>
     <string name="password_title">Пароль</string>
 
+    <string name="incorrect_login">МойСклад не поддерживает не ASCII символы в именах пользователей. Пожалуйста, используйте ваш email.</string>
+
     <string name="wait">Пожалуйста, подождите &#8230;</string>
     <string name="auth_error">Ошибка авторизации</string>
     <string name="server_error">Ошибка сервера</string>

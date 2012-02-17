@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 /**
  * Таблица с именен объекта и его идентификатором.
@@ -21,6 +22,11 @@ public abstract class NamedTable extends BaseTable {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.NAME);
 		return collection;
+	}
+
+	@Override
+	public Cursor list() {
+		return filter(null, null, Fields.NAME);
 	}
 
 	/**

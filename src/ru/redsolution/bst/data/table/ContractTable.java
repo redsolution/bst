@@ -63,7 +63,7 @@ public class ContractTable extends NamedTable {
 	public Cursor list(String company, String myCompany) {
 		return filter(
 				Fields.COMPANY + " = ? AND " + Fields.MY_COMPANY + " = ?",
-				new String[] { company, myCompany });
+				new String[] { company, myCompany }, null);
 	}
 
 	/**

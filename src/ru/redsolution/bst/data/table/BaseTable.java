@@ -73,16 +73,18 @@ public abstract class BaseTable implements DatabaseTable {
 	/**
 	 * @param selection
 	 * @param selectionArgs
+	 * @param orderBy
 	 * @return Фильтрованный курсор.
 	 */
-	protected Cursor filter(String selection, String[] selectionArgs) {
+	protected Cursor filter(String selection, String[] selectionArgs,
+			String orderBy) {
 		String[] projection = new String[] {};
 		projection = getFields().toArray(projection);
 		return DatabaseHelper
 				.getInstance()
 				.getReadableDatabase()
 				.query(getTableName(), projection, selection, selectionArgs,
-						null, null, null);
+						null, null, orderBy);
 	}
 
 	/**
@@ -95,7 +97,7 @@ public abstract class BaseTable implements DatabaseTable {
 	protected ContentValues get(String selection, String[] selectionArgs)
 			throws ObjectDoesNotExistException,
 			MultipleObjectsReturnedException {
-		Cursor cursor = filter(selection, selectionArgs);
+		Cursor cursor = filter(selection, selectionArgs, null);
 		try {
 			if (cursor.getCount() > 1)
 				throw new MultipleObjectsReturnedException();
@@ -116,7 +118,7 @@ public abstract class BaseTable implements DatabaseTable {
 	 * @return Список всех объетов.
 	 */
 	public Cursor list() {
-		return filter(null, null);
+		return filter(null, null, null);
 	}
 
 	/**

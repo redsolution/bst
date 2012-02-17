@@ -4,7 +4,6 @@ import ru.redsolution.bst.R;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.EditText;
 
@@ -29,13 +28,6 @@ public class ValueDialogBuilder extends ConfirmDialogBuilder {
 
 	public String getValue() {
 		return valueView.getText().toString();
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int id) {
-		if (id == DialogInterface.BUTTON_POSITIVE && "".equals(getValue()))
-			return;
-		super.onClick(dialog, id);
 	}
 
 }

@@ -25,6 +25,14 @@ public abstract class NamedTable extends BaseTable {
 	}
 
 	@Override
+	public String getFieldType(String name) {
+		String type = super.getFieldType(name);
+		if (Fields.NAME.equals(name))
+			type += " COLLATE UNICODE";
+		return type;
+	}
+
+	@Override
 	public Cursor list() {
 		return filter(null, null, Fields.NAME);
 	}

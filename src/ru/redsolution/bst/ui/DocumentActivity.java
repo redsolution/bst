@@ -7,7 +7,7 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.InternalServerException;
 import ru.redsolution.bst.data.OperationListener;
-import ru.redsolution.bst.data.table.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -211,8 +211,8 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	private void updateView() {
 		findPreference(getString(R.string.list_action)).setSummary(
-				String.format(getString(R.string.list_summary), SelectedTable
-						.getInstance().getGoodsCount(), SelectedTable
+				String.format(getString(R.string.list_summary), SelectedGoodTable
+						.getInstance().getGoodsCount(), SelectedGoodTable
 						.getInstance().getTotalQuantity()));
 	}
 }

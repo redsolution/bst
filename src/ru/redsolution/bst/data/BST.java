@@ -39,8 +39,8 @@ import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.ProjectTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
-import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import android.app.Application;
@@ -108,7 +108,7 @@ public class BST extends Application {
 		WarehouseTable.getInstance();
 		ProjectTable.getInstance();
 		ContractTable.getInstance();
-		SelectedTable.getInstance();
+		SelectedGoodTable.getInstance();
 		SelectedProductCodeForBarcodeTable.getInstance();
 	}
 
@@ -339,7 +339,7 @@ public class BST extends Application {
 			setValue(R.string.document_type, "");
 		else
 			setValue(R.string.document_type, documentType.name());
-		SelectedTable.getInstance().clear();
+		SelectedGoodTable.getInstance().clear();
 		SelectedProductCodeForBarcodeTable.getInstance().clear();
 	}
 

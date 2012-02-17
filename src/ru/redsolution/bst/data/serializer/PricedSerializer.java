@@ -6,7 +6,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
-import ru.redsolution.bst.data.table.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -31,7 +31,7 @@ public abstract class PricedSerializer extends BaseSerializer {
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		super.renderItemBody(serializer, cursor);
 		String good = cursor.getString(cursor
-				.getColumnIndex(SelectedTable.Fields._ID));
+				.getColumnIndex(SelectedGoodTable.Fields._ID));
 		ContentValues values;
 		try {
 			values = GoodTable.getInstance().getById(good);

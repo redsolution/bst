@@ -19,8 +19,8 @@ import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MultipleObjectsReturnedException;
 import ru.redsolution.bst.data.table.ObjectDoesNotExistException;
 import ru.redsolution.bst.data.table.ParentableTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
-import ru.redsolution.bst.data.table.SelectedTable;
 import ru.redsolution.bst.data.table.UomTable;
 import ru.redsolution.bst.ui.dialog.ValueDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
@@ -392,7 +392,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (productCode != null)
 			SelectedProductCodeForBarcodeTable.getInstance().add(productCode,
 					type, barcode);
-		SelectedTable.getInstance().set(values.getAsString(Fields._ID),
+		SelectedGoodTable.getInstance().set(values.getAsString(Fields._ID),
 				getQuantity() + getRest());
 	}
 
@@ -408,7 +408,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (values == null)
 			return 0;
 		else
-			return SelectedTable.getInstance().getQuantity(
+			return SelectedGoodTable.getInstance().getQuantity(
 					values.getAsString(Fields._ID));
 	}
 

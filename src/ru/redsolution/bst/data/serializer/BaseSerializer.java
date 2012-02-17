@@ -8,7 +8,7 @@ import org.xmlpull.v1.XmlSerializer;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
-import ru.redsolution.bst.data.table.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import android.database.Cursor;
 import android.util.Xml;
 
@@ -141,7 +141,7 @@ public abstract class BaseSerializer {
 	 * @return Курсор с объектами.
 	 */
 	protected Cursor getCursor() {
-		return SelectedTable.getInstance().list();
+		return SelectedGoodTable.getInstance().list();
 	}
 
 	/**

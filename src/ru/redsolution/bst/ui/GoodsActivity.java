@@ -3,7 +3,7 @@ package ru.redsolution.bst.ui;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
-import ru.redsolution.bst.data.table.SelectedTable;
+import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.UomTable;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -41,14 +41,14 @@ public class GoodsActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goods);
 		setListAdapter(new ResourceCursorAdapter(this,
-				android.R.layout.simple_list_item_2, SelectedTable
+				android.R.layout.simple_list_item_2, SelectedGoodTable
 						.getInstance().list()) {
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
 				String id = cursor.getString(cursor
-						.getColumnIndex(SelectedTable.Fields._ID));
+						.getColumnIndex(SelectedGoodTable.Fields._ID));
 				int quantity = cursor.getInt(cursor
-						.getColumnIndex(SelectedTable.Fields.QUANTITY));
+						.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
 				ContentValues values;
 				try {
 					values = GoodTable.getInstance().getById(id);
@@ -83,7 +83,7 @@ public class GoodsActivity extends ListActivity implements
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		System.out.println(getListView().getItemAtPosition(info.position));
 		Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
-		id = cursor.getString(cursor.getColumnIndex(SelectedTable.Fields._ID));
+		id = cursor.getString(cursor.getColumnIndex(SelectedGoodTable.Fields._ID));
 		try {
 			menu.setHeaderTitle(GoodTable.getInstance().getName(id));
 		} catch (BaseDatabaseException e) {
@@ -117,9 +117,9 @@ public class GoodsActivity extends ListActivity implements
 			if (quantityView instanceof NumberPicker) {
 				((NumberPicker) quantityView).setRange(1, 99999999);
 				try {
-					((NumberPicker) quantityView).setCurrent(SelectedTable
+					((NumberPicker) quantityView).setCurrent(SelectedGoodTable
 							.getInstance().getById(this.id)
-							.getAsInteger(SelectedTable.Fields.QUANTITY));
+							.getAsInteger(SelectedGoodTable.Fields.QUANTITY));
 				} catch (BaseDatabaseException e) {
 				}
 			}
@@ -139,12 +139,12 @@ public class GoodsActivity extends ListActivity implements
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_CHANGE_QANTITY_ID:
 			if (quantityView instanceof NumberPicker) {
-				SelectedTable.getInstance().set(id,
+				SelectedGoodTable.getInstance().set(id,
 						((NumberPicker) quantityView).getCurrent());
 			}
 			break;
 		case DIALOG_REMOVE_ID:
-			SelectedTable.getInstance().set(id, 0);
+			SelectedGoodTable.getInstance().set(id, 0);
 			break;
 		default:
 			break;
@@ -157,7 +157,7 @@ public class GoodsActivity extends ListActivity implements
 	}
 
 	private void updateView() {
-		((ResourceCursorAdapter) getListAdapter()).changeCursor(SelectedTable
+		((ResourceCursorAdapter) getListAdapter()).changeCursor(SelectedGoodTable
 				.getInstance().list());
 	}
 

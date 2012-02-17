@@ -12,25 +12,25 @@ import android.database.Cursor;
  * @author alexander.ivanov
  * 
  */
-public class SelectedTable extends BaseTable {
+public class SelectedGoodTable extends BaseTable {
 	public static interface Fields extends BaseTable.Fields {
 		public static final String QUANTITY = "quantity";
 	}
 
-	private static final String NAME = "selected";
+	private static final String NAME = "selected_good";
 
-	private final static SelectedTable instance;
+	private final static SelectedGoodTable instance;
 
 	static {
-		instance = new SelectedTable();
+		instance = new SelectedGoodTable();
 		DatabaseHelper.getInstance().addTable(instance);
 	}
 
-	public static SelectedTable getInstance() {
+	public static SelectedGoodTable getInstance() {
 		return instance;
 	}
 
-	private SelectedTable() {
+	private SelectedGoodTable() {
 	}
 
 	@Override

@@ -28,9 +28,9 @@ import ru.redsolution.bst.ui.dialog.CancelableDialogWrapper;
 import ru.redsolution.bst.ui.dialog.ValueDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
-import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import ru.redsolution.dialogs.DialogBuilder;
 import ru.redsolution.dialogs.NotificationDialogBuilder;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -53,6 +53,8 @@ public class VerifyActivity extends PreferenceActivity implements
 		OnClickListener, AcceptAndDeclineDialogListener {
 
 	public static final String ACTION_MANUAL_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.ACTION_MANUAL_BARCODE";
+
+	private static final int CHOOSE_REQUEST_CODE = 0x10;
 
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
 	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
@@ -93,7 +95,6 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final int DIALOG_MULTIPLE_OBJECTS_RETURNED_ID = 4;
 	private static final int DIALOG_SEARCH_BY_REQUEST_ID = 5;
 	private static final int DIALOG_SEARCH_BY_PRODUCT_CODE_ID = 6;
-	private static final int DIALOG_SEARCH_BY_NAME_ID = 7;
 	private static final int DIALOG_MANUAL_BARCODE_ID = 0x10;
 
 	private static final String RE_EAN_8 = "^\\d{8}$";
@@ -239,6 +240,16 @@ public class VerifyActivity extends PreferenceActivity implements
 			setQuantity(1);
 			if (barcode == null)
 				finish();
+		} else if (requestCode == CHOOSE_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				productCode = null;
+				productId = intent
+						.getStringExtra(ChooseActivity.EXTRA_PRODUCT_ID);
+				notFoundNotified = false;
+				updateView();
+			} else {
+				showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
+			}
 		}
 	}
 
@@ -266,13 +277,6 @@ public class VerifyActivity extends PreferenceActivity implements
 					.setTitle(R.string.search_by_product_code)
 					.setMessage(R.string.search_by_product_code_message)
 					.setCancelable(false).create();
-		case DIALOG_SEARCH_BY_NAME_ID:
-			return new CancelableDialogWrapper<CursorChoiceDialogBuilder>(
-					new CursorChoiceDialogBuilder(this, id, this, GoodTable
-							.getInstance().list(), null, GoodTable.Fields.NAME),
-					this, this).getDialodBuilder()
-					.setTitle(R.string.search_by_name).setCancelable(false)
-					.create();
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 			return new NotificationDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
@@ -327,7 +331,8 @@ public class VerifyActivity extends PreferenceActivity implements
 				showDialog(DIALOG_SEARCH_BY_PRODUCT_CODE_ID);
 				break;
 			case R.string.search_by_name:
-				showDialog(DIALOG_SEARCH_BY_NAME_ID);
+				startActivityForResult(new Intent(this, ChooseActivity.class),
+						CHOOSE_REQUEST_CODE);
 				break;
 			default:
 				throw new IllegalStateException();
@@ -350,13 +355,6 @@ public class VerifyActivity extends PreferenceActivity implements
 			}
 			productCode = value;
 			productId = null;
-			notFoundNotified = false;
-			updateView();
-			break;
-		case DIALOG_SEARCH_BY_NAME_ID:
-			productCode = null;
-			productId = ((CursorChoiceDialogBuilder) dialogBuilder)
-					.getCheckedId();
 			notFoundNotified = false;
 			updateView();
 			break;
@@ -393,7 +391,6 @@ public class VerifyActivity extends PreferenceActivity implements
 			showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
 			break;
 		case DIALOG_SEARCH_BY_PRODUCT_CODE_ID:
-		case DIALOG_SEARCH_BY_NAME_ID:
 			showDialog(DIALOG_SEARCH_BY_REQUEST_ID);
 			break;
 		case DIALOG_MANUAL_BARCODE_ID:

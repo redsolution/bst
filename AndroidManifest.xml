@@ -41,5 +41,9 @@
             android:name=".ui.GoodsActivity"
             android:label="@string/list_action"
             />
+        <activity
+            android:name=".ui.ChooseActivity"
+            android:label="@string/search_by_name"
+            />
     </application>
 </manifest>

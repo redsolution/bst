@@ -61,6 +61,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final String SAVED_NOT_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_NOT_FOUND_NOTIFIED";
 	private static final String SAVED_MULTIPLE_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_MULTIPLE_FOUND_NOTIFIED";
 	private static final String SAVED_BARCODE_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE_NOTIFIED";
+	private static final String SAVED_SAVE_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_SAVE_BARCODE";
 
 	private static final String ZXING_EAN_8 = "EAN_8";
 	private static final String ZXING_EAN_13 = "EAN_13";
@@ -100,6 +101,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private String type;
 	private String barcode;
 	private String productId;
+	private boolean saveBarcode;
 
 	/**
 	 * Пользователь извещен о необходимости установить сканер.
@@ -151,6 +153,8 @@ public class VerifyActivity extends PreferenceActivity implements
 					SAVED_MULTIPLE_FOUND_NOTIFIED, false);
 			barcodeNotified = savedInstanceState.getBoolean(
 					SAVED_BARCODE_NOTIFIED, false);
+			saveBarcode = savedInstanceState.getBoolean(SAVED_SAVE_BARCODE,
+					false);
 		} else {
 			quantity = 1;
 			type = null;
@@ -160,6 +164,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			notFoundNotified = false;
 			multipleFoundNotified = false;
 			barcodeNotified = false;
+			saveBarcode = false;
 		}
 		setQuantity(quantity);
 	}
@@ -216,6 +221,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putBoolean(SAVED_MULTIPLE_FOUND_NOTIFIED,
 				multipleFoundNotified);
 		outState.putBoolean(SAVED_BARCODE_NOTIFIED, barcodeNotified);
+		outState.putBoolean(SAVED_SAVE_BARCODE, saveBarcode);
 	}
 
 	@Override
@@ -226,6 +232,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			barcode = scanResult.getContents();
 			type = CODE_TYPES.get(scanResult.getFormatName());
 			productId = null;
+			saveBarcode = false;
 			setQuantity(1);
 			if (barcode == null)
 				finish();
@@ -233,6 +240,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			if (resultCode == Activity.RESULT_OK) {
 				productId = intent
 						.getStringExtra(ChooseActivity.EXTRA_PRODUCT_ID);
+				saveBarcode = true;
 				notFoundNotified = false;
 				updateView();
 			} else {
@@ -322,6 +330,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			else
 				type = TYPE_CODE_128;
 			productId = null;
+			saveBarcode = false;
 			setQuantity(1);
 			updateView();
 			return;
@@ -368,16 +377,11 @@ public class VerifyActivity extends PreferenceActivity implements
 	 * Сохранить результат.
 	 */
 	private void save() {
-		ContentValues values = null;
-		try {
-			values = getGood();
-		} catch (BaseDatabaseException e) {
-		}
-		if (values == null)
+		if (productId == null)
 			throw new IllegalStateException();
-		if (productId != null)
+		if (saveBarcode)
 			NewGoodBarcodeTable.getInstance().add(productId, type, barcode);
-		SelectedGoodTable.getInstance().set(values.getAsString(Fields._ID),
+		SelectedGoodTable.getInstance().set(productId,
 				getQuantity() + getRest());
 	}
 
@@ -385,21 +389,14 @@ public class VerifyActivity extends PreferenceActivity implements
 	 * @return Количество ранее добавленных товаров.
 	 */
 	private int getRest() {
-		ContentValues values = null;
-		try {
-			values = getGood();
-		} catch (BaseDatabaseException e) {
-		}
-		if (values == null)
+		if (productId == null)
 			return 0;
 		else
-			return SelectedGoodTable.getInstance().getQuantity(
-					values.getAsString(Fields._ID));
+			return SelectedGoodTable.getInstance().getQuantity(productId);
 	}
 
 	/**
-	 * @return Товар по штрих коду либо <code>null</code> если штрих код не
-	 *         задан. При необходимости используется артикул продукта.
+	 * @return Выбранный товар либо <code>null</code>.
 	 * @throws MultipleObjectsReturnedException
 	 * @throws ObjectDoesNotExistException
 	 */
@@ -407,23 +404,21 @@ public class VerifyActivity extends PreferenceActivity implements
 			MultipleObjectsReturnedException {
 		if (barcode == null)
 			return null;
-		String id;
-		if (this.productId == null) {
+		if (productId == null) {
 			try {
-				id = GoodBarcodeTable.getInstance().getId(type, barcode);
+				productId = GoodBarcodeTable.getInstance().getId(type, barcode);
 			} catch (ObjectDoesNotExistException e) {
 				try {
-					id = NewGoodBarcodeTable.getInstance().getId(type, barcode);
+					productId = NewGoodBarcodeTable.getInstance().getId(type,
+							barcode);
 				} catch (BaseDatabaseException e1) {
 					throw e;
 				}
 			} catch (MultipleObjectsReturnedException e) {
 				throw e;
 			}
-		} else {
-			id = this.productId;
 		}
-		return GoodTable.getInstance().getById(id);
+		return GoodTable.getInstance().getById(productId);
 	}
 
 	private void updateView() {

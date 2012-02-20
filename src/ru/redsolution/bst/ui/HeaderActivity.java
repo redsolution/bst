@@ -5,7 +5,9 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.CompanyTable;
+import ru.redsolution.bst.data.table.ContractTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
+import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -115,6 +117,16 @@ public class HeaderActivity extends BaseSettingsActivity implements
 				CompanyTable.getInstance().getName(company);
 		} catch (BaseDatabaseException e) {
 			return false;
+		}
+		try {
+			ContractTable.getInstance().getById(contract);
+		} catch (BaseDatabaseException e) {
+			contract = "";
+		}
+		try {
+			ProjectTable.getInstance().getById(project);
+		} catch (BaseDatabaseException e) {
+			project = "";
 		}
 		return true;
 	}

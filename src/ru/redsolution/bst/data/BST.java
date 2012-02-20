@@ -34,6 +34,7 @@ import ru.redsolution.bst.data.serializer.SupplySerializer;
 import ru.redsolution.bst.data.table.CompanyFolderTable;
 import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.ContractTable;
+import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.DatabaseHelper;
 import ru.redsolution.bst.data.table.GoodBarcodeTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
@@ -111,6 +112,7 @@ public class BST extends Application {
 		ContractTable.getInstance();
 		SelectedGoodTable.getInstance();
 		NewGoodBarcodeTable.getInstance();
+		CustomGoodTable.getInstance();
 	}
 
 	public void setOperationListener(OperationListener operationListener) {
@@ -342,6 +344,7 @@ public class BST extends Application {
 			setValue(R.string.document_type, documentType.name());
 		SelectedGoodTable.getInstance().clear();
 		NewGoodBarcodeTable.getInstance().clear();
+		CustomGoodTable.getInstance().clear();
 	}
 
 	public String getSelectedMyCompany() {

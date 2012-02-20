@@ -3,6 +3,7 @@ package ru.redsolution.bst.ui;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.NamedTable;
@@ -18,26 +19,35 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-public class ChooseActivity extends ListActivity implements OnItemClickListener {
+public class ChooseActivity extends ListActivity implements
+		OnItemClickListener, OnClickListener {
 
 	private static final String SAVED_FOLDER = "ru.redsolution.bst.ui.ChooseActivity.SAVED_FOLDER";
 
 	/**
-	 * Поле в результате, содержащее ID выбранного продукта.
+	 * Поле результата, содержащее ID выбранного продукта.
 	 */
-	public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+	public static final String EXTRA_PRODUCT_ID = "ru.redsolution.bst.ui.ChooseActivity.PRODUCT_ID";
+
+	/**
+	 * Поле результата, содержащее истину, если был создан новый ТМЦ.
+	 */
+	public static final String EXTRA_IS_CUSTOM = "ru.redsolution.bst.ui.ChooseActivity.IS_CUSTOM";
 
 	private static final int OPTION_MENU_SHOW_FOLDERS_ID = 1;
 	private static final int OPTION_MENU_HIDE_FOLDERS_ID = 2;
 
+	private Button createButton;
 	private EditText searchView;
 
 	/**
@@ -139,15 +149,19 @@ public class ChooseActivity extends ListActivity implements OnItemClickListener 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				adapter.getFilter().filter(s);
+				updateButton();
 			}
 
 		});
+		createButton = (Button) findViewById(R.id.create);
+		createButton.setOnClickListener(this);
 		getListView().setOnItemClickListener(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		updateButton();
 		updateCursor();
 	}
 
@@ -216,6 +230,7 @@ public class ChooseActivity extends ListActivity implements OnItemClickListener 
 			String productId = cursor.getString(cursor
 					.getColumnIndex(GoodTable.Fields._ID));
 			intent.putExtra(EXTRA_PRODUCT_ID, productId);
+			intent.putExtra(EXTRA_IS_CUSTOM, false);
 			setResult(RESULT_OK, intent);
 			finish();
 			break;
@@ -244,6 +259,27 @@ public class ChooseActivity extends ListActivity implements OnItemClickListener 
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	private void updateButton() {
+		String name = searchView.getText().toString();
+		createButton.setEnabled(!"".equals(name));
+		createButton.setText(getString(R.string.create_good, name));
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.create:
+			Intent intent = new Intent();
+			long id = CustomGoodTable.getInstance().add(
+					searchView.getText().toString());
+			intent.putExtra(EXTRA_PRODUCT_ID, String.valueOf(id));
+			intent.putExtra(EXTRA_IS_CUSTOM, true);
+			setResult(RESULT_OK, intent);
+			finish();
+			break;
+		}
 	}
 
 }

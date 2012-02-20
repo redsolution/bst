@@ -9,11 +9,19 @@
         android:id="@+id/search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:hint="@string/search_hint"
         >
         <requestFocus />
     </EditText>
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/create_good"
+        android:ellipsize="end"
+        android:singleLine="true"
+        />
 
     <ListView
         android:id="@android:id/list"

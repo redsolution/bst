@@ -69,7 +69,7 @@
     <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Выбрать товар из списка и ассоциировать его со штрих кодом?</string>
 
     <string name="search_title">Поиск товаров</string>
-    <string name="search_hint">Введите наименование или артикул</string>
+    <string name="search_hint">Наименование или артикул</string>
     <string name="create_good">Создать новый товар %s</string>
     <string name="folder">Папка</string>
     <string name="show_folders">Отобразить папки</string>

@@ -156,9 +156,10 @@ public abstract class BaseTable implements DatabaseTable {
 	 * Добавить элемент.
 	 * 
 	 * @param values
+	 * @return
 	 */
-	protected void add(ContentValues values) {
-		DatabaseHelper.getInstance().getWritableDatabase()
+	protected long add(ContentValues values) {
+		return DatabaseHelper.getInstance().getWritableDatabase()
 				.insert(getTableName(), null, values);
 	}
 }

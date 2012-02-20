@@ -16,6 +16,7 @@ import android.provider.BaseColumns;
  */
 public abstract class BaseTable implements DatabaseTable {
 	public static interface Fields extends BaseColumns {
+		public static final String TABLE_NAME = "table_name";
 	}
 
 	/**
@@ -78,13 +79,32 @@ public abstract class BaseTable implements DatabaseTable {
 	 */
 	protected Cursor filter(String selection, String[] selectionArgs,
 			String orderBy) {
-		String[] projection = new String[] {};
-		projection = getFields().toArray(projection);
-		return DatabaseHelper
-				.getInstance()
-				.getReadableDatabase()
-				.query(getTableName(), projection, selection, selectionArgs,
-						null, null, orderBy);
+		StringBuilder query = new StringBuilder(120);
+		query.append("SELECT ");
+		boolean first = true;
+		for (String name : getFields()) {
+			if (first)
+				first = false;
+			else
+				query.append(", ");
+			query.append(name);
+		}
+		query.append(", '");
+		query.append(getTableName());
+		query.append("' AS ");
+		query.append(Fields.TABLE_NAME);
+		query.append(" FROM ");
+		query.append(getTableName());
+		if (selection != null && !"".equals(selection)) {
+			query.append(" WHERE ");
+			query.append(selection);
+		}
+		if (orderBy != null && !"".equals(orderBy)) {
+			query.append(" ORDER BY ");
+			query.append(orderBy);
+		}
+		return DatabaseHelper.getInstance().getReadableDatabase()
+				.rawQuery(query.toString(), selectionArgs);
 	}
 
 	/**

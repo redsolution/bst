@@ -161,9 +161,15 @@ public abstract class BaseSerializer {
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
-	protected abstract void renderItemAttrs(XmlSerializer serializer,
-			Cursor cursor) throws IllegalArgumentException,
-			IllegalStateException, IOException;
+	protected void renderItemAttrs(XmlSerializer serializer, Cursor cursor)
+			throws IllegalArgumentException, IllegalStateException, IOException {
+		String good = cursor.getString(cursor
+				.getColumnIndex(SelectedGoodTable.Fields._ID));
+		int quantity = cursor.getInt(cursor
+				.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
+		serializer.attribute("", "quantity", String.valueOf(quantity));
+		serializer.attribute("", "goodId", good);
+	}
 
 	/**
 	 * Задаёт контент для элемента.

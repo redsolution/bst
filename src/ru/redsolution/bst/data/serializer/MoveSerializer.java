@@ -5,14 +5,12 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
-import ru.redsolution.bst.data.table.SelectedGoodTable;
-import android.database.Cursor;
 
-public class InventorySerializer extends BaseSerializer {
+public class MoveSerializer extends BaseSerializer {
 
 	@Override
 	protected String getContainerName() {
-		return "inventory";
+		return "move";
 	}
 
 	@Override
@@ -20,28 +18,24 @@ public class InventorySerializer extends BaseSerializer {
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		String myCompany = BST.getInstance().getSelectedMyCompany();
 		String warehouse = BST.getInstance().getSelectedWarehouse();
+		String targetWarehouse = BST.getInstance().getSelectedTargetWarehouse();
+		String project = BST.getInstance().getSelectedProject();
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");
 		serializer.attribute("", "targetRequisiteId", myCompany);
 		serializer.attribute("", "sourceRequisiteId", myCompany);
 		serializer.attribute("", "sourceStoreId", warehouse);
+		serializer.attribute("", "targetStoreId", targetWarehouse);
 		serializer.attribute("", "sourceAgentId", myCompany);
 		serializer.attribute("", "targetAgentId", myCompany);
+		if (!"".equals(project))
+			serializer.attribute("", "projectId", project);
 	}
 
 	@Override
 	protected String getItemName() {
-		return "inventoryPosition";
-	}
-
-	@Override
-	protected void renderItemAttrs(XmlSerializer serializer, Cursor cursor)
-			throws IllegalArgumentException, IllegalStateException, IOException {
-		super.renderItemAttrs(serializer, cursor);
-		int quantity = cursor.getInt(cursor
-				.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
-		serializer.attribute("", "correctionAmount", String.valueOf(quantity));
+		return "movePosition";
 	}
 
 }

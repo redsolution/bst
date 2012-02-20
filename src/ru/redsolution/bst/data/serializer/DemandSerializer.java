@@ -6,8 +6,6 @@ import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.GoodTable;
-import ru.redsolution.bst.data.table.SelectedGoodTable;
-import android.database.Cursor;
 
 public class DemandSerializer extends PricedSerializer {
 
@@ -41,17 +39,6 @@ public class DemandSerializer extends PricedSerializer {
 	@Override
 	protected String getItemName() {
 		return "shipmentOut";
-	}
-
-	@Override
-	protected void renderItemAttrs(XmlSerializer serializer, Cursor cursor)
-			throws IllegalArgumentException, IllegalStateException, IOException {
-		String good = cursor.getString(cursor
-				.getColumnIndex(SelectedGoodTable.Fields._ID));
-		int quantity = cursor.getInt(cursor
-				.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
-		serializer.attribute("", "quantity", String.valueOf(quantity));
-		serializer.attribute("", "goodId", good);
 	}
 
 	@Override

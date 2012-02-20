@@ -21,13 +21,18 @@ public enum DocumentType {
 	/**
 	 * Отгрузка.
 	 */
-	demand;
+	demand,
+
+	/**
+	 * Перемещение.
+	 */
+	move;
 
 	/**
 	 * @return Использовать цены реализации.
 	 */
 	public boolean useSalePrice() {
-		return this == demand;
+		return this == demand || this == move;
 	}
 
 }

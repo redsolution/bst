@@ -362,6 +362,14 @@ public class BST extends Application {
 		setValue(R.string.selected_warehouse_key, value);
 	}
 
+	public String getSelectedTargetWarehouse() {
+		return getValue(R.string.selected_target_warehouse_key);
+	}
+
+	public void setSelectedTargetWarehouse(String value) {
+		setValue(R.string.selected_target_warehouse_key, value);
+	}
+
 	public String getSelectedCompany() {
 		return getValue(R.string.selected_company_key);
 	}

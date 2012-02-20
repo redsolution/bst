@@ -12,6 +12,7 @@
     <string name="document_type">document_type</string>
     <string name="selected_my_company_key">selected_my_company</string>
     <string name="selected_warehouse_key">selected_warehouse</string>
+    <string name="selected_target_warehouse_key">selected_target_warehouse</string>
     <string name="selected_company_key">selected_company</string>
     <string name="selected_contract_key">selected_contract</string>
     <string name="selected_project_key">selected_project</string>

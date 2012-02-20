@@ -24,6 +24,7 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	private static final int DIALOG_MY_COMPANY_ID = 0x01;
 	private static final int DIALOG_WAREHOUSE_ID = 0x02;
+	private static final int DIALOG_TARGET_WAREHOUSE_ID = 0x08;
 	private static final int DIALOG_SUPPLY_COMPANY_ID = 0x03;
 	private static final int DIALOG_SUPPLY_CONTRACT_ID = 0x04;
 	private static final int DIALOG_DEMAND_COMPANY_ID = 0x05;
@@ -33,8 +34,9 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		registerOnPreferenceClickListener(R.string.warehouse_title);
 		registerOnPreferenceClickListener(R.string.my_company_title);
+		registerOnPreferenceClickListener(R.string.warehouse_title);
+		registerOnPreferenceClickListener(R.string.target_warehouse_title);
 		registerOnPreferenceClickListener(R.string.supply_company_title);
 		registerOnPreferenceClickListener(R.string.supply_contract_title);
 		registerOnPreferenceClickListener(R.string.demand_company_title);
@@ -55,6 +57,9 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.warehouse_title))) {
 			showDialog(DIALOG_WAREHOUSE_ID);
+		} else if (preference.getKey().equals(
+				getString(R.string.target_warehouse_title))) {
+			showDialog(DIALOG_TARGET_WAREHOUSE_ID);
 		} else if (preference.getKey().equals(
 				getString(R.string.supply_company_title))) {
 			showDialog(DIALOG_SUPPLY_COMPANY_ID);
@@ -84,6 +89,10 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		case DIALOG_WAREHOUSE_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
 					.getInstance().list(), getWarehouse(),
+					WarehouseTable.Fields.NAME).create();
+		case DIALOG_TARGET_WAREHOUSE_ID:
+			return new CursorChoiceDialogBuilder(this, id, this, WarehouseTable
+					.getInstance().list(), getTargetWarehouse(),
 					WarehouseTable.Fields.NAME).create();
 		case DIALOG_SUPPLY_COMPANY_ID:
 			return new CursorChoiceDialogBuilder(this, id, this, CompanyTable
@@ -123,6 +132,10 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 			break;
 		case DIALOG_WAREHOUSE_ID:
 			setWarehouse(((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId());
+			break;
+		case DIALOG_TARGET_WAREHOUSE_ID:
+			setTargetWarehouse(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
 			break;
 		case DIALOG_SUPPLY_COMPANY_ID:
@@ -181,6 +194,8 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 				getMyCompany());
 		setSummary(R.string.warehouse_title, WarehouseTable.getInstance(),
 				getWarehouse());
+		setSummary(R.string.target_warehouse_title,
+				WarehouseTable.getInstance(), getTargetWarehouse());
 		setSummary(R.string.supply_company_title, CompanyTable.getInstance(),
 				getSupplyCompany());
 		setSummary(R.string.supply_contract_title, ContractTable.getInstance(),
@@ -227,6 +242,8 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	protected abstract String getWarehouse();
 
+	protected abstract String getTargetWarehouse();
+
 	protected abstract String getSupplyCompany();
 
 	protected abstract String getSupplyContract();
@@ -240,6 +257,8 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 	protected abstract void setMyCompany(String value);
 
 	protected abstract void setWarehouse(String value);
+
+	protected abstract void setTargetWarehouse(String value);
 
 	protected abstract void setSupplyCompany(String value);
 

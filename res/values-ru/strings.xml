@@ -6,13 +6,14 @@
     <string name="continue_supply_summary">Идет приемка товара</string>
     <string name="continue_inventory_summary">Идет инвентаризация</string>
     <string name="continue_demand_summary">Идет отгрузка</string>
+    <string name="continue_move_summary">Идет перемещение</string>
     <string name="import_action">Импорт данных</string>
     <string name="import_summary">Загрузка справочников</string>
     <string name="supply_action">Приемка товара</string>
     <string name="inventory_action">Инвентаризация</string>
     <string name="demand_action">Отгрузка</string>
     <string name="retail_action">Розничная продажа</string>
-    <string name="movement_action">Перемещение</string>
+    <string name="move_action">Перемещение</string>
     <string name="settings_action">Настройки</string>
 
     <string name="another_title">Новый документ</string>
@@ -32,6 +33,7 @@
 
     <string name="my_company_title">Организация</string>
     <string name="warehouse_title">Склад</string>
+    <string name="target_warehouse_title">Склад назначения</string>
     <string name="supply_company_title">Контрагент для закупок</string>
     <string name="supply_contract_title">Договор для закупок</string>
     <string name="demand_company_title">Контрагент для продаж</string>
@@ -87,7 +89,7 @@
     <string name="remove_action">Удалить</string>
     <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
 
-    <string name="new_barcode_description">Найдены новые штрих коды для следующих артикулов.\n</string>
+    <string name="new_barcode_description">Найдены новые штрих коды.\n</string>
     <string name="new_product_code_for_barcode">Штрих код, Тип штрих кода, Артикул:\n</string>
     <string name="new_product_name_for_barcode">Штрих код, Тип штрих кода, Наименование:\n</string>
 </resources>

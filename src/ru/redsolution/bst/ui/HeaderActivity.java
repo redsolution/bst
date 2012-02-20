@@ -26,6 +26,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	private static final String SAVED_INITIALIZED = "ru.redsolution.bst.ui.HeaderActivity.SAVED_INITIALIZED";
 	private static final String SAVED_MY_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_MY_COMPANY";
 	private static final String SAVED_WAREHOUSE = "ru.redsolution.bst.ui.HeaderActivity.SAVED_WAREHOUSE";
+	private static final String SAVED_TARGET_WAREHOUSE = "ru.redsolution.bst.ui.HeaderActivity.SAVED_TARGET_WAREHOUSE";
 	private static final String SAVED_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_COMPANY";
 	private static final String SAVED_CONTRACT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_CONTRACT";
 	private static final String SAVED_PROJECT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_PROJECT";
@@ -42,6 +43,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 
 	private String myCompany;
 	private String warehouse;
+	private String targetWarehouse;
 	private String company;
 	private String contract;
 	private String project;
@@ -69,6 +71,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			addPreferencesFromResource(R.xml.inventory);
 		else if (type == DocumentType.demand)
 			addPreferencesFromResource(R.xml.demand);
+		else if (type == DocumentType.move)
+			addPreferencesFromResource(R.xml.move);
 		else
 			throw new UnsupportedOperationException();
 
@@ -77,6 +81,8 @@ public class HeaderActivity extends BaseSettingsActivity implements
 					false);
 			myCompany = savedInstanceState.getString(SAVED_MY_COMPANY);
 			warehouse = savedInstanceState.getString(SAVED_WAREHOUSE);
+			targetWarehouse = savedInstanceState
+					.getString(SAVED_TARGET_WAREHOUSE);
 			company = savedInstanceState.getString(SAVED_COMPANY);
 			contract = savedInstanceState.getString(SAVED_CONTRACT);
 			project = savedInstanceState.getString(SAVED_PROJECT);
@@ -86,6 +92,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			initialized = false;
 			myCompany = BST.getInstance().getSelectedMyCompany();
 			warehouse = BST.getInstance().getSelectedWarehouse();
+			targetWarehouse = BST.getInstance().getSelectedTargetWarehouse();
 			company = BST.getInstance().getSelectedCompany();
 			contract = BST.getInstance().getSelectedContract();
 			project = BST.getInstance().getSelectedProject();
@@ -98,17 +105,32 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	}
 
 	/**
-	 * @return Заполнена ли шапка.
+	 * @return Заполнены ли настройки по умолчанию.
 	 */
-	private boolean isComplited() {
+	private boolean isDefaultsSetted() {
 		try {
 			WarehouseTable.getInstance().getName(warehouse);
 			MyCompanyTable.getInstance().getName(myCompany);
-			if (type != DocumentType.inventory)
+			if (type != DocumentType.inventory && type != DocumentType.move)
 				CompanyTable.getInstance().getName(company);
 		} catch (BaseDatabaseException e) {
 			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * @return Заполнена ли шапка.
+	 */
+	private boolean isComplited() {
+		if (!isDefaultsSetted())
+			return false;
+		if (type == DocumentType.move)
+			try {
+				WarehouseTable.getInstance().getName(targetWarehouse);
+			} catch (BaseDatabaseException e) {
+				return false;
+			}
 		return true;
 	}
 
@@ -118,6 +140,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			initialized = true;
 			myCompany = BST.getInstance().getDefaultMyCompany();
 			warehouse = BST.getInstance().getDefaultWarehouse();
+			targetWarehouse = "";
 			if (type == DocumentType.supply) {
 				company = BST.getInstance().getDefaultSupplyCompany();
 				contract = BST.getInstance().getDefaultSupplyContract();
@@ -128,7 +151,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			project = BST.getInstance().getDefaultProject();
 		}
 		super.onResume();
-		if (!isComplited() && !defaultsNotified) {
+		if (!isDefaultsSetted() && !defaultsNotified) {
 			defaultsNotified = true;
 			showDialog(DIALOG_DEFAULTS_ID);
 		}
@@ -140,6 +163,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		outState.putBoolean(SAVED_INITIALIZED, initialized);
 		outState.putString(SAVED_MY_COMPANY, myCompany);
 		outState.putString(SAVED_WAREHOUSE, warehouse);
+		outState.putString(SAVED_TARGET_WAREHOUSE, targetWarehouse);
 		outState.putString(SAVED_COMPANY, company);
 		outState.putString(SAVED_CONTRACT, contract);
 		outState.putString(SAVED_PROJECT, project);
@@ -187,6 +211,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			if (isComplited()) {
 				BST.getInstance().setSelectedMyCompany(myCompany);
 				BST.getInstance().setSelectedWarehouse(warehouse);
+				BST.getInstance().setSelectedTargetWarehouse(targetWarehouse);
 				BST.getInstance().setSelectedCompany(company);
 				BST.getInstance().setSelectedContract(contract);
 				BST.getInstance().setSelectedProject(project);
@@ -211,6 +236,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	@Override
 	protected String getWarehouse() {
 		return warehouse;
+	}
+
+	@Override
+	protected String getTargetWarehouse() {
+		return targetWarehouse;
 	}
 
 	@Override
@@ -246,6 +276,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	@Override
 	protected void setWarehouse(String value) {
 		warehouse = value;
+	}
+
+	@Override
+	protected void setTargetWarehouse(String value) {
+		targetWarehouse = value;
 	}
 
 	@Override

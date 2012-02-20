@@ -70,6 +70,10 @@ public class DocumentActivity extends PreferenceActivity implements
 			setTitle(R.string.inventory_action);
 		else if (type == DocumentType.demand)
 			setTitle(R.string.demand_action);
+		else if (type == DocumentType.move)
+			setTitle(R.string.move_action);
+		else
+			throw new UnsupportedOperationException();
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(true);
@@ -211,8 +215,8 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	private void updateView() {
 		findPreference(getString(R.string.list_action)).setSummary(
-				String.format(getString(R.string.list_summary), SelectedGoodTable
-						.getInstance().getGoodsCount(), SelectedGoodTable
-						.getInstance().getTotalQuantity()));
+				String.format(getString(R.string.list_summary),
+						SelectedGoodTable.getInstance().getGoodsCount(),
+						SelectedGoodTable.getInstance().getTotalQuantity()));
 	}
 }

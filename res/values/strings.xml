@@ -6,13 +6,14 @@
     <string name="continue_supply_summary">Continue supply</string>
     <string name="continue_inventory_summary">Continue inventory</string>
     <string name="continue_demand_summary">Continue demand</string>
+    <string name="continue_move_summary">Continue movement</string>
     <string name="import_action">Import</string>
     <string name="import_summary">Load data</string>
     <string name="supply_action">Supply</string>
     <string name="inventory_action">Inventory</string>
     <string name="demand_action">Demand</string>
     <string name="retail_action">Retail</string>
-    <string name="movement_action">Movement</string>
+    <string name="move_action">Movement</string>
     <string name="settings_action">Settings</string>
 
     <string name="another_title">New document</string>
@@ -32,6 +33,7 @@
 
     <string name="my_company_title">My company</string>
     <string name="warehouse_title">Ware house</string>
+    <string name="target_warehouse_title">Target ware house</string>
     <string name="supply_company_title">Supplier company</string>
     <string name="supply_contract_title">Supplier contract</string>
     <string name="demand_company_title">Customer company</string>
@@ -87,7 +89,7 @@
     <string name="remove_action">Remove</string>
     <string name="remove_confirm">Do you really want to remove good?</string>
 
-    <string name="new_barcode_description">New barcodes were found for specified product codes.\n</string>
+    <string name="new_barcode_description">New barcodes were found.\n</string>
     <string name="new_product_code_for_barcode">Barcode, Barcode type, Product code:\n</string>
     <string name="new_product_name_for_barcode">Barcode, Barcode type, Product name:\n</string>
 </resources>

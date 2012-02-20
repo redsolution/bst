@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/move_action"
+    >
+    <PreferenceScreen
+        android:key="@string/my_company_title"
+        android:title="@string/my_company_title"
+        />
+    <PreferenceScreen
+        android:key="@string/warehouse_title"
+        android:title="@string/warehouse_title"
+        />
+    <PreferenceScreen
+        android:key="@string/target_warehouse_title"
+        android:title="@string/target_warehouse_title"
+        />
+    <PreferenceScreen
+        android:key="@string/project_title"
+        android:title="@string/project_title"
+        />
+</PreferenceScreen>

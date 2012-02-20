@@ -37,6 +37,8 @@ public class SettingsActivity extends BaseSettingsActivity implements
 				addPreferencesFromResource(R.xml.inventory);
 			else if (type == DocumentType.demand)
 				addPreferencesFromResource(R.xml.demand);
+			else if (type == DocumentType.move)
+				addPreferencesFromResource(R.xml.move_defaults);
 			else
 				throw new UnsupportedOperationException();
 			setTitle(R.string.defaults_title);
@@ -87,6 +89,11 @@ public class SettingsActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
+	protected String getTargetWarehouse() {
+		return "";
+	}
+
+	@Override
 	protected String getSupplyCompany() {
 		return BST.getInstance().getDefaultSupplyCompany();
 	}
@@ -119,6 +126,10 @@ public class SettingsActivity extends BaseSettingsActivity implements
 	@Override
 	protected void setWarehouse(String value) {
 		BST.getInstance().setDefaultWarehouse(value);
+	}
+
+	@Override
+	protected void setTargetWarehouse(String value) {
 	}
 
 	@Override

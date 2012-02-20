@@ -18,6 +18,10 @@
         android:title="@string/demand_action"
         />
     <PreferenceScreen
+        android:key="@string/move_action"
+        android:title="@string/move_action"
+        />
+    <PreferenceScreen
         android:key="@string/import_action"
         android:title="@string/import_action"
         android:summary="@string/import_summary"

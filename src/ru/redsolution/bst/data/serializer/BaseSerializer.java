@@ -9,9 +9,9 @@ import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
+import ru.redsolution.bst.data.table.NewGoodBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
-import ru.redsolution.bst.data.table.SelectedProductCodeForBarcodeTable;
-import ru.redsolution.bst.data.table.SelectedProductIdForBarcodeTable;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Xml;
 
@@ -69,68 +69,37 @@ public abstract class BaseSerializer {
 	protected void renderContainerBody(XmlSerializer serializer)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", DESCRIPTION_TAG);
-		Cursor cursor = SelectedProductCodeForBarcodeTable.getInstance().list();
-		boolean hasNewBarcode = false;
+		Cursor cursor = NewGoodBarcodeTable.getInstance().list();
 		try {
 			if (cursor.moveToFirst()) {
-				hasNewBarcode = true;
 				serializer.text(BST.getInstance().getString(
 						R.string.new_barcode_description));
-				serializer.text(BST.getInstance().getString(
-						R.string.new_product_code_for_barcode));
 				do {
-					serializer
-							.text(cursor.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.VALUE)));
-					serializer.text(" ");
-					serializer
-							.text(cursor.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.TYPE)));
-					serializer.text(" ");
-					serializer
-							.text(cursor.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields._ID)));
-					serializer.text("\n");
-				} while (cursor.moveToNext());
-			}
-		} finally {
-			cursor.close();
-		}
-
-		cursor = SelectedProductIdForBarcodeTable.getInstance().list();
-		try {
-			if (cursor.moveToFirst()) {
-				if (!hasNewBarcode)
-					serializer.text(BST.getInstance().getString(
-							R.string.new_barcode_description));
-				serializer.text(BST.getInstance().getString(
-						R.string.new_product_name_for_barcode));
-				do {
-					String id = cursor
-							.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields._ID));
-					String name;
+					String id = cursor.getString(cursor
+							.getColumnIndex(NewGoodBarcodeTable.Fields._ID));
+					ContentValues values;
 					try {
-						name = GoodTable.getInstance().getName(id);
+						values = GoodTable.getInstance().getById(id);
 					} catch (BaseDatabaseException e) {
 						continue;
 					}
-					serializer
-							.text(cursor.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.VALUE)));
+					serializer.text(cursor.getString(cursor
+							.getColumnIndex(NewGoodBarcodeTable.Fields.VALUE)));
 					serializer.text(" ");
-					serializer
-							.text(cursor.getString(cursor
-									.getColumnIndex(SelectedProductCodeForBarcodeTable.Fields.TYPE)));
+					serializer.text(cursor.getString(cursor
+							.getColumnIndex(NewGoodBarcodeTable.Fields.TYPE)));
 					serializer.text(" ");
-					serializer.text(name);
+					String value = values
+							.getAsString(GoodTable.Fields.PRODUCT_CODE);
+					if ("".equals(value))
+						value = values.getAsString(GoodTable.Fields.NAME);
+					serializer.text(value);
 					serializer.text("\n");
 				} while (cursor.moveToNext());
 			}
 		} finally {
 			cursor.close();
 		}
-
 		serializer.endTag("", DESCRIPTION_TAG);
 		cursor = getCursor();
 		try {

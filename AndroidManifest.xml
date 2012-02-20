@@ -43,7 +43,7 @@
             />
         <activity
             android:name=".ui.ChooseActivity"
-            android:label="@string/search_by_name"
+            android:label="@string/search_title"
             />
     </application>
 </manifest>

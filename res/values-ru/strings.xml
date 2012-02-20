@@ -64,15 +64,13 @@
     <string name="good_with_extra">%1$s (%2$s)</string>
     <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
 
-    <string name="search_by_title">Товар не найден</string>
-    <string name="search_by_product_code">Искать по артикулу</string>
-    <string name="search_by_product_code_message">Введите артикул и он будет ассоциирован со штрих кодом</string>
-    <string name="search_by_name">Искать по наименованию</string>
-    <string name="search_hint">Введите часть наименования или артикул</string>
-
     <string name="verification_error">Невозможно добавить товар</string>
     <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
-    <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Пожалуйста, исправьте это на сервисе МойСклад.</string>
+    <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Выбрать товар из списка и ассоциировать его со штрих кодом?</string>
+
+    <string name="search_title">Поиск товаров</string>
+    <string name="search_hint">Введите часть наименования или артикул</string>
+    <string name="create_good">Создать товар: %s</string>
 
     <string name="scan_action">Сканировать</string>
     <string name="barcode_action">Добавить по штрих коду</string>
@@ -89,7 +87,5 @@
     <string name="remove_action">Удалить</string>
     <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
 
-    <string name="new_barcode_description">Найдены новые штрих коды.\n</string>
-    <string name="new_product_code_for_barcode">Штрих код, Тип штрих кода, Артикул:\n</string>
-    <string name="new_product_name_for_barcode">Штрих код, Тип штрих кода, Наименование:\n</string>
+    <string name="new_barcode_description">Найдены новые штрих коды.\nШтрих код, Тип штрих кода, Артикул / Наименование:\n</string>
 </resources>

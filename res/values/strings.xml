@@ -64,15 +64,13 @@
     <string name="good_with_extra">%1$s (%2$s)</string>
     <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
 
-    <string name="search_by_title">Good was not found</string>
-    <string name="search_by_product_code">Search by product code</string>
-    <string name="search_by_product_code_message">Enter product code to be associated with barcode</string>
-    <string name="search_by_name">Search by name</string>
-    <string name="search_hint">Enter product code or name</string>
-
-    <string name="verification_error">Good can`t be added.</string>
+    <string name="verification_error">Good can`t be added</string>
     <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>
-    <string name="object_does_not_exist">There is no goods with such barcode. Please fix it in MoySklad.</string>
+    <string name="object_does_not_exist">There is no goods with such barcode. Do you want to choose one and associate with barcode?</string>
+
+    <string name="search_title">Good search</string>
+    <string name="search_hint">Enter product code or name</string>
+    <string name="create_good">Create good: %s</string>
 
     <string name="scan_action">Scan</string>
     <string name="barcode_action">Add using barcode</string>
@@ -89,7 +87,5 @@
     <string name="remove_action">Remove</string>
     <string name="remove_confirm">Do you really want to remove good?</string>
 
-    <string name="new_barcode_description">New barcodes were found.\n</string>
-    <string name="new_product_code_for_barcode">Barcode, Barcode type, Product code:\n</string>
-    <string name="new_product_name_for_barcode">Barcode, Barcode type, Product name:\n</string>
+    <string name="new_barcode_description">New barcodes were found.\nBarcode, Barcode type, Product code / name:\n</string>
 </resources>

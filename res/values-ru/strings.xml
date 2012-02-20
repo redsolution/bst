@@ -66,6 +66,7 @@
     <string name="search_by_product_code">Искать по артикулу</string>
     <string name="search_by_product_code_message">Введите артикул и он будет ассоциирован со штрих кодом</string>
     <string name="search_by_name">Искать по наименованию</string>
+    <string name="search_hint">Введите часть наименования или артикул</string>
 
     <string name="verification_error">Невозможно добавить товар</string>
     <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>

@@ -66,6 +66,7 @@
     <string name="search_by_product_code">Search by product code</string>
     <string name="search_by_product_code_message">Enter product code to be associated with barcode</string>
     <string name="search_by_name">Search by name</string>
+    <string name="search_hint">Enter product code or name</string>
 
     <string name="verification_error">Good can`t be added.</string>
     <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>

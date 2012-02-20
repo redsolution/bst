@@ -17,4 +17,5 @@
     <string name="selected_contract_key">selected_contract</string>
     <string name="selected_project_key">selected_project</string>
     <string name="imported_key">imported</string>
+    <string name="show_folders_key">show_folders</string>
 </resources>

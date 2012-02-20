@@ -1,7 +1,9 @@
 package ru.redsolution.bst.data.table;
 
+import android.database.Cursor;
+
 /**
- * Список групп организаций.
+ * Список групп товаров.
  * 
  * @author alexander.ivanov
  * 
@@ -28,4 +30,19 @@ public class GoodFolderTable extends ParentableTable {
 	public String getTableName() {
 		return NAME;
 	}
+
+	@Override
+	public Cursor list() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param parent
+	 * @return Список групп товаров.
+	 */
+	public Cursor list(String parent) {
+		return filter(Fields.PARENT + " = ?", new String[] { parent },
+				Fields.NAME);
+	}
+
 }

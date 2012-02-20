@@ -393,6 +393,23 @@ public class BST extends Application {
 	}
 
 	/**
+	 * @return Отображать список товаров по папкам.
+	 */
+	public boolean isShowFolders() {
+		return settings.getBoolean(getString(R.string.show_folders_key), false);
+	}
+
+	/**
+	 * @param value
+	 *            Отображать список товаров по папкам.
+	 */
+	public void setShowFolders(boolean value) {
+		Editor editor = settings.edit();
+		editor.putBoolean(getString(R.string.show_folders_key), value);
+		editor.commit();
+	}
+
+	/**
 	 * Абстрактная асинхронная задача, которая может завершиться успешно, либо
 	 * вернуть ошибку.
 	 * 

@@ -70,7 +70,10 @@
 
     <string name="search_title">Good search</string>
     <string name="search_hint">Enter product code or name</string>
-    <string name="create_good">Create good: %s</string>
+    <string name="create_good">Create new good %s</string>
+    <string name="folder">Folder</string>
+    <string name="show_folders">Show folders</string>
+    <string name="hide_folders">Hide folders</string>
 
     <string name="scan_action">Scan</string>
     <string name="barcode_action">Add using barcode</string>

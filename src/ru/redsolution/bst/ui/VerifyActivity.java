@@ -309,7 +309,12 @@ public class VerifyActivity extends PreferenceActivity implements
 			scan();
 			break;
 		case DIALOG_MANUAL_BARCODE_ID:
-			barcode = ((ValueDialogBuilder) dialogBuilder).getValue();
+			String value = ((ValueDialogBuilder) dialogBuilder).getValue();
+			if ("".equals(value)) {
+				showDialog(DIALOG_MANUAL_BARCODE_ID);
+				break;
+			}
+			barcode = value;
 			if (barcode.matches(RE_EAN_13))
 				type = TYPE_EAN_13;
 			else if (barcode.matches(RE_EAN_8))

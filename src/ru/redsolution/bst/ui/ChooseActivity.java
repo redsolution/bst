@@ -1,45 +1,130 @@
 package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
+import ru.redsolution.bst.data.table.NamedTable;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
-import android.widget.SimpleCursorAdapter;
+import android.widget.ResourceCursorAdapter;
+import android.widget.TextView;
 
 public class ChooseActivity extends ListActivity implements OnItemClickListener {
 
+	private static final String SAVED_FOLDER = "ru.redsolution.bst.ui.ChooseActivity.SAVED_FOLDER";
+
+	/**
+	 * Поле в результате, содержащее ID выбранного продукта.
+	 */
 	public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+
+	private static final int OPTION_MENU_SHOW_FOLDERS_ID = 1;
+	private static final int OPTION_MENU_HIDE_FOLDERS_ID = 2;
+
+	private EditText searchView;
+
+	/**
+	 * Тип данных.
+	 * 
+	 * @author alexander.ivanov
+	 * 
+	 */
+	private static enum Type {
+
+		good,
+
+		folder;
+
+		/**
+		 * @param cursor
+		 * @return Тип данных, содержащихся в текущей строке курсора.
+		 */
+		public static Type getType(Cursor cursor) {
+			String tableName = cursor.getString(cursor
+					.getColumnIndex(NamedTable.Fields.TABLE_NAME));
+			if (tableName.equals(GoodTable.getInstance().getTableName())) {
+				return good;
+			} else if (tableName.equals(GoodFolderTable.getInstance()
+					.getTableName())) {
+				return folder;
+			} else
+				throw new IllegalStateException();
+		}
+
+	}
+
+	/**
+	 * Группа товаров.
+	 */
+	private String folder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose);
-		final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_list_item_2, GoodTable.getInstance()
-						.list(), new String[] { GoodTable.Fields.NAME,
-						GoodTable.Fields.PRODUCT_CODE }, new int[] {
-						android.R.id.text1, android.R.id.text2 });
+		if (savedInstanceState != null) {
+			folder = savedInstanceState.getString(SAVED_FOLDER);
+		} else {
+			folder = "";
+		}
+		final CursorAdapter adapter = new ResourceCursorAdapter(this,
+				android.R.layout.simple_list_item_2, createCursor()) {
+
+			@Override
+			public void bindView(View view, Context context, Cursor cursor) {
+				String name = cursor.getString(cursor
+						.getColumnIndex(NamedTable.Fields.NAME));
+				((TextView) view.findViewById(android.R.id.text1))
+						.setText(name);
+				TextView summaryView = (TextView) view
+						.findViewById(android.R.id.text2);
+				switch (Type.getType(cursor)) {
+				case good:
+					summaryView.setText(cursor.getString(cursor
+							.getColumnIndex(GoodTable.Fields.PRODUCT_CODE)));
+					break;
+				case folder:
+					summaryView.setText(R.string.folder);
+					break;
+				}
+			}
+
+		};
 		adapter.setFilterQueryProvider(new FilterQueryProvider() {
+
 			@Override
 			public Cursor runQuery(CharSequence constraint) {
-				Cursor cursor = GoodTable.getInstance().filterByText(
-						constraint.toString());
+				Cursor cursor;
+				if (constraint.length() == 0)
+					cursor = createCursor();
+				else
+					cursor = GoodTable.getInstance().filterByText(
+							constraint.toString());
 				startManagingCursor(cursor);
 				return cursor;
 			}
+
 		});
 		setListAdapter(adapter);
-		EditText filterText = (EditText) findViewById(R.id.search);
-		filterText.addTextChangedListener(new TextWatcher() {
+		searchView = (EditText) findViewById(R.id.search);
+		searchView.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -61,15 +146,104 @@ public class ChooseActivity extends ListActivity implements OnItemClickListener 
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		updateCursor();
+	}
+
+	/**
+	 * @return Новый курсор.
+	 */
+	private Cursor createCursor() {
+		if (BST.getInstance().isShowFolders()) {
+			return new MergeCursor(new Cursor[] {
+					GoodFolderTable.getInstance().list(folder),
+					GoodTable.getInstance().list(folder) });
+		} else {
+			return GoodTable.getInstance().list();
+		}
+	}
+
+	/**
+	 * Обновляет данные списка.
+	 */
+	private void updateCursor() {
+		((CursorAdapter) getListAdapter()).changeCursor(createCursor());
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(SAVED_FOLDER, folder);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		menu.clear();
+		if (BST.getInstance().isShowFolders())
+			menu.add(0, OPTION_MENU_HIDE_FOLDERS_ID, 0,
+					getText(R.string.hide_folders));
+		else
+			menu.add(0, OPTION_MENU_SHOW_FOLDERS_ID, 0,
+					getText(R.string.show_folders));
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case OPTION_MENU_SHOW_FOLDERS_ID:
+			BST.getInstance().setShowFolders(true);
+			updateCursor();
+			return true;
+		case OPTION_MENU_HIDE_FOLDERS_ID:
+			BST.getInstance().setShowFolders(false);
+			updateCursor();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Intent intent = new Intent();
 		Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-		String productId = cursor.getString(cursor
-				.getColumnIndex(GoodTable.Fields._ID));
-		intent.putExtra(EXTRA_PRODUCT_ID, productId);
-		setResult(RESULT_OK, intent);
-		finish();
+		switch (Type.getType(cursor)) {
+		case good:
+			Intent intent = new Intent();
+			String productId = cursor.getString(cursor
+					.getColumnIndex(GoodTable.Fields._ID));
+			intent.putExtra(EXTRA_PRODUCT_ID, productId);
+			setResult(RESULT_OK, intent);
+			finish();
+			break;
+
+		case folder:
+			this.folder = cursor.getString(cursor
+					.getColumnIndex(GoodTable.Fields._ID));
+			updateCursor();
+			break;
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			if (!BST.getInstance().isShowFolders() || "".equals(folder))
+				break;
+			try {
+				folder = GoodFolderTable.getInstance().getById(folder)
+						.getAsString(GoodFolderTable.Fields.PARENT);
+			} catch (BaseDatabaseException e) {
+				break;
+			}
+			updateCursor();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

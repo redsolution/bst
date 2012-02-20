@@ -7,7 +7,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 /**
- * Список складов.
+ * Список товаров.
  * 
  * @author alexander.ivanov
  * 
@@ -108,6 +108,15 @@ public class GoodTable extends NamedTable {
 		return filter(Fields.PRODUCT_CODE + " LIKE ? OR "
 				+ Fields.LOWER_CASED_NAME + " LIKE ?", new String[] { text,
 				text, }, Fields.NAME);
+	}
+
+	/**
+	 * @param folder
+	 * @return Товары в указанной папке.
+	 */
+	public Cursor list(String folder) {
+		return filter(Fields.GOOD_FOLDER + " = ?", new String[] { folder },
+				Fields.NAME);
 	}
 
 }

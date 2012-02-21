@@ -2,6 +2,7 @@ package ru.redsolution.dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 
 /**
  * Yes / No dialog builder.
@@ -10,7 +11,7 @@ import android.content.DialogInterface;
  * 
  */
 public class ConfirmDialogBuilder extends DialogBuilder implements
-		DialogInterface.OnClickListener {
+		DialogInterface.OnClickListener, OnCancelListener {
 	private final AcceptAndDeclineDialogListener listener;
 
 	/**
@@ -29,6 +30,7 @@ public class ConfirmDialogBuilder extends DialogBuilder implements
 		this.listener = listener;
 		setPositiveButton(activity.getString(android.R.string.yes), this);
 		setNegativeButton(activity.getString(android.R.string.no), this);
+		setOnCancelListener(this);
 	}
 
 	@Override
@@ -43,6 +45,12 @@ public class ConfirmDialogBuilder extends DialogBuilder implements
 			listener.onDecline(this);
 			break;
 		}
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		dialog.dismiss();
+		listener.onDecline(this);
 	}
 
 }

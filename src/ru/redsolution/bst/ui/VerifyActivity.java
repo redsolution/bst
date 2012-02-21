@@ -264,26 +264,21 @@ public class VerifyActivity extends PreferenceActivity implements
 		case DIALOG_INSTALL_ID:
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.install_title)
-					.setMessage(R.string.install_message).setCancelable(false)
-					.create();
+					.setMessage(R.string.install_message).create();
 		case DIALOG_NO_MARKET_ID:
-			return new NotificationDialogBuilder(this, id, this)
-					.setMessage(R.string.install_fail).setCancelable(false)
-					.create();
+			return new NotificationDialogBuilder(this, id, this).setMessage(
+					R.string.install_fail).create();
 		case DIALOG_OBJECT_DOES_NOT_EXIST_ID:
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
-					.setMessage(R.string.object_does_not_exist)
-					.setCancelable(false).create();
+					.setMessage(R.string.object_does_not_exist).create();
 		case DIALOG_MULTIPLE_OBJECTS_RETURNED_ID:
 			return new NotificationDialogBuilder(this, id, this)
 					.setTitle(R.string.verification_error)
-					.setMessage(R.string.multiple_objects_returned)
-					.setCancelable(false).create();
+					.setMessage(R.string.multiple_objects_returned).create();
 		case DIALOG_MANUAL_BARCODE_ID:
-			return new ValueDialogBuilder(this, id, this)
-					.setTitle(R.string.barcode_title).setCancelable(false)
-					.create();
+			return new ValueDialogBuilder(this, id, this).setTitle(
+					R.string.barcode_title).create();
 		default:
 			return super.onCreateDialog(id);
 		}

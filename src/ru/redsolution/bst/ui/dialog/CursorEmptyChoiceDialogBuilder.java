@@ -3,7 +3,7 @@ package ru.redsolution.bst.ui.dialog;
 import java.util.ArrayList;
 
 import ru.redsolution.bst.R;
-import ru.redsolution.dialogs.AcceptDialogListener;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.CursorChoiceDialogBuilder;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -30,8 +30,8 @@ public class CursorEmptyChoiceDialogBuilder extends CursorChoiceDialogBuilder {
 	private HeaderViewListAdapter adapter;
 
 	public CursorEmptyChoiceDialogBuilder(Activity activity, int dialogId,
-			AcceptDialogListener listener, Cursor cursor, String checkedId,
-			String labelColumn) {
+			AcceptAndDeclineDialogListener listener, Cursor cursor,
+			String checkedId, String labelColumn) {
 		super(activity, dialogId, listener, cursor, checkedId, labelColumn);
 	}
 

@@ -5,7 +5,6 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
-import ru.redsolution.dialogs.DialogBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -65,10 +64,6 @@ public class SettingsActivity extends BaseSettingsActivity implements
 		default:
 			return super.onCreateDialog(id);
 		}
-	}
-
-	@Override
-	public void onDecline(DialogBuilder dialogBuilder) {
 	}
 
 	@Override

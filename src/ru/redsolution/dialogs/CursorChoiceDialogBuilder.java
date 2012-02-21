@@ -2,6 +2,7 @@ package ru.redsolution.dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
@@ -12,8 +13,8 @@ import android.provider.BaseColumns;
  * 
  */
 public class CursorChoiceDialogBuilder extends DialogBuilder implements
-		DialogInterface.OnClickListener {
-	protected final AcceptDialogListener listener;
+		DialogInterface.OnClickListener, OnCancelListener {
+	protected final AcceptAndDeclineDialogListener listener;
 	protected final Cursor cursor;
 	protected String checkedId;
 
@@ -26,8 +27,8 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 	 * @param labelColumn
 	 */
 	public CursorChoiceDialogBuilder(Activity activity, int dialogId,
-			AcceptDialogListener listener, Cursor cursor, String checkedId,
-			String labelColumn) {
+			AcceptAndDeclineDialogListener listener, Cursor cursor,
+			String checkedId, String labelColumn) {
 		super(activity, dialogId);
 		this.listener = listener;
 		this.cursor = cursor;
@@ -46,6 +47,7 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 			} while (cursor.moveToNext());
 		}
 		setSingleChoiceItems(cursor, checkedItem, labelColumn, this);
+		setOnCancelListener(this);
 	}
 
 	@Override
@@ -68,4 +70,11 @@ public class CursorChoiceDialogBuilder extends DialogBuilder implements
 	public String getCheckedId() {
 		return checkedId;
 	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		dialog.dismiss();
+		listener.onDecline(this);
+	}
+
 }

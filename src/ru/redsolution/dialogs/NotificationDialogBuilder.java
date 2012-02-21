@@ -2,6 +2,7 @@ package ru.redsolution.dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 
 /**
  * Notification dailog builder.
@@ -10,7 +11,7 @@ import android.content.DialogInterface;
  * 
  */
 public class NotificationDialogBuilder extends DialogBuilder implements
-		DialogInterface.OnClickListener {
+		DialogInterface.OnClickListener, OnCancelListener {
 	private final AcceptDialogListener listener;
 
 	/**
@@ -28,16 +29,23 @@ public class NotificationDialogBuilder extends DialogBuilder implements
 		super(activity, dialogId);
 		this.listener = listener;
 		setPositiveButton(activity.getString(android.R.string.ok), this);
+		setOnCancelListener(this);
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int id) {
 		switch (id) {
 		case DialogInterface.BUTTON_POSITIVE:
-			listener.onAccept(this);
 			dialog.dismiss();
+			listener.onAccept(this);
 			break;
 		}
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		dialog.dismiss();
+		listener.onAccept(this);
 	}
 
 }

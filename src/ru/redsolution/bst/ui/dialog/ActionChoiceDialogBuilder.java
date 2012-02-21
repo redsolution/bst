@@ -3,7 +3,7 @@ package ru.redsolution.bst.ui.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.redsolution.dialogs.AcceptDialogListener;
+import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.SingleChoiceDialogBuilder;
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ public class ActionChoiceDialogBuilder extends
 		SingleChoiceDialogBuilder<Integer> {
 
 	public ActionChoiceDialogBuilder(Activity activity, int dialogId,
-			AcceptDialogListener listener, int[] resourceIds,
+			AcceptAndDeclineDialogListener listener, int[] resourceIds,
 			Integer checkedResourceId) {
 		super(activity, dialogId, listener, getItems(resourceIds), getLabels(
 				activity, resourceIds), checkedResourceId);

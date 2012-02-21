@@ -213,10 +213,6 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
-	public void onDecline(DialogBuilder dialogBuilder) {
-	}
-
-	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.create:

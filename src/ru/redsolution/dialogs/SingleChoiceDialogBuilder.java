@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 
 /**
  * Builder for choose dialog.
@@ -13,14 +14,14 @@ import android.content.DialogInterface;
  * @param <T>
  */
 public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
-		DialogInterface.OnClickListener {
-	private final AcceptDialogListener listener;
+		DialogInterface.OnClickListener, OnCancelListener {
+	private final AcceptAndDeclineDialogListener listener;
 	private final List<T> items;
 	private T checkedItem;
 
 	public SingleChoiceDialogBuilder(Activity activity, int dialogId,
-			AcceptDialogListener listener, List<T> items, List<String> labels,
-			T checkedItem) {
+			AcceptAndDeclineDialogListener listener, List<T> items,
+			List<String> labels, T checkedItem) {
 		super(activity, dialogId);
 		this.listener = listener;
 		this.items = items;
@@ -28,6 +29,7 @@ public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
 		setCheckedItem(index);
 		String[] array = labels.toArray(new String[labels.size()]);
 		setSingleChoiceItems(array, index, this);
+		setOnCancelListener(this);
 	}
 
 	private void setCheckedItem(int index) {
@@ -51,6 +53,12 @@ public class SingleChoiceDialogBuilder<T> extends DialogBuilder implements
 	 */
 	public T getCheckedItem() {
 		return checkedItem;
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		dialog.dismiss();
+		listener.onDecline(this);
 	}
 
 }

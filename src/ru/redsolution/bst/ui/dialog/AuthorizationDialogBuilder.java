@@ -61,7 +61,6 @@ public class AuthorizationDialogBuilder extends ConfirmDialogBuilder {
 		passwordView.setText(BST.getInstance().getPassword());
 		setView(dialogLayout);
 		setTitle(R.string.auth_title);
-		setCancelable(false);
 	}
 
 	public String getLogin() {

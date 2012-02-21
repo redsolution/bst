@@ -72,6 +72,7 @@
     <string name="search_hint">Enter product code or name</string>
     <string name="create_good">Create new good %s</string>
     <string name="folder">Folder</string>
+    <string name="custom_good">New good</string>
     <string name="show_folders">Show folders</string>
     <string name="hide_folders">Hide folders</string>
 

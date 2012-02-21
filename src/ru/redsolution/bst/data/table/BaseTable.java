@@ -19,6 +19,9 @@ public abstract class BaseTable implements DatabaseTable {
 		public static final String TABLE_NAME = "table_name";
 	}
 
+	private static final String TRUE = "1";
+	private static final String FALSE = "0";
+
 	/**
 	 * @return Имя таблицы.
 	 */
@@ -180,4 +183,21 @@ public abstract class BaseTable implements DatabaseTable {
 		return DatabaseHelper.getInstance().getWritableDatabase()
 				.insert(getTableName(), null, values);
 	}
+
+	/**
+	 * @param value
+	 * @return Значение для хранения в DB.
+	 */
+	protected static String getBoolean(boolean value) {
+		return value ? TRUE : FALSE;
+	}
+
+	/**
+	 * @param value
+	 * @return Значения для получения из DB.
+	 */
+	protected static boolean getBoolean(String value) {
+		return !FALSE.equals(value);
+	}
+
 }

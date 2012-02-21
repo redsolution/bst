@@ -12,7 +12,8 @@ import java.util.Map;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
-import ru.redsolution.bst.data.table.BaseTable.Fields;
+import ru.redsolution.bst.data.table.BaseGoodTable;
+import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.GoodBarcodeTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
@@ -56,6 +57,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final String SAVED_TYPE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_TYPE";
 	private static final String SAVED_BARCODE = "ru.redsolution.bst.ui.VerifyActivity.SAVED_BARCODE";
 	private static final String SAVED_PRODUCT_ID = "ru.redsolution.bst.ui.VerifyActivity.SAVED_PRODUCT_ID";
+	private static final String SAVED_IS_CUSTOM = "ru.redsolution.bst.ui.VerifyActivity.SAVED_IS_CUSTOM";
 	private static final String SAVED_QUANTITY = "ru.redsolution.bst.ui.VerifyActivity.SAVED_QUANTITY";
 	private static final String SAVED_INSTALL_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_INSTALL_NOTIFIED";
 	private static final String SAVED_NOT_FOUND_NOTIFIED = "ru.redsolution.bst.ui.VerifyActivity.SAVED_NOT_FOUND_NOTIFIED";
@@ -101,6 +103,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private String type;
 	private String barcode;
 	private String productId;
+	private boolean isCustom;
 	private boolean saveBarcode;
 
 	/**
@@ -145,6 +148,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			type = savedInstanceState.getString(SAVED_TYPE);
 			barcode = savedInstanceState.getString(SAVED_BARCODE);
 			productId = savedInstanceState.getString(SAVED_PRODUCT_ID);
+			isCustom = savedInstanceState.getBoolean(SAVED_IS_CUSTOM);
 			installNotified = savedInstanceState.getBoolean(
 					SAVED_INSTALL_NOTIFIED, false);
 			notFoundNotified = savedInstanceState.getBoolean(
@@ -160,6 +164,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			type = null;
 			barcode = null;
 			productId = null;
+			isCustom = false;
 			installNotified = false;
 			notFoundNotified = false;
 			multipleFoundNotified = false;
@@ -216,6 +221,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
 		outState.putString(SAVED_PRODUCT_ID, productId);
+		outState.putBoolean(SAVED_IS_CUSTOM, isCustom);
 		outState.putBoolean(SAVED_INSTALL_NOTIFIED, installNotified);
 		outState.putBoolean(SAVED_NOT_FOUND_NOTIFIED, notFoundNotified);
 		outState.putBoolean(SAVED_MULTIPLE_FOUND_NOTIFIED,
@@ -232,6 +238,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			barcode = scanResult.getContents();
 			type = CODE_TYPES.get(scanResult.getFormatName());
 			productId = null;
+			isCustom = false;
 			saveBarcode = false;
 			setQuantity(1);
 			if (barcode == null)
@@ -240,6 +247,8 @@ public class VerifyActivity extends PreferenceActivity implements
 			if (resultCode == Activity.RESULT_OK) {
 				productId = intent
 						.getStringExtra(ChooseActivity.EXTRA_PRODUCT_ID);
+				isCustom = intent.getBooleanExtra(
+						ChooseActivity.EXTRA_IS_CUSTOM, false);
 				saveBarcode = true;
 				notFoundNotified = false;
 				updateView();
@@ -330,6 +339,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			else
 				type = TYPE_CODE_128;
 			productId = null;
+			isCustom = false;
 			saveBarcode = false;
 			setQuantity(1);
 			updateView();
@@ -380,8 +390,9 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (productId == null)
 			throw new IllegalStateException();
 		if (saveBarcode)
-			NewGoodBarcodeTable.getInstance().add(productId, type, barcode);
-		SelectedGoodTable.getInstance().set(productId,
+			NewGoodBarcodeTable.getInstance().add(productId, isCustom, type,
+					barcode);
+		SelectedGoodTable.getInstance().set(productId, isCustom,
 				getQuantity() + getRest());
 	}
 
@@ -392,50 +403,60 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (productId == null)
 			return 0;
 		else
-			return SelectedGoodTable.getInstance().getQuantity(productId);
+			return SelectedGoodTable.getInstance().getQuantity(productId,
+					isCustom);
 	}
 
 	/**
-	 * @return Выбранный товар либо <code>null</code>.
-	 * @throws MultipleObjectsReturnedException
+	 * Поиск продукта по штрих коду.
+	 * 
 	 * @throws ObjectDoesNotExistException
+	 * @throws MultipleObjectsReturnedException
 	 */
-	private ContentValues getGood() throws ObjectDoesNotExistException,
+	private void searchForProductId() throws ObjectDoesNotExistException,
 			MultipleObjectsReturnedException {
-		if (barcode == null)
-			return null;
-		if (productId == null) {
+		ContentValues values;
+		try {
+			values = GoodBarcodeTable.getInstance().getByValue(type, barcode);
+		} catch (ObjectDoesNotExistException e) {
 			try {
-				productId = GoodBarcodeTable.getInstance().getId(type, barcode);
-			} catch (ObjectDoesNotExistException e) {
-				try {
-					productId = NewGoodBarcodeTable.getInstance().getId(type,
-							barcode);
-				} catch (BaseDatabaseException e1) {
-					throw e;
-				}
-			} catch (MultipleObjectsReturnedException e) {
+				values = NewGoodBarcodeTable.getInstance().getByValue(type,
+						barcode);
+			} catch (BaseDatabaseException e1) {
 				throw e;
 			}
+			productId = values.getAsString(NewGoodBarcodeTable.Fields._ID);
+			isCustom = values
+					.getAsBoolean(NewGoodBarcodeTable.Fields.IS_CUSTOM);
+			return;
+		} catch (MultipleObjectsReturnedException e) {
+			throw e;
 		}
-		return GoodTable.getInstance().getById(productId);
+		productId = values.getAsString(GoodBarcodeTable.Fields._ID);
+		isCustom = false;
 	}
 
 	private void updateView() {
 		ContentValues values = null;
-		try {
-			values = getGood();
-		} catch (ObjectDoesNotExistException e) {
-			if (!notFoundNotified) {
-				notFoundNotified = true;
-				showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
+		if (barcode != null)
+			try {
+				if (productId == null)
+					searchForProductId();
+				if (isCustom)
+					values = CustomGoodTable.getInstance().getById(productId);
+				else
+					values = GoodTable.getInstance().getById(productId);
+			} catch (ObjectDoesNotExistException e) {
+				if (!notFoundNotified) {
+					notFoundNotified = true;
+					showDialog(DIALOG_OBJECT_DOES_NOT_EXIST_ID);
+				}
+			} catch (MultipleObjectsReturnedException e) {
+				if (!multipleFoundNotified) {
+					multipleFoundNotified = true;
+					showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
+				}
 			}
-		} catch (MultipleObjectsReturnedException e) {
-			if (!multipleFoundNotified) {
-				multipleFoundNotified = true;
-				showDialog(DIALOG_MULTIPLE_OBJECTS_RETURNED_ID);
-			}
-		}
 		if (values == null) {
 			findPreference(getString(R.string.name_title)).setTitle("");
 			findPreference(getString(R.string.name_title)).setSummary("");
@@ -443,18 +464,18 @@ public class VerifyActivity extends PreferenceActivity implements
 			findPreference(getString(R.string.code_title)).setTitle("");
 			findPreference(getString(R.string.product_code_title)).setTitle("");
 		} else {
-			String name = values.getAsString(GoodTable.Fields.NAME);
+			String name = values.getAsString(BaseGoodTable.Fields.NAME);
 			String uom = "";
 			try {
 				uom = UomTable.getInstance().getName(
-						values.getAsString(GoodTable.Fields.UOM));
+						values.getAsString(BaseGoodTable.Fields.UOM));
 			} catch (BaseDatabaseException e) {
 			}
 			String price;
 			if (BST.getInstance().getDocumentType().useSalePrice())
-				price = values.getAsString(GoodTable.Fields.SALE_PRICE);
+				price = values.getAsString(BaseGoodTable.Fields.SALE_PRICE);
 			else
-				price = values.getAsString(GoodTable.Fields.BUY_PRICE);
+				price = values.getAsString(BaseGoodTable.Fields.BUY_PRICE);
 			BigDecimal bigDecimal = null;
 			try {
 				bigDecimal = new BigDecimal(price);
@@ -463,9 +484,9 @@ public class VerifyActivity extends PreferenceActivity implements
 			if (bigDecimal != null) {
 				bigDecimal = bigDecimal.movePointLeft(2);
 				bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_EVEN);
+				if (bigDecimal.longValue() == 0)
+					bigDecimal = null;
 			}
-			if (bigDecimal.longValue() == 0)
-				bigDecimal = null;
 			if (bigDecimal == null)
 				price = "";
 			else
@@ -486,7 +507,8 @@ public class VerifyActivity extends PreferenceActivity implements
 							price, uom);
 			}
 			LinkedList<String> folders = new LinkedList<String>();
-			String folder = values.getAsString(GoodTable.Fields.GOOD_FOLDER);
+			String folder = values
+					.getAsString(BaseGoodTable.Fields.GOOD_FOLDER);
 			while (!"".equals(folder)) {
 				ContentValues folderValues;
 				try {
@@ -511,9 +533,9 @@ public class VerifyActivity extends PreferenceActivity implements
 					builder.toString());
 			findPreference(getString(R.string.barcode_title)).setTitle(barcode);
 			findPreference(getString(R.string.code_title)).setTitle(
-					values.getAsString(GoodTable.Fields.CODE));
+					values.getAsString(BaseGoodTable.Fields.CODE));
 			findPreference(getString(R.string.product_code_title)).setTitle(
-					values.getAsString(GoodTable.Fields.PRODUCT_CODE));
+					values.getAsString(BaseGoodTable.Fields.PRODUCT_CODE));
 		}
 		restView.setText(String
 				.format(getString(R.string.rest_text), getRest()));

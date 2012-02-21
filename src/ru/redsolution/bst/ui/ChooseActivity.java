@@ -3,6 +3,7 @@ package ru.redsolution.bst.ui;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.BaseGoodTable;
 import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
@@ -60,6 +61,8 @@ public class ChooseActivity extends ListActivity implements
 
 		good,
 
+		custom,
+
 		folder;
 
 		/**
@@ -71,6 +74,9 @@ public class ChooseActivity extends ListActivity implements
 					.getColumnIndex(NamedTable.Fields.TABLE_NAME));
 			if (tableName.equals(GoodTable.getInstance().getTableName())) {
 				return good;
+			} else if (tableName.equals(CustomGoodTable.getInstance()
+					.getTableName())) {
+				return custom;
 			} else if (tableName.equals(GoodFolderTable.getInstance()
 					.getTableName())) {
 				return folder;
@@ -95,7 +101,7 @@ public class ChooseActivity extends ListActivity implements
 			folder = "";
 		}
 		final CursorAdapter adapter = new ResourceCursorAdapter(this,
-				android.R.layout.simple_list_item_2, createCursor()) {
+				android.R.layout.simple_list_item_2, createCursor("")) {
 
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
@@ -111,6 +117,9 @@ public class ChooseActivity extends ListActivity implements
 							.getValues(cursor)
 							.getAsString(GoodTable.Fields.PRODUCT_CODE));
 					break;
+				case custom:
+					summaryView.setText(R.string.custom_good);
+					break;
 				case folder:
 					summaryView.setText(R.string.folder);
 					break;
@@ -123,11 +132,7 @@ public class ChooseActivity extends ListActivity implements
 			@Override
 			public Cursor runQuery(CharSequence constraint) {
 				Cursor cursor;
-				if (constraint.length() == 0)
-					cursor = createCursor();
-				else
-					cursor = GoodTable.getInstance().filterByText(
-							constraint.toString());
+				cursor = createCursor(constraint);
 				startManagingCursor(cursor);
 				return cursor;
 			}
@@ -167,15 +172,32 @@ public class ChooseActivity extends ListActivity implements
 	}
 
 	/**
+	 * @param constraint
 	 * @return Новый курсор.
 	 */
-	private Cursor createCursor() {
+	private Cursor createCursor(CharSequence constraint) {
 		if (BST.getInstance().isShowFolders()) {
-			return new MergeCursor(new Cursor[] {
-					GoodFolderTable.getInstance().list(folder),
-					GoodTable.getInstance().list(folder) });
+			if (constraint.length() == 0) {
+				if ("".equals(folder))
+					return new MergeCursor(new Cursor[] {
+							GoodFolderTable.getInstance().list(folder),
+							CustomGoodTable.getInstance().list(),
+							GoodTable.getInstance().list(folder) });
+				else
+					return new MergeCursor(new Cursor[] {
+							GoodFolderTable.getInstance().list(folder),
+							GoodTable.getInstance().list(folder) });
+			} else {
+				return new MergeCursor(new Cursor[] {
+						CustomGoodTable.getInstance().filterByText(
+								constraint.toString()),
+						GoodTable.getInstance().filterByText(
+								constraint.toString()) });
+			}
 		} else {
-			return GoodTable.getInstance().list();
+			return new MergeCursor(new Cursor[] {
+					CustomGoodTable.getInstance().list(),
+					GoodTable.getInstance().list() });
 		}
 	}
 
@@ -183,7 +205,7 @@ public class ChooseActivity extends ListActivity implements
 	 * Обновляет данные списка.
 	 */
 	private void updateCursor() {
-		((CursorAdapter) getListAdapter()).changeCursor(createCursor());
+		((CursorAdapter) getListAdapter()).changeCursor(createCursor(""));
 	}
 
 	@Override
@@ -227,11 +249,13 @@ public class ChooseActivity extends ListActivity implements
 		Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 		switch (Type.getType(cursor)) {
 		case good:
+		case custom:
 			Intent intent = new Intent();
 			String productId = cursor.getString(cursor
-					.getColumnIndex(GoodTable.Fields._ID));
+					.getColumnIndex(BaseGoodTable.Fields._ID));
 			intent.putExtra(EXTRA_PRODUCT_ID, productId);
-			intent.putExtra(EXTRA_IS_CUSTOM, false);
+			intent.putExtra(EXTRA_IS_CUSTOM,
+					Type.getType(cursor) == Type.custom);
 			setResult(RESULT_OK, intent);
 			finish();
 			break;

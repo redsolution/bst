@@ -92,9 +92,9 @@ public abstract class BaseSerializer {
 							.getAsString(NewGoodBarcodeTable.Fields.TYPE));
 					serializer.text(" ");
 					String value = good
-							.getAsString(GoodTable.Fields.PRODUCT_CODE);
+							.getAsString(BaseGoodTable.Fields.PRODUCT_CODE);
 					if ("".equals(value))
-						value = good.getAsString(GoodTable.Fields.NAME);
+						value = good.getAsString(BaseGoodTable.Fields.NAME);
 					serializer.text(value);
 					serializer.text("\n");
 				} while (cursor.moveToNext());
@@ -103,7 +103,7 @@ public abstract class BaseSerializer {
 			cursor.close();
 		}
 		serializer.endTag("", DESCRIPTION_TAG);
-		cursor = SelectedGoodTable.getInstance().list();
+		cursor = SelectedGoodTable.getInstance().listCustom(false);
 		try {
 			if (cursor.moveToFirst()) {
 				do {

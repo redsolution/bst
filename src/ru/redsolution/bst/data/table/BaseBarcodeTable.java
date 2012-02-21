@@ -48,15 +48,15 @@ public abstract class BaseBarcodeTable extends BaseTable {
 	 *            Тип штрих кода.
 	 * @param value
 	 *            Значение штрих кода.
-	 * @return Идентификатор родительского объекта.
+	 * @return
 	 * @throws ObjectDoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public String getId(String type, String value)
+	public ContentValues getByValue(String type, String value)
 			throws ObjectDoesNotExistException,
 			MultipleObjectsReturnedException {
 		return get(Fields.TYPE + " = ? AND " + Fields.VALUE + " = ?",
-				new String[] { type, value }).getAsString(Fields._ID);
+				new String[] { type, value });
 	}
 
 }

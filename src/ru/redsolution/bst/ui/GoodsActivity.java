@@ -2,6 +2,8 @@ package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.BaseGoodTable;
+import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.UomTable;
@@ -34,6 +36,7 @@ public class GoodsActivity extends ListActivity implements
 	private static final int DIALOG_REMOVE_ID = 2;
 
 	private String id;
+	private boolean isCustom;
 	private View quantityView;
 
 	@Override
@@ -51,15 +54,18 @@ public class GoodsActivity extends ListActivity implements
 				int quantity = values
 						.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
 				try {
-					values = GoodTable.getInstance().getById(id);
+					if (values.getAsBoolean(SelectedGoodTable.Fields.IS_CUSTOM))
+						values = CustomGoodTable.getInstance().getById(id);
+					else
+						values = GoodTable.getInstance().getById(id);
 				} catch (BaseDatabaseException e) {
 					values = null;
 				}
 				String name = "";
 				String uom = "";
 				if (values != null) {
-					name = values.getAsString(GoodTable.Fields.NAME);
-					String uomId = values.getAsString(GoodTable.Fields.UOM);
+					name = values.getAsString(BaseGoodTable.Fields.NAME);
+					String uomId = values.getAsString(BaseGoodTable.Fields.UOM);
 					try {
 						uom = UomTable.getInstance().getName(uomId);
 					} catch (BaseDatabaseException e) {
@@ -86,8 +92,12 @@ public class GoodsActivity extends ListActivity implements
 		ContentValues values = SelectedGoodTable.getInstance()
 				.getValues(cursor);
 		id = values.getAsString(SelectedGoodTable.Fields._ID);
+		isCustom = values.getAsBoolean(SelectedGoodTable.Fields.IS_CUSTOM);
 		try {
-			menu.setHeaderTitle(GoodTable.getInstance().getName(id));
+			if (isCustom)
+				menu.setHeaderTitle(CustomGoodTable.getInstance().getName(id));
+			else
+				menu.setHeaderTitle(GoodTable.getInstance().getName(id));
 		} catch (BaseDatabaseException e) {
 		}
 		menu.add(0, CONTEXT_MENU_CHANGE_QANTITY_ID, 0,
@@ -118,12 +128,8 @@ public class GoodsActivity extends ListActivity implements
 					R.layout.quantity_picker, null, false);
 			if (quantityView instanceof NumberPicker) {
 				((NumberPicker) quantityView).setRange(1, 99999999);
-				try {
-					((NumberPicker) quantityView).setCurrent(SelectedGoodTable
-							.getInstance().getById(this.id)
-							.getAsInteger(SelectedGoodTable.Fields.QUANTITY));
-				} catch (BaseDatabaseException e) {
-				}
+				((NumberPicker) quantityView).setCurrent(SelectedGoodTable
+						.getInstance().getQuantity(this.id, isCustom));
 			}
 			return new ConfirmDialogBuilder(this, id, this).setView(
 					quantityView).create();
@@ -141,12 +147,12 @@ public class GoodsActivity extends ListActivity implements
 		switch (dialogBuilder.getDialogId()) {
 		case DIALOG_CHANGE_QANTITY_ID:
 			if (quantityView instanceof NumberPicker) {
-				SelectedGoodTable.getInstance().set(id,
+				SelectedGoodTable.getInstance().set(id, isCustom,
 						((NumberPicker) quantityView).getCurrent());
 			}
 			break;
 		case DIALOG_REMOVE_ID:
-			SelectedGoodTable.getInstance().set(id, 0);
+			SelectedGoodTable.getInstance().set(id, isCustom, 0);
 			break;
 		default:
 			break;
@@ -159,8 +165,8 @@ public class GoodsActivity extends ListActivity implements
 	}
 
 	private void updateView() {
-		((ResourceCursorAdapter) getListAdapter()).changeCursor(SelectedGoodTable
-				.getInstance().list());
+		((ResourceCursorAdapter) getListAdapter())
+				.changeCursor(SelectedGoodTable.getInstance().list());
 	}
 
 }

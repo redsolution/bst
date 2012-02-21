@@ -72,6 +72,7 @@
     <string name="search_hint">Наименование или артикул</string>
     <string name="create_good">Создать новый товар %s</string>
     <string name="folder">Папка</string>
+    <string name="custom_good">Новый товар</string>
     <string name="show_folders">Отобразить папки</string>
     <string name="hide_folders">Скрыть папки</string>
 

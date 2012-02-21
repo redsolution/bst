@@ -24,7 +24,7 @@ public abstract class BaseGoodTable extends NamedTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.BUY_PRICE);
 		collection.add(Fields.SALE_PRICE);

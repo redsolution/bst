@@ -18,14 +18,14 @@ public abstract class NamedTable extends BaseTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.NAME);
 		return collection;
 	}
 
 	@Override
-	public String getFieldType(String name) {
+	protected String getFieldType(String name) {
 		String type = super.getFieldType(name);
 		if (Fields.NAME.equals(name))
 			type += " COLLATE UNICODE";

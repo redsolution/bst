@@ -41,7 +41,7 @@ public class CompanyTable extends NamedTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.FOLDER);
 		return collection;

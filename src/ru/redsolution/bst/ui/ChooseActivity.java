@@ -107,8 +107,9 @@ public class ChooseActivity extends ListActivity implements
 						.findViewById(android.R.id.text2);
 				switch (Type.getType(cursor)) {
 				case good:
-					summaryView.setText(cursor.getString(cursor
-							.getColumnIndex(GoodTable.Fields.PRODUCT_CODE)));
+					summaryView.setText(GoodTable.getInstance()
+							.getValues(cursor)
+							.getAsString(GoodTable.Fields.PRODUCT_CODE));
 					break;
 				case folder:
 					summaryView.setText(R.string.folder);
@@ -236,8 +237,8 @@ public class ChooseActivity extends ListActivity implements
 			break;
 
 		case folder:
-			this.folder = cursor.getString(cursor
-					.getColumnIndex(GoodTable.Fields._ID));
+			this.folder = GoodFolderTable.getInstance().getValues(cursor)
+					.getAsString(GoodFolderTable.Fields._ID);
 			updateCursor();
 			break;
 		}

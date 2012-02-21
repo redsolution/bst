@@ -18,7 +18,7 @@ public abstract class BaseBarcodeTable extends BaseTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.TYPE);
 		collection.add(Fields.VALUE);

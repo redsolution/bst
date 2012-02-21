@@ -6,7 +6,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
-import android.database.Cursor;
+import android.content.ContentValues;
 
 public class InventorySerializer extends BaseSerializer {
 
@@ -36,11 +36,11 @@ public class InventorySerializer extends BaseSerializer {
 	}
 
 	@Override
-	protected void renderItemAttrs(XmlSerializer serializer, Cursor cursor)
-			throws IllegalArgumentException, IllegalStateException, IOException {
-		super.renderItemAttrs(serializer, cursor);
-		int quantity = cursor.getInt(cursor
-				.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
+	protected void renderItemAttrs(XmlSerializer serializer,
+			ContentValues values) throws IllegalArgumentException,
+			IllegalStateException, IOException {
+		super.renderItemAttrs(serializer, values);
+		int quantity = values.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
 		serializer.attribute("", "correctionAmount", String.valueOf(quantity));
 	}
 

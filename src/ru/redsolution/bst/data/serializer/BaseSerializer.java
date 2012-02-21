@@ -75,24 +75,26 @@ public abstract class BaseSerializer {
 				serializer.text(BST.getInstance().getString(
 						R.string.new_barcode_description));
 				do {
-					String id = cursor.getString(cursor
-							.getColumnIndex(NewGoodBarcodeTable.Fields._ID));
-					ContentValues values;
+					ContentValues values = NewGoodBarcodeTable.getInstance()
+							.getValues(cursor);
+					String id = values
+							.getAsString(NewGoodBarcodeTable.Fields._ID);
+					ContentValues good;
 					try {
-						values = GoodTable.getInstance().getById(id);
+							good = GoodTable.getInstance().getById(id);
 					} catch (BaseDatabaseException e) {
 						continue;
 					}
-					serializer.text(cursor.getString(cursor
-							.getColumnIndex(NewGoodBarcodeTable.Fields.VALUE)));
+					serializer.text(values
+							.getAsString(NewGoodBarcodeTable.Fields.VALUE));
 					serializer.text(" ");
-					serializer.text(cursor.getString(cursor
-							.getColumnIndex(NewGoodBarcodeTable.Fields.TYPE)));
+					serializer.text(values
+							.getAsString(NewGoodBarcodeTable.Fields.TYPE));
 					serializer.text(" ");
-					String value = values
+					String value = good
 							.getAsString(GoodTable.Fields.PRODUCT_CODE);
 					if ("".equals(value))
-						value = values.getAsString(GoodTable.Fields.NAME);
+						value = good.getAsString(GoodTable.Fields.NAME);
 					serializer.text(value);
 					serializer.text("\n");
 				} while (cursor.moveToNext());
@@ -101,13 +103,15 @@ public abstract class BaseSerializer {
 			cursor.close();
 		}
 		serializer.endTag("", DESCRIPTION_TAG);
-		cursor = getCursor();
+		cursor = SelectedGoodTable.getInstance().list();
 		try {
 			if (cursor.moveToFirst()) {
 				do {
 					serializer.startTag("", getItemName());
-					renderItemAttrs(serializer, cursor);
-					renderItemBody(serializer, cursor);
+					ContentValues values = SelectedGoodTable.getInstance()
+							.getValues(cursor);
+					renderItemAttrs(serializer, values);
+					renderItemBody(serializer, values);
 					serializer.endTag("", getItemName());
 				} while (cursor.moveToNext());
 			}
@@ -130,12 +134,11 @@ public abstract class BaseSerializer {
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
-	protected void renderItemAttrs(XmlSerializer serializer, Cursor cursor)
-			throws IllegalArgumentException, IllegalStateException, IOException {
-		String good = cursor.getString(cursor
-				.getColumnIndex(SelectedGoodTable.Fields._ID));
-		int quantity = cursor.getInt(cursor
-				.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
+	protected void renderItemAttrs(XmlSerializer serializer,
+			ContentValues values) throws IllegalArgumentException,
+			IllegalStateException, IOException {
+		String good = values.getAsString(SelectedGoodTable.Fields._ID);
+		int quantity = values.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
 		serializer.attribute("", "quantity", String.valueOf(quantity));
 		serializer.attribute("", "goodId", good);
 	}
@@ -149,16 +152,8 @@ public abstract class BaseSerializer {
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
-	protected void renderItemBody(XmlSerializer serializer, Cursor cursor)
+	protected void renderItemBody(XmlSerializer serializer, ContentValues values)
 			throws IllegalArgumentException, IllegalStateException, IOException {
-
-	}
-
-	/**
-	 * @return Курсор с объектами.
-	 */
-	protected Cursor getCursor() {
-		return SelectedGoodTable.getInstance().list();
 	}
 
 	/**

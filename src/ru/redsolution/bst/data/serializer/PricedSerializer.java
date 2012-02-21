@@ -8,7 +8,6 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import android.content.ContentValues;
-import android.database.Cursor;
 
 /**
  * Класс для сериализации данных и учета стоимости ТМЦ в документе.
@@ -27,18 +26,17 @@ public abstract class PricedSerializer extends BaseSerializer {
 	protected abstract String getPriceFieldName();
 
 	@Override
-	protected void renderItemBody(XmlSerializer serializer, Cursor cursor)
+	protected void renderItemBody(XmlSerializer serializer, ContentValues values)
 			throws IllegalArgumentException, IllegalStateException, IOException {
-		super.renderItemBody(serializer, cursor);
-		String good = cursor.getString(cursor
-				.getColumnIndex(SelectedGoodTable.Fields._ID));
-		ContentValues values;
+		super.renderItemBody(serializer, values);
+		String id = values.getAsString(SelectedGoodTable.Fields._ID);
+		ContentValues good;
 		try {
-			values = GoodTable.getInstance().getById(good);
+			good = GoodTable.getInstance().getById(id);
 		} catch (BaseDatabaseException e) {
 			return;
 		}
-		String price = values.getAsString(getPriceFieldName());
+		String price = good.getAsString(getPriceFieldName());
 		if ("".equals(price))
 			return;
 		serializer.startTag("", BASE_PRICE_TAG);

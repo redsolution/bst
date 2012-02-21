@@ -27,7 +27,7 @@ public abstract class BaseTable implements DatabaseTable {
 	/**
 	 * @return Список полей в таблице.
 	 */
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>();
 		collection.add(Fields._ID);
 		return collection;
@@ -38,8 +38,31 @@ public abstract class BaseTable implements DatabaseTable {
 	 *            Имя поля.
 	 * @return Тип поля.
 	 */
-	public String getFieldType(String name) {
+	protected String getFieldType(String name) {
 		return "TEXT";
+	}
+
+	/**
+	 * Размещает значение именованного поля из курсора в результирующий набор
+	 * значений.
+	 * 
+	 * @param values
+	 * @param name
+	 * @param cursor
+	 */
+	protected void putValue(ContentValues values, String name, Cursor cursor) {
+		values.put(name, cursor.getString(cursor.getColumnIndex(name)));
+	}
+
+	/**
+	 * @param cursor
+	 * @return Значения из курсора.
+	 */
+	public ContentValues getValues(Cursor cursor) {
+		ContentValues values = new ContentValues();
+		for (String name : getFields())
+			putValue(values, name, cursor);
+		return values;
 	}
 
 	@Override
@@ -121,13 +144,8 @@ public abstract class BaseTable implements DatabaseTable {
 		try {
 			if (cursor.getCount() > 1)
 				throw new MultipleObjectsReturnedException();
-			if (cursor.moveToFirst()) {
-				ContentValues values = new ContentValues();
-				for (String name : getFields())
-					values.put(name,
-							cursor.getString(cursor.getColumnIndex(name)));
-				return values;
-			}
+			if (cursor.moveToFirst())
+				return getValues(cursor);
 		} finally {
 			cursor.close();
 		}

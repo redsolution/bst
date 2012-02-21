@@ -32,7 +32,7 @@ public class CustomGoodTable extends BaseGoodTable {
 	}
 
 	@Override
-	public String getFieldType(String name) {
+	protected String getFieldType(String name) {
 		if (Fields._ID.equals(name))
 			return "INTEGER PRIMARY KEY";
 		return super.getFieldType(name);

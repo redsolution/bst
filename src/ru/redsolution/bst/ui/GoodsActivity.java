@@ -45,11 +45,11 @@ public class GoodsActivity extends ListActivity implements
 						.getInstance().list()) {
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
-				String id = cursor.getString(cursor
-						.getColumnIndex(SelectedGoodTable.Fields._ID));
-				int quantity = cursor.getInt(cursor
-						.getColumnIndex(SelectedGoodTable.Fields.QUANTITY));
 				ContentValues values;
+				values = SelectedGoodTable.getInstance().getValues(cursor);
+				String id = values.getAsString(SelectedGoodTable.Fields._ID);
+				int quantity = values
+						.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
 				try {
 					values = GoodTable.getInstance().getById(id);
 				} catch (BaseDatabaseException e) {
@@ -83,7 +83,9 @@ public class GoodsActivity extends ListActivity implements
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		System.out.println(getListView().getItemAtPosition(info.position));
 		Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
-		id = cursor.getString(cursor.getColumnIndex(SelectedGoodTable.Fields._ID));
+		ContentValues values = SelectedGoodTable.getInstance()
+				.getValues(cursor);
+		id = values.getAsString(SelectedGoodTable.Fields._ID);
 		try {
 			menu.setHeaderTitle(GoodTable.getInstance().getName(id));
 		} catch (BaseDatabaseException e) {

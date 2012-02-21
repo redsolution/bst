@@ -43,7 +43,7 @@ public class ContractTable extends NamedTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.COMPANY);
 		collection.add(Fields.MY_COMPANY);

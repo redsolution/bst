@@ -39,14 +39,14 @@ public class SelectedGoodTable extends BaseTable {
 	}
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.QUANTITY);
 		return collection;
 	}
 
 	@Override
-	public String getFieldType(String name) {
+	protected String getFieldType(String name) {
 		if (Fields.QUANTITY.equals(name))
 			return "INTEGER";
 		else

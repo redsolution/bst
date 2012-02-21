@@ -20,7 +20,7 @@ public abstract class ParentableTable extends NamedTable {
 	public abstract String getTableName();
 
 	@Override
-	public Collection<String> getFields() {
+	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.PARENT);
 		return collection;

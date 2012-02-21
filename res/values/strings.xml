@@ -92,4 +92,5 @@
     <string name="remove_confirm">Do you really want to remove good?</string>
 
     <string name="new_barcode_description">New barcodes were found.\nBarcode, Barcode type, Product code / name:\n</string>
+    <string name="custom_good_description">New goods were found.\nQuantity, Name:\n</string>
 </resources>

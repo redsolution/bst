@@ -8,6 +8,8 @@ import org.xmlpull.v1.XmlSerializer;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
+import ru.redsolution.bst.data.table.BaseGoodTable;
+import ru.redsolution.bst.data.table.CustomGoodTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.NewGoodBarcodeTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
@@ -69,7 +71,34 @@ public abstract class BaseSerializer {
 	protected void renderContainerBody(XmlSerializer serializer)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		serializer.startTag("", DESCRIPTION_TAG);
-		Cursor cursor = NewGoodBarcodeTable.getInstance().list();
+		Cursor cursor = SelectedGoodTable.getInstance().listCustom(true);
+		try {
+			if (cursor.moveToFirst()) {
+				serializer.text(BST.getInstance().getString(
+						R.string.custom_good_description));
+				do {
+					ContentValues values = SelectedGoodTable.getInstance()
+							.getValues(cursor);
+					String id = values
+							.getAsString(SelectedGoodTable.Fields._ID);
+					ContentValues good;
+					try {
+						good = CustomGoodTable.getInstance().getById(id);
+					} catch (BaseDatabaseException e) {
+						continue;
+					}
+					serializer.text(values
+							.getAsString(SelectedGoodTable.Fields.QUANTITY));
+					serializer.text(" ");
+					serializer.text(good
+							.getAsString(CustomGoodTable.Fields.NAME));
+					serializer.text("\n");
+				} while (cursor.moveToNext());
+			}
+		} finally {
+			cursor.close();
+		}
+		cursor = NewGoodBarcodeTable.getInstance().list();
 		try {
 			if (cursor.moveToFirst()) {
 				serializer.text(BST.getInstance().getString(
@@ -81,6 +110,10 @@ public abstract class BaseSerializer {
 							.getAsString(NewGoodBarcodeTable.Fields._ID);
 					ContentValues good;
 					try {
+						if (values
+								.getAsBoolean(NewGoodBarcodeTable.Fields.IS_CUSTOM))
+							good = CustomGoodTable.getInstance().getById(id);
+						else
 							good = GoodTable.getInstance().getById(id);
 					} catch (BaseDatabaseException e) {
 						continue;

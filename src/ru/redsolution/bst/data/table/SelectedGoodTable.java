@@ -146,4 +146,13 @@ public class SelectedGoodTable extends BaseTable {
 		return executeForQuantity("SUM");
 	}
 
+	/**
+	 * @param isCustom
+	 * @return Список выбранных товаров.
+	 */
+	public Cursor listCustom(boolean isCustom) {
+		return filter(Fields.IS_CUSTOM + " = ?",
+				new String[] { getBoolean(isCustom) }, null);
+	}
+
 }

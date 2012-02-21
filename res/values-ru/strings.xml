@@ -92,4 +92,5 @@
     <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
 
     <string name="new_barcode_description">Найдены новые штрих коды.\nШтрих код, Тип штрих кода, Артикул / Наименование:\n</string>
+    <string name="custom_good_description">Найдены новые товары.\nКоличество, Наименование:\n</string>
 </resources>

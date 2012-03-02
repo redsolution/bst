@@ -245,6 +245,9 @@ public class MainActivity extends PreferenceActivity implements
 				.setEnabled(isImported);
 		findPreference(getString(R.string.inventory_action)).setEnabled(
 				isImported);
+		findPreference(getString(R.string.demand_action))
+				.setEnabled(isImported);
+		findPreference(getString(R.string.move_action)).setEnabled(isImported);
 		findPreference(getString(R.string.settings_action)).setEnabled(
 				isImported);
 	}

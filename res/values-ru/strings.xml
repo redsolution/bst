@@ -1,96 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">МойСклад - Терминал ввода данных</string>
-    <string name="continue_action">Продолжить работу</string>
-    <string name="continue_summary">Нет созданного документа</string>
-    <string name="continue_supply_summary">Идет приемка товара</string>
-    <string name="continue_inventory_summary">Идет инвентаризация</string>
-    <string name="continue_demand_summary">Идет отгрузка</string>
-    <string name="continue_move_summary">Идет перемещение</string>
-    <string name="import_action">Импорт данных</string>
-    <string name="import_summary">Загрузка справочников</string>
-    <string name="supply_action">Приемка товара</string>
-    <string name="inventory_action">Инвентаризация</string>
-    <string name="demand_action">Отгрузка</string>
-    <string name="retail_action">Розничная продажа</string>
-    <string name="move_action">Перемещение</string>
-    <string name="settings_action">Настройки</string>
-
-    <string name="another_title">Новый документ</string>
-    <string name="another_confirm">Вы действительно хотите удалить предыдущий документ и создать новый?</string>
-
-    <string name="auth_title">Настройки авторизации</string>
-    <string name="login_title">Имя пользователя или email</string>
-    <string name="login_hint">имя@организация</string>
-    <string name="password_title">Пароль</string>
-
-    <string name="incorrect_login">МойСклад не поддерживает не ASCII символы в именах пользователей. Пожалуйста, используйте ваш email.</string>
-
-    <string name="wait">Пожалуйста, подождите &#8230;</string>
-    <string name="auth_error">Ошибка авторизации</string>
-    <string name="server_error">Ошибка сервера</string>
-    <string name="connection_error">Ошибка подключения</string>
-
-    <string name="my_company_title">Организация</string>
-    <string name="warehouse_title">Склад</string>
-    <string name="target_warehouse_title">Склад назначения</string>
-    <string name="supply_company_title">Контрагент для закупок</string>
-    <string name="supply_contract_title">Договор для закупок</string>
-    <string name="demand_company_title">Контрагент для продаж</string>
-    <string name="demand_contract_title">Договор для продаж</string>
-    <string name="project_title">Проект</string>
-    <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
-
-    <string name="nothing">&lt; Ничего &gt;</string>
-
-    <string name="defaults_title">Значения, используемые по умолчанию</string>
-    <string name="defaults_hint">Не выбраны реквизиты, используемые по умолчанию. Хотите задать их сейчас?</string>
-
-    <string name="create">Создать</string>
-
-    <string name="install_title">Установить сканер штрих кодов?</string>
-    <string name="install_message">Для работы необходим Сканер штрих кодов. Вы хотите установить его?</string>
-    <string name="install_fail">Android Market не найден. Пожалуйста, самостоятельно установите Сканер штрих кодов.</string>
-
-    <string name="verify_title">Проверка товара</string>
-    <string name="name_title">Наименование</string>
-    <string name="barcode_title">Штрих код</string>
-    <string name="code_title">Код</string>
-    <string name="product_code_title">Артикул</string>
-    <string name="quantity_title">Количество</string>
-    <string name="rest_text">%1$d + </string>
-    <string name="more">Ещё</string>
-    <string name="finish">Готово</string>
-    <string name="good_with_extra">%1$s (%2$s)</string>
-    <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
-
-    <string name="verification_error">Невозможно добавить товар</string>
-    <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
-    <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Выбрать товар из списка и ассоциировать его со штрих кодом?</string>
-
-    <string name="search_title">Поиск товаров</string>
-    <string name="search_hint">Наименование или артикул</string>
-    <string name="create_good">Создать новый товар %s</string>
-    <string name="folder">Папка</string>
-    <string name="custom_good">Новый товар</string>
-    <string name="show_folders">Отобразить папки</string>
-    <string name="hide_folders">Скрыть папки</string>
-
-    <string name="scan_action">Сканировать</string>
-    <string name="barcode_action">Добавить по штрих коду</string>
-    <string name="barcode_summary">Ввести значение с клавиатуры</string>
-    <string name="list_action">Список товаров</string>
-    <string name="list_summary">Наименований: %1$d, товаров: %2$d</string>
-    <string name="header_action">Изменить шапку</string>
-    <string name="send_action">Отправка документа</string>
-    <string name="cancel_action">Удалить документ</string>
-    <string name="cancel_confirm">Вы действительно хотите удалить документ?</string>
-
-    <string name="summary_text">%1$d %2$s</string>
-    <string name="quantity_action">Изменить количество</string>
-    <string name="remove_action">Удалить</string>
-    <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
-
-    <string name="new_barcode_description">Найдены новые штрих коды.\nШтрих код, Тип штрих кода, Артикул / Наименование:\n</string>
-    <string name="custom_good_description">Найдены новые товары.\nКоличество, Наименование:\n</string>
+  <string name="app_name">МойСклад - Терминал ввода данных</string>
+  <string name="continue_action">Продолжить работу</string>
+  <string name="continue_summary">Нет созданного документа</string>
+  <string name="continue_supply_summary">Идет приемка товара</string>
+  <string name="continue_inventory_summary">Идет инвентаризация</string>
+  <string name="continue_demand_summary">Идет отгрузка</string>
+  <string name="continue_move_summary">Идет перемещение</string>
+  <string name="import_action">Импорт данных</string>
+  <string name="import_summary">Загрузка справочников</string>
+  <string name="supply_action">Приемка товара</string>
+  <string name="inventory_action">Инвентаризация</string>
+  <string name="demand_action">Отгрузка</string>
+  <string name="retail_action">Розничная продажа</string>
+  <string name="move_action">Перемещение</string>
+  <string name="settings_action">Настройки</string>
+  <string name="another_title">Новый документ</string>
+  <string name="another_confirm">Вы действительно хотите удалить предыдущий документ и создать новый?</string>
+  <string name="auth_title">Настройки авторизации</string>
+  <string name="login_title">Имя пользователя или email</string>
+  <string name="login_hint">имя@организация</string>
+  <string name="password_title">Пароль</string>
+  <string name="incorrect_login">МойСклад не поддерживает не ASCII символы в именах пользователей. Пожалуйста, используйте ваш email.</string>
+  <string name="wait">Пожалуйста, подождите &#8230;</string>
+  <string name="auth_error">Ошибка авторизации</string>
+  <string name="server_error">Ошибка сервера</string>
+  <string name="connection_error">Ошибка подключения</string>
+  <string name="my_company_title">Организация</string>
+  <string name="warehouse_title">Склад</string>
+  <string name="target_warehouse_title">Склад назначения</string>
+  <string name="supply_company_title">Контрагент для закупок</string>
+  <string name="supply_contract_title">Договор для закупок</string>
+  <string name="demand_company_title">Контрагент для продаж</string>
+  <string name="demand_contract_title">Договор для продаж</string>
+  <string name="project_title">Проект</string>
+  <string name="complite_warning">Пожалуйста, сначала заполните форму</string>
+  <string name="nothing">&lt; Ничего &gt;</string>
+  <string name="defaults_title">Значения, используемые по умолчанию</string>
+  <string name="defaults_hint">Не выбраны реквизиты, используемые по умолчанию. Хотите задать их сейчас?</string>
+  <string name="create">Создать</string>
+  <string name="install_title">Установить сканер штрих кодов?</string>
+  <string name="install_message">Для работы необходим Сканер штрих кодов. Вы хотите установить его?</string>
+  <string name="install_fail">Android Market не найден. Пожалуйста, самостоятельно установите Сканер штрих кодов.</string>
+  <string name="verify_title">Проверка товара</string>
+  <string name="name_title">Наименование</string>
+  <string name="barcode_title">Штрих код</string>
+  <string name="code_title">Код</string>
+  <string name="product_code_title">Артикул</string>
+  <string name="quantity_title">Количество</string>
+  <string name="rest_text">%1$d + </string>
+  <string name="more">Ещё</string>
+  <string name="finish">Готово</string>
+  <string name="good_with_extra">%1$s (%2$s)</string>
+  <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
+  <string name="verification_error">Невозможно добавить товар</string>
+  <string name="multiple_objects_returned">Было найдено более одного товара. Пожалуйста, исправьте это на сервисе МойСклад.</string>
+  <string name="object_does_not_exist">Товар с таким штрих кодом не был найден. Выбрать товар из списка и ассоциировать его со штрих кодом?</string>
+  <string name="search_title">Поиск товаров</string>
+  <string name="search_hint">Наименование или артикул</string>
+  <string name="create_good">Создать новый товар %s</string>
+  <string name="folder">Папка</string>
+  <string name="custom_good">Новый товар</string>
+  <string name="show_folders">Отобразить папки</string>
+  <string name="hide_folders">Скрыть папки</string>
+  <string name="scan_action">Сканировать</string>
+  <string name="barcode_action">Добавить по штрих коду</string>
+  <string name="barcode_summary">Ввести значение с клавиатуры</string>
+  <string name="list_action">Список товаров</string>
+  <string name="list_summary">Наименований: %1$d, товаров: %2$d</string>
+  <string name="header_action">Изменить шапку</string>
+  <string name="send_action">Отправка документа</string>
+  <string name="cancel_action">Удалить документ</string>
+  <string name="cancel_confirm">Вы действительно хотите удалить документ?</string>
+  <string name="summary_text">%1$d %2$s</string>
+  <string name="quantity_action">Изменить количество</string>
+  <string name="remove_action">Удалить</string>
+  <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
+  <string name="new_barcode_description">Найдены новые штрих коды.\nШтрих код, Тип штрих кода, Артикул / Наименование:\n</string>
+  <string name="custom_good_description">Найдены новые товары.\nКоличество, Наименование:\n</string>
 </resources>

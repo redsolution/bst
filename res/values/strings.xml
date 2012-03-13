@@ -1,96 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MoySklad Barcode Scanner Terminal</string>
-    <string name="continue_action">Continue</string>
-    <string name="continue_summary">There is no document</string>
-    <string name="continue_supply_summary">Continue supply</string>
-    <string name="continue_inventory_summary">Continue inventory</string>
-    <string name="continue_demand_summary">Continue demand</string>
-    <string name="continue_move_summary">Continue movement</string>
-    <string name="import_action">Import</string>
-    <string name="import_summary">Load data</string>
-    <string name="supply_action">Supply</string>
-    <string name="inventory_action">Inventory</string>
-    <string name="demand_action">Demand</string>
-    <string name="retail_action">Retail</string>
-    <string name="move_action">Movement</string>
-    <string name="settings_action">Settings</string>
-
-    <string name="another_title">New document</string>
-    <string name="another_confirm">Do you really want to remove previous document and create new one?</string>
-
-    <string name="auth_title">Authorization</string>
-    <string name="login_title">Login or email</string>
-    <string name="login_hint">name@company</string>
-    <string name="password_title">password</string>
-
-    <string name="incorrect_login">MoySklad does not support non ASCII symbols in login. Please use your email.</string>
-
-    <string name="wait">Please, wait &#8230;</string>
-    <string name="auth_error">Authorization error</string>
-    <string name="server_error">Server error</string>
-    <string name="connection_error">Connection error</string>
-
-    <string name="my_company_title">My company</string>
-    <string name="warehouse_title">Ware house</string>
-    <string name="target_warehouse_title">Target ware house</string>
-    <string name="supply_company_title">Supplier company</string>
-    <string name="supply_contract_title">Supplier contract</string>
-    <string name="demand_company_title">Customer company</string>
-    <string name="demand_contract_title">Customer contract</string>
-    <string name="project_title">Project</string>
-    <string name="complite_warning">Please fill the form</string>
-
-    <string name="nothing">&lt; Nothing &gt;</string>
-
-    <string name="defaults_title">Default values</string>
-    <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>
-
-    <string name="create">Create</string>
-
-    <string name="install_title">Install Barcode Scanner?</string>
-    <string name="install_message">This application requires Barcode Scanner. Would you like to install it?</string>
-    <string name="install_fail">There is no Android Market. Please install Barcode Scanner manually.</string>
-
-    <string name="verify_title">Verify good</string>
-    <string name="name_title">Name</string>
-    <string name="barcode_title">Barcode</string>
-    <string name="code_title">Code</string>
-    <string name="product_code_title">Product code</string>
-    <string name="quantity_title">Quantity</string>
-    <string name="rest_text">%1$d + </string>
-    <string name="more">More</string>
-    <string name="finish">Finish</string>
-    <string name="good_with_extra">%1$s (%2$s)</string>
-    <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
-
-    <string name="verification_error">Good can`t be added</string>
-    <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>
-    <string name="object_does_not_exist">There is no goods with such barcode. Do you want to choose one and associate with barcode?</string>
-
-    <string name="search_title">Good search</string>
-    <string name="search_hint">Enter product code or name</string>
-    <string name="create_good">Create new good %s</string>
-    <string name="folder">Folder</string>
-    <string name="custom_good">New good</string>
-    <string name="show_folders">Show folders</string>
-    <string name="hide_folders">Hide folders</string>
-
-    <string name="scan_action">Scan</string>
-    <string name="barcode_action">Add using barcode</string>
-    <string name="barcode_summary">Enter value from keyboard</string>
-    <string name="list_action">List of goods</string>
-    <string name="list_summary">Goods: %1$d, items: %2$d</string>
-    <string name="header_action">Change header</string>
-    <string name="send_action">Send document</string>
-    <string name="cancel_action">Remove document</string>
-    <string name="cancel_confirm">Do you realy want to remove document?</string>
-
-    <string name="summary_text">%1$d %2$s</string>
-    <string name="quantity_action">Change quantity</string>
-    <string name="remove_action">Remove</string>
-    <string name="remove_confirm">Do you really want to remove good?</string>
-
-    <string name="new_barcode_description">New barcodes were found.\nBarcode, Barcode type, Product code / name:\n</string>
-    <string name="custom_good_description">New goods were found.\nQuantity, Name:\n</string>
+  <string name="app_name">MoySklad Barcode Scanner Terminal</string>
+  <string name="continue_action">Continue</string>
+  <string name="continue_summary">There is no document</string>
+  <string name="continue_supply_summary">Continue supply</string>
+  <string name="continue_inventory_summary">Continue inventory</string>
+  <string name="continue_demand_summary">Continue demand</string>
+  <string name="continue_move_summary">Continue movement</string>
+  <string name="import_action">Import</string>
+  <string name="import_summary">Load data</string>
+  <string name="supply_action">Supply</string>
+  <string name="inventory_action">Inventory</string>
+  <string name="demand_action">Demand</string>
+  <string name="retail_action">Retail</string>
+  <string name="move_action">Movement</string>
+  <string name="settings_action">Settings</string>
+  <string name="another_title">New document</string>
+  <string name="another_confirm">Do you really want to remove previous document and create new one?</string>
+  <string name="auth_title">Authorization</string>
+  <string name="login_title">Login or email</string>
+  <string name="login_hint">name@company</string>
+  <string name="password_title">password</string>
+  <string name="incorrect_login">MoySklad does not support non ASCII symbols in login. Please use your email.</string>
+  <string name="wait">Please, wait &#8230;</string>
+  <string name="auth_error">Authorization error</string>
+  <string name="server_error">Server error</string>
+  <string name="connection_error">Connection error</string>
+  <string name="my_company_title">My company</string>
+  <string name="warehouse_title">Ware house</string>
+  <string name="target_warehouse_title">Target ware house</string>
+  <string name="supply_company_title">Supplier company</string>
+  <string name="supply_contract_title">Supplier contract</string>
+  <string name="demand_company_title">Customer company</string>
+  <string name="demand_contract_title">Customer contract</string>
+  <string name="project_title">Project</string>
+  <string name="complite_warning">Please fill the form</string>
+  <string name="nothing">&lt; Nothing &gt;</string>
+  <string name="defaults_title">Default values</string>
+  <string name="defaults_hint">There is no defaults. Do you want to set them now?</string>
+  <string name="create">Create</string>
+  <string name="install_title">Install Barcode Scanner?</string>
+  <string name="install_message">This application requires Barcode Scanner. Would you like to install it?</string>
+  <string name="install_fail">There is no Android Market. Please install Barcode Scanner manually.</string>
+  <string name="verify_title">Verify good</string>
+  <string name="name_title">Name</string>
+  <string name="barcode_title">Barcode</string>
+  <string name="code_title">Code</string>
+  <string name="product_code_title">Product code</string>
+  <string name="quantity_title">Quantity</string>
+  <string name="rest_text">%1$d + </string>
+  <string name="more">More</string>
+  <string name="finish">Finish</string>
+  <string name="good_with_extra">%1$s (%2$s)</string>
+  <string name="good_with_price_and_uom">%1$s (%2$s / %3$s)</string>
+  <string name="verification_error">Good can`t be added</string>
+  <string name="multiple_objects_returned">Multiple goods were found. Please fix it in MoySklad.</string>
+  <string name="object_does_not_exist">There is no goods with such barcode. Do you want to choose one and associate with barcode?</string>
+  <string name="search_title">Good search</string>
+  <string name="search_hint">Enter product code or name</string>
+  <string name="create_good">Create new good %s</string>
+  <string name="folder">Folder</string>
+  <string name="custom_good">New good</string>
+  <string name="show_folders">Show folders</string>
+  <string name="hide_folders">Hide folders</string>
+  <string name="scan_action">Scan</string>
+  <string name="barcode_action">Add using barcode</string>
+  <string name="barcode_summary">Enter value from keyboard</string>
+  <string name="list_action">List of goods</string>
+  <string name="list_summary">Goods: %1$d, items: %2$d</string>
+  <string name="header_action">Change header</string>
+  <string name="send_action">Send document</string>
+  <string name="cancel_action">Remove document</string>
+  <string name="cancel_confirm">Do you realy want to remove document?</string>
+  <string name="summary_text">%1$d %2$s</string>
+  <string name="quantity_action">Change quantity</string>
+  <string name="remove_action">Remove</string>
+  <string name="remove_confirm">Do you really want to remove good?</string>
+  <string name="new_barcode_description">New barcodes were found.\nBarcode, Barcode type, Product code / name:\n</string>
+  <string name="custom_good_description">New goods were found.\nQuantity, Name:\n</string>
 </resources>

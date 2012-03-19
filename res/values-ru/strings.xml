@@ -78,4 +78,9 @@
   <string name="remove_confirm">Вы действительно хотите удалить торвар?</string>
   <string name="new_barcode_description">Найдены новые штрих-коды.\nШтрих-код, Тип штрих-кода, Артикул / Наименование:\n</string>
   <string name="custom_good_description">Найдены новые товары.\nКоличество, Наименование:\n</string>
+  <string name="about_action">О программе</string>
+  <string name="about_develop">Разработка приложения — Redsolution.ru</string>
+  <string name="about_name">МойСклад</string>
+  <string name="about_summary">Создание интернет-магазинов, интегрированных с сервисом МойСклад — info@redsolution.ru</string>
+  <string name="about_title">Терминал ввода данных в сервис moysklad.ru</string>
 </resources>

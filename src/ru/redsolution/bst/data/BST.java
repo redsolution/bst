@@ -81,6 +81,8 @@ public class BST extends Application {
 
 	private final AbstractHttpClient httpClient;
 
+	private boolean wellcomeScreenShown;
+
 	public BST() {
 		super();
 		if (instance != null)
@@ -90,6 +92,7 @@ public class BST extends Application {
 		importTask = null;
 		sendTask = null;
 		operationListener = null;
+		wellcomeScreenShown = false;
 	}
 
 	@Override
@@ -113,6 +116,13 @@ public class BST extends Application {
 		SelectedGoodTable.getInstance();
 		NewGoodBarcodeTable.getInstance();
 		CustomGoodTable.getInstance();
+	}
+
+	public boolean showWellcomeScreen() {
+		if (wellcomeScreenShown)
+			return false;
+		wellcomeScreenShown = true;
+		return true;
 	}
 
 	public void setOperationListener(OperationListener operationListener) {

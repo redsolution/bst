@@ -30,4 +30,8 @@
         android:key="@string/settings_action"
         android:title="@string/settings_action"
         />
+    <PreferenceScreen
+        android:key="@string/about_action"
+        android:title="@string/about_action"
+        />
 </PreferenceScreen>

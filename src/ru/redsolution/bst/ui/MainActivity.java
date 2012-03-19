@@ -58,6 +58,8 @@ public class MainActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.settings_action))
 				.setOnPreferenceClickListener(this);
+		findPreference(getString(R.string.about_action))
+				.setOnPreferenceClickListener(this);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(true);
@@ -78,6 +80,11 @@ public class MainActivity extends PreferenceActivity implements
 					type = DocumentType.valueOf(value);
 				} catch (IllegalArgumentException e) {
 				}
+		}
+		if (BST.getInstance().showWellcomeScreen()) {
+			Intent intent = new Intent(this, AboutActivity.class);
+			intent.setAction(AboutActivity.ACTION_WELLCOME_SCREEN);
+			startActivity(intent);
 		}
 	}
 
@@ -128,6 +135,8 @@ public class MainActivity extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.settings_action))) {
 			startActivity(new Intent(this, SettingsActivity.class));
+		} else if (preference.getKey().equals(getString(R.string.about_action))) {
+			startActivity(new Intent(this, AboutActivity.class));
 		}
 		return true;
 	}

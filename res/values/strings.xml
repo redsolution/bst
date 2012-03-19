@@ -78,4 +78,9 @@
   <string name="remove_confirm">Do you really want to remove the good?</string>
   <string name="new_barcode_description">New barcodes were found.\nBarcode, Barcode type, Product code / name:\n</string>
   <string name="custom_good_description">New goods were found.\nQuantity, Name:\n</string>
+  <string name="about_action">About</string>
+  <string name="about_develop">Developed by Redsolution.ru</string>
+  <string name="about_name">MoySklad</string>
+  <string name="about_summary">Online store integrated with MoySklad — info@redsolution.ru</string>
+  <string name="about_title">Barcode scanner terminal for moysklad.ru service</string>
 </resources>

@@ -51,30 +51,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		void onChanged(NumberPicker picker, int oldVal, int newVal);
 	}
 
-	public interface Formatter {
-		String toString(int value);
-	}
-
-	/*
-	 * Use a custom NumberPicker formatting callback to use two-digit minutes
-	 * strings like "01". Keeping a static formatter etc. is the most efficient
-	 * way to do this; it avoids creating temporary objects on every call to
-	 * format().
-	 */
-	public static final NumberPicker.Formatter TWO_DIGIT_FORMATTER = new NumberPicker.Formatter() {
-		final StringBuilder mBuilder = new StringBuilder();
-		final java.util.Formatter mFmt = new java.util.Formatter(mBuilder);
-		final Object[] mArgs = new Object[1];
-
-		@Override
-		public String toString(int value) {
-			mArgs[0] = value;
-			mBuilder.delete(0, mBuilder.length());
-			mFmt.format("%02d", mArgs);
-			return mFmt.toString();
-		}
-	};
-
 	private final Handler mHandler;
 	private final Runnable mRunnable = new Runnable() {
 		@Override
@@ -94,7 +70,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	protected int mCurrent;
 	protected int mPrevious;
 	private OnChangedListener mListener;
-	private Formatter mFormatter;
 	private long mSpeed = 300;
 
 	private boolean mIncrement;
@@ -146,10 +121,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		mListener = listener;
 	}
 
-	public void setFormatter(Formatter formatter) {
-		mFormatter = formatter;
-	}
-
 	public void setCurrent(int current) {
 		mCurrent = current;
 		updateView();
@@ -177,11 +148,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		}
 	}
 
-	private String formatNumber(int value) {
-		return (mFormatter != null) ? mFormatter.toString(value) : String
-				.valueOf(value);
-	}
-
 	protected void changeCurrent(int current) {
 
 		mPrevious = mCurrent;
@@ -204,7 +170,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		 * find the correct value in the displayed values for the current
 		 * number.
 		 */
-		mText.setText(formatNumber(mCurrent));
+		mText.setText(String.valueOf(mCurrent));
 		mText.setSelection(mText.getText().length());
 	}
 

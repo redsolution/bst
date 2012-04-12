@@ -67,7 +67,7 @@
   <string name="barcode_action">Add using barcode</string>
   <string name="barcode_summary">Enter value from keyboard</string>
   <string name="list_action">List of goods</string>
-  <string name="list_summary">Goods: %1$d, items: %2$d</string>
+  <string name="list_summary">Goods: %1$d, items: %2$s</string>
   <string name="header_action">Change header</string>
   <string name="send_action">Send document</string>
   <string name="cancel_action">Remove document</string>

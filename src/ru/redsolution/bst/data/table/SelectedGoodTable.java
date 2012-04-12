@@ -1,5 +1,6 @@
 package ru.redsolution.bst.data.table;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -111,17 +112,11 @@ public class SelectedGoodTable extends BaseTable {
 	}
 
 	/**
-	 * @param function
-	 * @return Результат выполнения функции для столбца количества единиц
-	 *         товара.
+	 * @return Количетсво наименований товаров.
 	 */
-	private int executeForQuantity(String function) {
-		Cursor cursor = DatabaseHelper
-				.getInstance()
-				.getReadableDatabase()
-				.rawQuery(
-						"SELECT " + function + "(" + Fields.QUANTITY
-								+ ") FROM " + getTableName(), null);
+	public int getGoodsCount() {
+		Cursor cursor = DatabaseHelper.getInstance().getReadableDatabase()
+				.rawQuery("SELECT COUNT(*) FROM " + getTableName(), null);
 		try {
 			if (cursor.moveToFirst()) {
 				return cursor.getInt(0);
@@ -133,17 +128,23 @@ public class SelectedGoodTable extends BaseTable {
 	}
 
 	/**
-	 * @return Количетсво наименований товаров.
-	 */
-	public int getGoodsCount() {
-		return executeForQuantity("COUNT");
-	}
-
-	/**
 	 * @return Общее количетсво единиц товаров.
 	 */
-	public int getTotalQuantity() {
-		return executeForQuantity("SUM");
+	public BigDecimal getTotalQuantity() {
+		BigDecimal value = BigDecimal.ZERO;
+		Cursor cursor = list();
+		try {
+			if (cursor.moveToFirst()) {
+				do {
+					String quantity = getValues(cursor).getAsString(
+							Fields.QUANTITY);
+					value = value.add(new BigDecimal(quantity));
+				} while (cursor.moveToNext());
+			}
+		} finally {
+			cursor.close();
+		}
+		return value;
 	}
 
 	/**

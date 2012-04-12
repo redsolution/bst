@@ -97,7 +97,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	private static final String RE_EAN_8 = "^\\d{8}$";
 	private static final String RE_EAN_13 = "^\\d{13}$";
 
-	private View quantityView;
+	private NumberPicker quantityView;
 	private TextView restView;
 
 	private String type;
@@ -134,7 +134,7 @@ public class VerifyActivity extends PreferenceActivity implements
 		((Button) view.findViewById(R.id.more)).setOnClickListener(this);
 		((Button) view.findViewById(R.id.finish)).setOnClickListener(this);
 		restView = (TextView) view.findViewById(R.id.rest);
-		quantityView = view.findViewById(R.id.quantity);
+		quantityView = (NumberPicker) view.findViewById(R.id.quantity);
 		getListView().addHeaderView(view, null, false);
 		addPreferencesFromResource(R.xml.verify);
 		findPreference(getString(R.string.name_title)).setLayoutResource(
@@ -169,18 +169,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			barcodeNotified = false;
 			saveBarcode = false;
 		}
-		setQuantity(quantity);
-	}
-
-	private void setQuantity(int value) {
-		if (quantityView instanceof NumberPicker)
-			((NumberPicker) quantityView).setCurrent(value);
-	}
-
-	private int getQuantity() {
-		if (quantityView instanceof NumberPicker)
-			return ((NumberPicker) quantityView).getCurrent();
-		return 0;
+		quantityView.setCurrent(quantity);
 	}
 
 	/**
@@ -215,7 +204,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(SAVED_QUANTITY, getQuantity());
+		outState.putInt(SAVED_QUANTITY, quantityView.getCurrent());
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
 		outState.putString(SAVED_PRODUCT_ID, productId);
@@ -238,7 +227,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			productId = null;
 			isCustom = false;
 			saveBarcode = false;
-			setQuantity(1);
+			quantityView.setCurrent(1);
 			if (barcode == null)
 				finish();
 		} else if (requestCode == CHOOSE_REQUEST_CODE) {
@@ -334,7 +323,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			productId = null;
 			isCustom = false;
 			saveBarcode = false;
-			setQuantity(1);
+			quantityView.setCurrent(1);
 			updateView();
 			return;
 		default:
@@ -386,7 +375,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			NewGoodBarcodeTable.getInstance().add(productId, isCustom, type,
 					barcode);
 		SelectedGoodTable.getInstance().set(productId, isCustom,
-				getQuantity() + getRest());
+				quantityView.getCurrent() + getRest());
 	}
 
 	/**

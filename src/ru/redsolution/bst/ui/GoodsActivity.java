@@ -37,7 +37,7 @@ public class GoodsActivity extends ListActivity implements
 
 	private String id;
 	private boolean isCustom;
-	private View quantityView;
+	private NumberPicker quantityView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,12 +124,10 @@ public class GoodsActivity extends ListActivity implements
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_CHANGE_QANTITY_ID:
-			quantityView = getLayoutInflater().inflate(
+			quantityView = (NumberPicker) getLayoutInflater().inflate(
 					R.layout.quantity_picker, null, false);
-			if (quantityView instanceof NumberPicker) {
-				((NumberPicker) quantityView).setCurrent(SelectedGoodTable
-						.getInstance().getQuantity(this.id, isCustom));
-			}
+			quantityView.setCurrent(SelectedGoodTable.getInstance()
+					.getQuantity(this.id, isCustom));
 			return new ConfirmDialogBuilder(this, id, this).setView(
 					quantityView).create();
 		case DIALOG_REMOVE_ID:
@@ -147,7 +145,7 @@ public class GoodsActivity extends ListActivity implements
 		case DIALOG_CHANGE_QANTITY_ID:
 			if (quantityView instanceof NumberPicker) {
 				SelectedGoodTable.getInstance().set(id, isCustom,
-						((NumberPicker) quantityView).getCurrent());
+						quantityView.getCurrent());
 			}
 			break;
 		case DIALOG_REMOVE_ID:

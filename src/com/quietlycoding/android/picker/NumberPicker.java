@@ -46,8 +46,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		OnFocusChangeListener, OnLongClickListener {
 
 	private static final String TAG = "NumberPicker";
-	private static final int DEFAULT_MAX = 200;
-	private static final int DEFAULT_MIN = 0;
 
 	public interface OnChangedListener {
 		void onChanged(NumberPicker picker, int oldVal, int newVal);
@@ -93,8 +91,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	private final EditText mText;
 
-	protected int mStart;
-	protected int mEnd;
 	protected int mCurrent;
 	protected int mPrevious;
 	private OnChangedListener mListener;
@@ -112,7 +108,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		this(context, attrs, 0);
 	}
 
-	@SuppressWarnings({ "UnusedDeclaration" })
 	public NumberPicker(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 		setOrientation(VERTICAL);
@@ -137,9 +132,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		if (!isEnabled()) {
 			setEnabled(false);
 		}
-
-		mStart = DEFAULT_MIN;
-		mEnd = DEFAULT_MAX;
 	}
 
 	@Override
@@ -156,22 +148,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	public void setFormatter(Formatter formatter) {
 		mFormatter = formatter;
-	}
-
-	/**
-	 * Set the range of numbers allowed for the number picker. The current value
-	 * will be automatically set to the start.
-	 * 
-	 * @param start
-	 *            the start of the range (inclusive)
-	 * @param end
-	 *            the end of the range (inclusive)
-	 */
-	public void setRange(int start, int end) {
-		mStart = start;
-		mEnd = end;
-		mCurrent = start;
-		updateView();
 	}
 
 	public void setCurrent(int current) {
@@ -208,12 +184,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	protected void changeCurrent(int current) {
 
-		// Wrap around the values if we go past the start or end
-		if (current > mEnd) {
-			current = mEnd;
-		} else if (current < mStart) {
-			current = mStart;
-		}
 		mPrevious = mCurrent;
 		mCurrent = current;
 
@@ -240,12 +210,10 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	private void validateCurrentView(CharSequence str) {
 		int val = getSelectedPos(str.toString());
-		if ((val >= mStart) && (val <= mEnd)) {
-			if (mCurrent != val) {
-				mPrevious = mCurrent;
-				mCurrent = val;
-				notifyChange();
-			}
+		if (mCurrent != val) {
+			mPrevious = mCurrent;
+			mCurrent = val;
+			notifyChange();
 		}
 		updateView();
 	}
@@ -341,18 +309,8 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 			if ("".equals(result)) {
 				return result;
 			}
-			int val = getSelectedPos(result);
 
-			/*
-			 * Ensure the user can't type in a value greater than the max
-			 * allowed. We have to allow less than min as the user might want to
-			 * delete some numbers and then type a new number.
-			 */
-			if (val > mEnd) {
-				return "";
-			} else {
-				return filtered;
-			}
+			return filtered;
 		}
 	}
 

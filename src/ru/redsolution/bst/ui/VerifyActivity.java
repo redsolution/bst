@@ -135,8 +135,6 @@ public class VerifyActivity extends PreferenceActivity implements
 		((Button) view.findViewById(R.id.finish)).setOnClickListener(this);
 		restView = (TextView) view.findViewById(R.id.rest);
 		quantityView = view.findViewById(R.id.quantity);
-		if (quantityView instanceof NumberPicker)
-			((NumberPicker) quantityView).setRange(1, 99999999);
 		getListView().addHeaderView(view, null, false);
 		addPreferencesFromResource(R.xml.verify);
 		findPreference(getString(R.string.name_title)).setLayoutResource(

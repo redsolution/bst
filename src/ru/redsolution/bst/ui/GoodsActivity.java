@@ -127,7 +127,6 @@ public class GoodsActivity extends ListActivity implements
 			quantityView = getLayoutInflater().inflate(
 					R.layout.quantity_picker, null, false);
 			if (quantityView instanceof NumberPicker) {
-				((NumberPicker) quantityView).setRange(1, 99999999);
 				((NumberPicker) quantityView).setCurrent(SelectedGoodTable
 						.getInstance().getQuantity(this.id, isCustom));
 			}

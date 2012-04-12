@@ -49,14 +49,6 @@ public class SelectedGoodTable extends BaseTable {
 	}
 
 	@Override
-	protected String getFieldType(String name) {
-		if (Fields.QUANTITY.equals(name))
-			return "INTEGER";
-		else
-			return super.getFieldType(name);
-	}
-
-	@Override
 	protected void putValue(ContentValues values, String name, Cursor cursor) {
 		super.putValue(values, name, cursor);
 		if (Fields.IS_CUSTOM.equals(name))
@@ -95,19 +87,19 @@ public class SelectedGoodTable extends BaseTable {
 	 * @param quantity
 	 *            Количество. 0 удаляет товар.
 	 */
-	public void set(String id, boolean isCustom, int quantity) {
+	public void set(String id, boolean isCustom, BigDecimal quantity) {
 		DatabaseHelper
 				.getInstance()
 				.getWritableDatabase()
 				.delete(getTableName(),
 						Fields._ID + " = ? AND " + Fields.IS_CUSTOM + " = ?",
 						new String[] { id, getBoolean(isCustom) });
-		if (quantity < 1)
+		if (BigDecimal.ZERO.equals(quantity))
 			return;
 		ContentValues values = new ContentValues();
 		values.put(Fields._ID, id);
 		values.put(Fields.IS_CUSTOM, isCustom);
-		values.put(Fields.QUANTITY, quantity);
+		values.put(Fields.QUANTITY, quantity.toString());
 		add(values);
 	}
 

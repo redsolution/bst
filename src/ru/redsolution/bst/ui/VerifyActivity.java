@@ -374,8 +374,11 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (saveBarcode)
 			NewGoodBarcodeTable.getInstance().add(productId, isCustom, type,
 					barcode);
-		SelectedGoodTable.getInstance().set(productId, isCustom,
-				quantityView.getCurrent() + getRest().intValue());
+		SelectedGoodTable.getInstance()
+				.set(productId,
+						isCustom,
+						new BigDecimal(quantityView.getCurrent()
+								+ getRest().intValue()));
 	}
 
 	/**

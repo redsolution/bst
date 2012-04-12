@@ -1,5 +1,7 @@
 package ru.redsolution.bst.ui;
 
+import java.math.BigDecimal;
+
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.BaseGoodTable;
@@ -145,11 +147,11 @@ public class GoodsActivity extends ListActivity implements
 		case DIALOG_CHANGE_QANTITY_ID:
 			if (quantityView instanceof NumberPicker) {
 				SelectedGoodTable.getInstance().set(id, isCustom,
-						quantityView.getCurrent());
+						new BigDecimal(quantityView.getCurrent()));
 			}
 			break;
 		case DIALOG_REMOVE_ID:
-			SelectedGoodTable.getInstance().set(id, isCustom, 0);
+			SelectedGoodTable.getInstance().set(id, isCustom, BigDecimal.ZERO);
 			break;
 		default:
 			break;

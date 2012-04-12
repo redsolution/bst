@@ -21,8 +21,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
-import android.text.method.NumberKeyListener;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +100,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 		mText = (EditText) findViewById(R.id.timepicker_input);
 		mText.setOnFocusChangeListener(this);
-		mText.setFilters(new InputFilter[] { new NumberRangeKeyListener() });
+		mText.setFilters(new InputFilter[] { DigitsKeyListener.getInstance() });
 		mText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
 		if (!isEnabled()) {
@@ -239,46 +238,8 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		mDecrement = false;
 	}
 
-	private static final char[] DIGIT_CHARACTERS = new char[] { '0', '1', '2',
-			'3', '4', '5', '6', '7', '8', '9' };
-
 	private final NumberPickerButton mIncrementButton;
 	private final NumberPickerButton mDecrementButton;
-
-	private class NumberRangeKeyListener extends NumberKeyListener {
-
-		// XXX This doesn't allow for range limits when controlled by a
-		// soft input method!
-		@Override
-		public int getInputType() {
-			return InputType.TYPE_CLASS_NUMBER;
-		}
-
-		@Override
-		protected char[] getAcceptedChars() {
-			return DIGIT_CHARACTERS;
-		}
-
-		@Override
-		public CharSequence filter(CharSequence source, int start, int end,
-				Spanned dest, int dstart, int dend) {
-
-			CharSequence filtered = super.filter(source, start, end, dest,
-					dstart, dend);
-			if (filtered == null) {
-				filtered = source.subSequence(start, end);
-			}
-
-			String result = String.valueOf(dest.subSequence(0, dstart))
-					+ filtered + dest.subSequence(dend, dest.length());
-
-			if ("".equals(result)) {
-				return result;
-			}
-
-			return filtered;
-		}
-	}
 
 	private int getSelectedPos(String str) {
 		return Integer.parseInt(str);

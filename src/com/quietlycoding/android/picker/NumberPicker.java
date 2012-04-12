@@ -92,9 +92,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	};
 
 	private final EditText mText;
-	private final InputFilter mNumberInputFilter;
 
-	private String[] mDisplayedValues;
 	protected int mStart;
 	protected int mEnd;
 	protected int mCurrent;
@@ -122,8 +120,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.number_picker, this, true);
 		mHandler = new Handler();
-		InputFilter inputFilter = new NumberPickerInputFilter();
-		mNumberInputFilter = new NumberRangeKeyListener();
 		mIncrementButton = (NumberPickerButton) findViewById(R.id.increment);
 		mIncrementButton.setOnClickListener(this);
 		mIncrementButton.setOnLongClickListener(this);
@@ -135,7 +131,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 		mText = (EditText) findViewById(R.id.timepicker_input);
 		mText.setOnFocusChangeListener(this);
-		mText.setFilters(new InputFilter[] { inputFilter });
+		mText.setFilters(new InputFilter[] { new NumberRangeKeyListener() });
 		mText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
 		if (!isEnabled()) {
@@ -172,26 +168,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	 *            the end of the range (inclusive)
 	 */
 	public void setRange(int start, int end) {
-		mStart = start;
-		mEnd = end;
-		mCurrent = start;
-		updateView();
-	}
-
-	/**
-	 * Set the range of numbers allowed for the number picker. The current value
-	 * will be automatically set to the start. Also provide a mapping for values
-	 * used to display to the user.
-	 * 
-	 * @param start
-	 *            the start of the range (inclusive)
-	 * @param end
-	 *            the end of the range (inclusive)
-	 * @param displayedValues
-	 *            the values displayed to the user.
-	 */
-	public void setRange(int start, int end, String[] displayedValues) {
-		mDisplayedValues = displayedValues;
 		mStart = start;
 		mEnd = end;
 		mCurrent = start;
@@ -258,11 +234,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		 * find the correct value in the displayed values for the current
 		 * number.
 		 */
-		if (mDisplayedValues == null) {
-			mText.setText(formatNumber(mCurrent));
-		} else {
-			mText.setText(mDisplayedValues[mCurrent - mStart]);
-		}
+		mText.setText(formatNumber(mCurrent));
 		mText.setSelection(mText.getText().length());
 	}
 
@@ -339,29 +311,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	private final NumberPickerButton mIncrementButton;
 	private final NumberPickerButton mDecrementButton;
 
-	private class NumberPickerInputFilter implements InputFilter {
-		@Override
-		public CharSequence filter(CharSequence source, int start, int end,
-				Spanned dest, int dstart, int dend) {
-			if (mDisplayedValues == null) {
-				return mNumberInputFilter.filter(source, start, end, dest,
-						dstart, dend);
-			}
-			CharSequence filtered = String.valueOf(source.subSequence(start,
-					end));
-			String result = String.valueOf(dest.subSequence(0, dstart))
-					+ filtered + dest.subSequence(dend, dest.length());
-			String str = String.valueOf(result).toLowerCase();
-			for (String val : mDisplayedValues) {
-				val = val.toLowerCase();
-				if (val.startsWith(str)) {
-					return filtered;
-				}
-			}
-			return "";
-		}
-	}
-
 	private class NumberRangeKeyListener extends NumberKeyListener {
 
 		// XXX This doesn't allow for range limits when controlled by a
@@ -408,30 +357,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	}
 
 	private int getSelectedPos(String str) {
-		if (mDisplayedValues == null) {
-			return Integer.parseInt(str);
-		} else {
-			for (int i = 0; i < mDisplayedValues.length; i++) {
-
-				/* Don't force the user to type in jan when ja will do */
-				str = str.toLowerCase();
-				if (mDisplayedValues[i].toLowerCase().startsWith(str)) {
-					return mStart + i;
-				}
-			}
-
-			/*
-			 * The user might have typed in a number into the month field i.e.
-			 * 10 instead of OCT so support that too.
-			 */
-			try {
-				return Integer.parseInt(str);
-			} catch (NumberFormatException e) {
-
-				/* Ignore as if it's not a number we don't care */
-			}
-		}
-		return mStart;
+		return Integer.parseInt(str);
 	}
 
 	/**

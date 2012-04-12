@@ -164,7 +164,8 @@ public class BST extends Application {
 					}
 				}
 			}
-			if (response.getStatusLine().getStatusCode() == 401)
+			if (response.getStatusLine().getStatusCode() == 401
+					|| response.getStatusLine().getStatusCode() == 403)
 				throw new RuntimeException(new AuthenticationException(response
 						.getStatusLine().toString()));
 			else if (response.getStatusLine().getStatusCode() == 500)

@@ -127,7 +127,7 @@ public class GoodsActivity extends ListActivity implements
 			quantityView = (NumberPicker) getLayoutInflater().inflate(
 					R.layout.quantity_picker, null, false);
 			quantityView.setCurrent(SelectedGoodTable.getInstance()
-					.getQuantity(this.id, isCustom));
+					.getQuantity(this.id, isCustom).intValue());
 			return new ConfirmDialogBuilder(this, id, this).setView(
 					quantityView).create();
 		case DIALOG_REMOVE_ID:

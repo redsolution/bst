@@ -74,15 +74,15 @@ public class SelectedGoodTable extends BaseTable {
 	 * @param isCustom
 	 * @return Количество выбранных товаров. 0, если нет выбранных товаров.
 	 */
-	public int getQuantity(String id, boolean isCustom) {
+	public BigDecimal getQuantity(String id, boolean isCustom) {
 		ContentValues values;
 		try {
 			values = get(Fields._ID + " = ? AND " + Fields.IS_CUSTOM + " = ?",
 					new String[] { id, getBoolean(isCustom) });
 		} catch (BaseDatabaseException e) {
-			return 0;
+			return BigDecimal.ZERO;
 		}
-		return values.getAsInteger(Fields.QUANTITY);
+		return new BigDecimal(values.getAsString(Fields.QUANTITY));
 	}
 
 	/**

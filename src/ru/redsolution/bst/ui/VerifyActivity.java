@@ -375,15 +375,15 @@ public class VerifyActivity extends PreferenceActivity implements
 			NewGoodBarcodeTable.getInstance().add(productId, isCustom, type,
 					barcode);
 		SelectedGoodTable.getInstance().set(productId, isCustom,
-				quantityView.getCurrent() + getRest());
+				quantityView.getCurrent() + getRest().intValue());
 	}
 
 	/**
 	 * @return Количество ранее добавленных товаров.
 	 */
-	private int getRest() {
+	private BigDecimal getRest() {
 		if (productId == null)
-			return 0;
+			return BigDecimal.ZERO;
 		else
 			return SelectedGoodTable.getInstance().getQuantity(productId,
 					isCustom);

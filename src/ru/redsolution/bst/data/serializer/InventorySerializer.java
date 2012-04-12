@@ -40,7 +40,7 @@ public class InventorySerializer extends BaseSerializer {
 			ContentValues values) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		super.renderItemAttrs(serializer, values);
-		int quantity = values.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
+		String quantity = values.getAsString(SelectedGoodTable.Fields.QUANTITY);
 		serializer.attribute("", "correctionAmount", String.valueOf(quantity));
 	}
 

@@ -171,7 +171,7 @@ public abstract class BaseSerializer {
 			ContentValues values) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		String good = values.getAsString(SelectedGoodTable.Fields._ID);
-		int quantity = values.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
+		String quantity = values.getAsString(SelectedGoodTable.Fields.QUANTITY);
 		serializer.attribute("", "quantity", String.valueOf(quantity));
 		serializer.attribute("", "goodId", good);
 	}

@@ -51,8 +51,8 @@ public class GoodsActivity extends ListActivity implements
 				ContentValues values;
 				values = SelectedGoodTable.getInstance().getValues(cursor);
 				String id = values.getAsString(SelectedGoodTable.Fields._ID);
-				int quantity = values
-						.getAsInteger(SelectedGoodTable.Fields.QUANTITY);
+				String quantity = values
+						.getAsString(SelectedGoodTable.Fields.QUANTITY);
 				try {
 					if (values.getAsBoolean(SelectedGoodTable.Fields.IS_CUSTOM))
 						values = CustomGoodTable.getInstance().getById(id);

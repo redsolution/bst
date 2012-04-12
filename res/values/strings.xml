@@ -72,7 +72,7 @@
   <string name="send_action">Send document</string>
   <string name="cancel_action">Remove document</string>
   <string name="cancel_confirm">Do you realy want to remove the document?</string>
-  <string name="summary_text">%1$d %2$s</string>
+  <string name="summary_text">%1$s %2$s</string>
   <string name="quantity_action">Change quantity</string>
   <string name="remove_action">Remove</string>
   <string name="remove_confirm">Do you really want to remove the good?</string>

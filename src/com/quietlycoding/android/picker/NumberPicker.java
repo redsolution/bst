@@ -241,6 +241,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	 * @return the current value.
 	 */
 	public BigDecimal getCurrent() {
+		validateInput(mText);
 		return mCurrent;
 	}
 }

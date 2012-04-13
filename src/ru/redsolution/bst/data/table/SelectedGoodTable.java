@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Список выбранных товаров.
@@ -148,4 +149,25 @@ public class SelectedGoodTable extends BaseTable {
 				new String[] { getBoolean(isCustom) }, null);
 	}
 
+	@Override
+	public void migrate(SQLiteDatabase db, int toVersion) {
+		super.migrate(db, toVersion);
+		String sql;
+		switch (toVersion) {
+		case 2:
+			sql = "ALTER TABLE selected_good RENAME TO selected_good_;";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "CREATE TABLE selected_good (" + "_id TEXT,"
+					+ "is_custom TEXT," + "quantity TEXT);";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "INSERT INTO selected_good (_id, is_custom, quantity) "
+					+ "SELECT _id, is_custom, quantity FROM selected_good_;";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "DROP TABLE selected_good_;";
+			DatabaseHelper.execSQL(db, sql);
+			break;
+		default:
+			break;
+		}
+	}
 }

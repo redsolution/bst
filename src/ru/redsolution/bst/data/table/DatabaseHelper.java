@@ -3,9 +3,11 @@ package ru.redsolution.bst.data.table;
 import java.util.ArrayList;
 
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.Debugger;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Помошник для работы с базой данных.
@@ -16,7 +18,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "sqlite-q.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private static final DatabaseHelper instance;
 
@@ -65,4 +67,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		for (DatabaseTable table : tables)
 			table.clear();
 	}
+
+	public static void execSQL(SQLiteDatabase db, String sql) {
+		if (Debugger.ENABLED)
+			Log.i("SQL", sql);
+		db.execSQL(sql);
+	}
+
 }

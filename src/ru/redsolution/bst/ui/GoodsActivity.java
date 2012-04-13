@@ -31,6 +31,9 @@ import com.quietlycoding.android.picker.NumberPicker;
 public class GoodsActivity extends ListActivity implements
 		AcceptAndDeclineDialogListener {
 
+	private static final String SAVED_ID = "ru.redsolution.bst.ui.GoodsActivity.SAVED_ID";
+	private static final String SAVED_IS_CUSTOM = "ru.redsolution.bst.ui.GoodsActivity.SAVED_IS_CUSTOM";
+
 	private static final int CONTEXT_MENU_CHANGE_QANTITY_ID = 1;
 	private static final int CONTEXT_MENU_REMOVE_ID = 2;
 
@@ -45,6 +48,13 @@ public class GoodsActivity extends ListActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goods);
+		if (savedInstanceState != null) {
+			id = savedInstanceState.getString(SAVED_ID);
+			isCustom = savedInstanceState.getBoolean(SAVED_IS_CUSTOM);
+		} else {
+			id = null;
+			isCustom = false;
+		}
 		setListAdapter(new ResourceCursorAdapter(this,
 				android.R.layout.simple_list_item_2, SelectedGoodTable
 						.getInstance().list()) {
@@ -82,6 +92,13 @@ public class GoodsActivity extends ListActivity implements
 			}
 		});
 		registerForContextMenu(getListView());
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(SAVED_ID, id);
+		outState.putBoolean(SAVED_IS_CUSTOM, isCustom);
 	}
 
 	@Override

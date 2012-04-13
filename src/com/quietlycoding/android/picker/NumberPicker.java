@@ -16,11 +16,12 @@
 
 package com.quietlycoding.android.picker;
 
+import java.math.BigDecimal;
+
 import ru.redsolution.bst.R;
 import android.content.Context;
 import android.os.Handler;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -44,10 +45,8 @@ import android.widget.TextView;
 public class NumberPicker extends LinearLayout implements OnClickListener,
 		OnFocusChangeListener, OnLongClickListener {
 
-	private static final String TAG = "NumberPicker";
-
 	public interface OnChangedListener {
-		void onChanged(NumberPicker picker, int oldVal, int newVal);
+		void onChanged(NumberPicker picker, BigDecimal oldVal, BigDecimal newVal);
 	}
 
 	private final Handler mHandler;
@@ -55,10 +54,10 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		@Override
 		public void run() {
 			if (mIncrement) {
-				changeCurrent(mCurrent + 1);
+				changeCurrent(mCurrent.add(BigDecimal.ONE));
 				mHandler.postDelayed(this, mSpeed);
 			} else if (mDecrement) {
-				changeCurrent(mCurrent - 1);
+				changeCurrent(mCurrent.add(BigDecimal.ONE.negate()));
 				mHandler.postDelayed(this, mSpeed);
 			}
 		}
@@ -66,8 +65,8 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	private final EditText mText;
 
-	protected int mCurrent;
-	protected int mPrevious;
+	protected BigDecimal mCurrent;
+	protected BigDecimal mPrevious;
 	private OnChangedListener mListener;
 	private long mSpeed = 300;
 
@@ -100,8 +99,10 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 		mText = (EditText) findViewById(R.id.timepicker_input);
 		mText.setOnFocusChangeListener(this);
-		mText.setFilters(new InputFilter[] { DigitsKeyListener.getInstance() });
-		mText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		DigitsKeyListener keyListener = DigitsKeyListener.getInstance(false,
+				true);
+		mText.setFilters(new InputFilter[] { keyListener });
+		mText.setRawInputType(keyListener.getInputType());
 
 		if (!isEnabled()) {
 			setEnabled(false);
@@ -120,7 +121,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 		mListener = listener;
 	}
 
-	public void setCurrent(int current) {
+	public void setCurrent(BigDecimal current) {
 		mCurrent = current;
 		updateView();
 	}
@@ -141,13 +142,13 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 		// now perform the increment/decrement
 		if (R.id.increment == v.getId()) {
-			changeCurrent(mCurrent + 1);
+			changeCurrent(mCurrent.add(BigDecimal.ONE));
 		} else if (R.id.decrement == v.getId()) {
-			changeCurrent(mCurrent - 1);
+			changeCurrent(mCurrent.add(BigDecimal.ONE.negate()));
 		}
 	}
 
-	protected void changeCurrent(int current) {
+	protected void changeCurrent(BigDecimal current) {
 
 		mPrevious = mCurrent;
 		mCurrent = current;
@@ -164,18 +165,13 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
 	protected void updateView() {
 
-		/*
-		 * If we don't have displayed values then use the current number else
-		 * find the correct value in the displayed values for the current
-		 * number.
-		 */
 		mText.setText(String.valueOf(mCurrent));
 		mText.setSelection(mText.getText().length());
 	}
 
 	private void validateCurrentView(CharSequence str) {
-		int val = getSelectedPos(str.toString());
-		if (mCurrent != val) {
+		BigDecimal val = new BigDecimal(str.toString());
+		if (!mCurrent.equals(val)) {
 			mPrevious = mCurrent;
 			mCurrent = val;
 			notifyChange();
@@ -241,14 +237,10 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 	private final NumberPickerButton mIncrementButton;
 	private final NumberPickerButton mDecrementButton;
 
-	private int getSelectedPos(String str) {
-		return Integer.parseInt(str);
-	}
-
 	/**
 	 * @return the current value.
 	 */
-	public int getCurrent() {
+	public BigDecimal getCurrent() {
 		return mCurrent;
 	}
 }

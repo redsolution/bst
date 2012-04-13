@@ -140,9 +140,10 @@ public class VerifyActivity extends PreferenceActivity implements
 		findPreference(getString(R.string.name_title)).setLayoutResource(
 				R.layout.multiline_preference);
 
-		int quantity;
+		BigDecimal quantity;
 		if (savedInstanceState != null) {
-			quantity = savedInstanceState.getInt(SAVED_QUANTITY, 1);
+			quantity = new BigDecimal(
+					savedInstanceState.getString(SAVED_QUANTITY));
 			type = savedInstanceState.getString(SAVED_TYPE);
 			barcode = savedInstanceState.getString(SAVED_BARCODE);
 			productId = savedInstanceState.getString(SAVED_PRODUCT_ID);
@@ -158,7 +159,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			saveBarcode = savedInstanceState.getBoolean(SAVED_SAVE_BARCODE,
 					false);
 		} else {
-			quantity = 1;
+			quantity = BigDecimal.ONE;
 			type = null;
 			barcode = null;
 			productId = null;
@@ -204,7 +205,7 @@ public class VerifyActivity extends PreferenceActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(SAVED_QUANTITY, quantityView.getCurrent());
+		outState.putString(SAVED_QUANTITY, quantityView.getCurrent().toString());
 		outState.putString(SAVED_TYPE, type);
 		outState.putString(SAVED_BARCODE, barcode);
 		outState.putString(SAVED_PRODUCT_ID, productId);
@@ -227,7 +228,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			productId = null;
 			isCustom = false;
 			saveBarcode = false;
-			quantityView.setCurrent(1);
+			quantityView.setCurrent(BigDecimal.ONE);
 			if (barcode == null)
 				finish();
 		} else if (requestCode == CHOOSE_REQUEST_CODE) {
@@ -323,7 +324,7 @@ public class VerifyActivity extends PreferenceActivity implements
 			productId = null;
 			isCustom = false;
 			saveBarcode = false;
-			quantityView.setCurrent(1);
+			quantityView.setCurrent(BigDecimal.ONE);
 			updateView();
 			return;
 		default:
@@ -374,11 +375,8 @@ public class VerifyActivity extends PreferenceActivity implements
 		if (saveBarcode)
 			NewGoodBarcodeTable.getInstance().add(productId, isCustom, type,
 					barcode);
-		SelectedGoodTable.getInstance()
-				.set(productId,
-						isCustom,
-						new BigDecimal(quantityView.getCurrent()
-								+ getRest().intValue()));
+		SelectedGoodTable.getInstance().set(productId, isCustom,
+				quantityView.getCurrent().add(getRest()));
 	}
 
 	/**

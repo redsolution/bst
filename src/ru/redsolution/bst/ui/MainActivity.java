@@ -162,7 +162,9 @@ public class MainActivity extends PreferenceActivity implements
 					.setMessage(R.string.another_confirm).create();
 		case DIALOG_PROGRESS_ID:
 			progressDialog = new ProgressDialog(this);
-			progressDialog.setIndeterminate(true);
+			progressDialog.setIndeterminate(false);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setMax(100);
 			progressDialog.setTitle(R.string.import_action);
 			progressDialog.setMessage(getString(R.string.wait));
 			progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -200,10 +202,13 @@ public class MainActivity extends PreferenceActivity implements
 	public void onBegin() {
 		updateView();
 		showDialog(DIALOG_PROGRESS_ID);
+		progressDialog.setProgress(0);
 	}
 
 	@Override
 	public void onProgressUpdate(int percent) {
+		showDialog(DIALOG_PROGRESS_ID);
+		progressDialog.setProgress(percent);
 	}
 
 	@Override

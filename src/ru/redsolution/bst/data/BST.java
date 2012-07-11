@@ -519,13 +519,21 @@ public class BST extends Application {
 			// getData("Agent", new DocumentImporter(new
 			// CompanyFoldersImporter()));
 			getData("Uom", new UomsImporter());
+			publishProgress(10);
 			getData("Company", new CompaniesImporter());
+			publishProgress(30);
 			getData("GoodFolder", new GoodFoldersImporter());
+			publishProgress(40);
 			getData("Good", new GoodsImporter());
+			publishProgress(60);
 			getData("MyCompany", new MyCompaniesImporter());
+			publishProgress(70);
 			getData("Warehouse", new WarehousesImporter());
+			publishProgress(80);
 			getData("Project", new ProjectsImporter());
+			publishProgress(90);
 			getData("Contract", new ContractsImporter());
+			publishProgress(100);
 			editor = settings.edit();
 			editor.putBoolean(getString(R.string.imported_key), true);
 			editor.commit();

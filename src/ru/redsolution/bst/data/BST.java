@@ -94,6 +94,8 @@ public class BST extends Application {
 
 	private boolean wellcomeScreenShown;
 
+	private final Object lock;
+
 	public BST() {
 		super();
 		if (instance != null)
@@ -104,6 +106,7 @@ public class BST extends Application {
 		sendTask = null;
 		operationListener = null;
 		wellcomeScreenShown = false;
+		lock = new Object();
 	}
 
 	@Override
@@ -502,41 +505,43 @@ public class BST extends Application {
 
 		@Override
 		protected void executeInBackground() {
-			CompanyFolderTable.getInstance().clear();
-			CompanyTable.getInstance().clear();
-			UomTable.getInstance().clear();
-			GoodFolderTable.getInstance().clear();
-			GoodTable.getInstance().clear();
-			GoodBarcodeTable.getInstance().clear();
-			MyCompanyTable.getInstance().clear();
-			WarehouseTable.getInstance().clear();
-			ProjectTable.getInstance().clear();
-			ContractTable.getInstance().clear();
-			Editor editor = settings.edit();
-			editor.putBoolean(getString(R.string.imported_key), false);
-			editor.commit();
-			// Не используется в новой версии МоегоСклада:
-			// getData("Agent", new DocumentImporter(new
-			// CompanyFoldersImporter()));
-			getData("Uom", new UomsImporter());
-			publishProgress(10);
-			getData("Company", new CompaniesImporter());
-			publishProgress(30);
-			getData("GoodFolder", new GoodFoldersImporter());
-			publishProgress(40);
-			getData("Good", new GoodsImporter());
-			publishProgress(60);
-			getData("MyCompany", new MyCompaniesImporter());
-			publishProgress(70);
-			getData("Warehouse", new WarehousesImporter());
-			publishProgress(80);
-			getData("Project", new ProjectsImporter());
-			publishProgress(90);
-			getData("Contract", new ContractsImporter());
-			publishProgress(100);
-			editor = settings.edit();
-			editor.putBoolean(getString(R.string.imported_key), true);
-			editor.commit();
+			synchronized (lock) {
+				CompanyFolderTable.getInstance().clear();
+				CompanyTable.getInstance().clear();
+				UomTable.getInstance().clear();
+				GoodFolderTable.getInstance().clear();
+				GoodTable.getInstance().clear();
+				GoodBarcodeTable.getInstance().clear();
+				MyCompanyTable.getInstance().clear();
+				WarehouseTable.getInstance().clear();
+				ProjectTable.getInstance().clear();
+				ContractTable.getInstance().clear();
+				Editor editor = settings.edit();
+				editor.putBoolean(getString(R.string.imported_key), false);
+				editor.commit();
+				// Не используется в новой версии МоегоСклада:
+				// getData("Agent", new DocumentImporter(new
+				// CompanyFoldersImporter()));
+				getData("Uom", new UomsImporter());
+				publishProgress(10);
+				getData("Company", new CompaniesImporter());
+				publishProgress(30);
+				getData("GoodFolder", new GoodFoldersImporter());
+				publishProgress(40);
+				getData("Good", new GoodsImporter());
+				publishProgress(60);
+				getData("MyCompany", new MyCompaniesImporter());
+				publishProgress(70);
+				getData("Warehouse", new WarehousesImporter());
+				publishProgress(80);
+				getData("Project", new ProjectsImporter());
+				publishProgress(90);
+				getData("Contract", new ContractsImporter());
+				publishProgress(100);
+				editor = settings.edit();
+				editor.putBoolean(getString(R.string.imported_key), true);
+				editor.commit();
+			}
 		}
 
 		private void getData(String type, ContainerImporter importer) {

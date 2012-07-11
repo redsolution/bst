@@ -35,6 +35,7 @@ public class MainActivity extends PreferenceActivity implements
 
 	private static final int DIALOG_AUTH_ID = 1;
 	private static final int DIALOG_ANOTHER_CONFIRM_ID = 2;
+	private static final int DIALOG_PROGRESS_ID = 3;
 
 	private DocumentType type;
 
@@ -60,18 +61,6 @@ public class MainActivity extends PreferenceActivity implements
 				.setOnPreferenceClickListener(this);
 		findPreference(getString(R.string.about_action))
 				.setOnPreferenceClickListener(this);
-
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setTitle(R.string.import_action);
-		progressDialog.setMessage(getString(R.string.wait));
-		progressDialog.setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				BST.getInstance().cancelImport();
-			}
-		});
-
 		type = null;
 		if (savedInstanceState != null) {
 			String value = savedInstanceState.getString(SAVED_INTENT);
@@ -91,10 +80,10 @@ public class MainActivity extends PreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateView();
 		BST.getInstance().setOperationListener(this);
+		updateView();
 		if (BST.getInstance().isImporting())
-			onBegin();
+			showDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
@@ -108,7 +97,6 @@ public class MainActivity extends PreferenceActivity implements
 	protected void onPause() {
 		super.onPause();
 		BST.getInstance().setOperationListener(null);
-		dismissProgressDialog();
 	}
 
 	@Override
@@ -172,6 +160,18 @@ public class MainActivity extends PreferenceActivity implements
 			return new ConfirmDialogBuilder(this, id, this)
 					.setTitle(R.string.another_title)
 					.setMessage(R.string.another_confirm).create();
+		case DIALOG_PROGRESS_ID:
+			progressDialog = new ProgressDialog(this);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setTitle(R.string.import_action);
+			progressDialog.setMessage(getString(R.string.wait));
+			progressDialog.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					BST.getInstance().cancelImport();
+				}
+			});
+			return progressDialog;
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -199,22 +199,25 @@ public class MainActivity extends PreferenceActivity implements
 	@Override
 	public void onBegin() {
 		updateView();
-		progressDialog.show();
+		showDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
 	public void onDone() {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
 	public void onCancelled() {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
 	public void onError(RuntimeException exception) {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 		if (exception.getCause() instanceof AuthenticationException) {
 			showDialog(DIALOG_AUTH_ID);
 			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
@@ -222,11 +225,6 @@ public class MainActivity extends PreferenceActivity implements
 			Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG)
 					.show();
 		}
-	}
-
-	private void dismissProgressDialog() {
-		updateView();
-		progressDialog.dismiss();
 	}
 
 	private void updateView() {

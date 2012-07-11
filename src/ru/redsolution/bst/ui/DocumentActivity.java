@@ -37,8 +37,7 @@ public class DocumentActivity extends PreferenceActivity implements
 
 	private static final int DIALOG_AUTH_ID = 1;
 	private static final int DIALOG_CANCEL_ID = 2;
-
-	private ProgressDialog progressDialog;
+	private static final int DIALOG_PROGRESS_ID = 3;
 
 	/**
 	 * Производилось сканирование.
@@ -74,17 +73,6 @@ public class DocumentActivity extends PreferenceActivity implements
 			setTitle(R.string.move_action);
 		else
 			throw new UnsupportedOperationException();
-
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setTitle(R.string.send_action);
-		progressDialog.setMessage(getString(R.string.wait));
-		progressDialog.setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				BST.getInstance().cancelSend();
-			}
-		});
 	}
 
 	@Override
@@ -101,7 +89,7 @@ public class DocumentActivity extends PreferenceActivity implements
 			} else {
 				BST.getInstance().setOperationListener(this);
 				if (BST.getInstance().isSending())
-					onBegin();
+					showDialog(DIALOG_PROGRESS_ID);
 			}
 		}
 	}
@@ -110,7 +98,6 @@ public class DocumentActivity extends PreferenceActivity implements
 	protected void onPause() {
 		super.onPause();
 		BST.getInstance().setOperationListener(null);
-		dismissProgressDialog();
 	}
 
 	@Override
@@ -152,6 +139,18 @@ public class DocumentActivity extends PreferenceActivity implements
 					R.string.cancel_confirm).create();
 		case DIALOG_AUTH_ID:
 			return new AuthorizationDialogBuilder(this, id, this).create();
+		case DIALOG_PROGRESS_ID:
+			ProgressDialog progressDialog = new ProgressDialog(this);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setTitle(R.string.send_action);
+			progressDialog.setMessage(getString(R.string.wait));
+			progressDialog.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					BST.getInstance().cancelSend();
+				}
+			});
+			return progressDialog;
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -180,23 +179,26 @@ public class DocumentActivity extends PreferenceActivity implements
 	@Override
 	public void onBegin() {
 		updateView();
-		progressDialog.show();
+		showDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
 	public void onDone() {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 		finish();
 	}
 
 	@Override
 	public void onCancelled() {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 	}
 
 	@Override
 	public void onError(RuntimeException exception) {
-		dismissProgressDialog();
+		updateView();
+		dismissDialog(DIALOG_PROGRESS_ID);
 		if (exception.getCause() instanceof AuthenticationException) {
 			showDialog(DIALOG_AUTH_ID);
 			Toast.makeText(this, R.string.auth_error, Toast.LENGTH_LONG).show();
@@ -208,15 +210,11 @@ public class DocumentActivity extends PreferenceActivity implements
 					.show();
 	}
 
-	private void dismissProgressDialog() {
-		updateView();
-		progressDialog.dismiss();
-	}
-
 	private void updateView() {
 		findPreference(getString(R.string.list_action)).setSummary(
 				String.format(getString(R.string.list_summary),
 						SelectedGoodTable.getInstance().getGoodsCount(),
 						SelectedGoodTable.getInstance().getTotalQuantity()));
 	}
+
 }

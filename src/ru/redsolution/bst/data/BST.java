@@ -542,6 +542,8 @@ public class BST extends Application {
 		private void getData(String type, ContainerImporter importer) {
 			int start = 0;
 			while (true) {
+				if (isCancelled())
+					throw new RuntimeException(new InterruptedException());
 				String url = String.format(IMPORT_URL, type, start,
 						ELEMENTS_IN_REQUEST);
 				if (Debugger.ENABLED)

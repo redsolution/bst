@@ -49,6 +49,15 @@
             android:textColor="#000"
             android:textSize="10sp" />
 
+        <TextView
+            android:id="@+id/debug_enabled"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/debug_enabled"
+            android:textColor="#F00"
+            android:textSize="10sp" />
+
     </LinearLayout>
 
     <LinearLayout

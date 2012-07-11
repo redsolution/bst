@@ -83,4 +83,5 @@
   <string name="about_name">МойСклад</string>
   <string name="about_summary">Создание интернет-магазинов, интегрированных с сервисом МойСклад — info@redsolution.ru</string>
   <string name="about_title">Терминал ввода данных в сервис moysklad.ru</string>
+  <string name="debug_enabled">Отладка включена</string>
 </resources>

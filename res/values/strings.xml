@@ -83,4 +83,5 @@
   <string name="about_name">MoySklad</string>
   <string name="about_summary">Online store integrated with MoySklad — info@redsolution.ru</string>
   <string name="about_title">Barcode scanner terminal for moysklad.ru service</string>
+  <string name="debug_enabled">Debug enabled</string>
 </resources>

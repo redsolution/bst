@@ -1,6 +1,7 @@
 package ru.redsolution.bst.ui;
 
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.Debugger;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,6 +42,8 @@ public class AboutActivity extends Activity implements OnClickListener {
 		handler = new Handler();
 		findViewById(R.id.root).setOnClickListener(this);
 		findViewById(R.id.redsolution).setOnClickListener(this);
+		findViewById(R.id.debug_enabled).setVisibility(
+				Debugger.ENABLED ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

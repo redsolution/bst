@@ -13,6 +13,12 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public abstract class ContainerImporter extends BaseImporter {
 
+	private int count;
+
+	public ContainerImporter() {
+		count = 0;
+	}
+
 	/**
 	 * @return Имя вложенного элемента.
 	 */
@@ -30,9 +36,24 @@ public abstract class ContainerImporter extends BaseImporter {
 			return true;
 		if (parser.getName().equals(getItemName())) {
 			createItemImporter().parse(parser);
+			count += 1;
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @return Количество созданных парсеров элементов.
+	 */
+	public int getCount() {
+		return count;
+	}
+
+	/**
+	 * Обнуляет счетик созданных парсеров элементов.
+	 */
+	public void resetCount() {
+		count = 0;
 	}
 
 }

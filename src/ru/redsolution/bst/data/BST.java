@@ -71,9 +71,11 @@ public class BST extends Application {
 
 	private static final String HOST_URL = "https://online.moysklad.ru";
 	private static final String IMPORT_URL = HOST_URL
-			+ "/exchange/rest/ms/xml/%s/list";
+			+ "/exchange/rest/ms/xml/%s/list?start=%d&count=%d";
 	private static final String INVENTORY_URL = HOST_URL
 			+ "/exchange/rest/ms/xml/Inventory";
+
+	private static final int ELEMENTS_IN_REQUEST = 50;
 
 	private static BST instance;
 
@@ -530,40 +532,51 @@ public class BST extends Application {
 		}
 
 		private void getData(String type, ContainerImporter importer) {
-			String url = String.format(IMPORT_URL, type);
-			if (Debugger.ENABLED)
-				System.out.println("Request: " + url);
-			HttpResponse response = executeRequest(new HttpGet(url));
-			if (Debugger.ENABLED)
-				System.out.println("Response...");
-			XmlPullParser parser;
-			try {
-				parser = XmlPullParserFactory.newInstance().newPullParser();
-				Reader reader = new BufferedReader(new InputStreamReader(
-						response.getEntity().getContent(), "UTF-8"));
-				if (Debugger.ENABLED) {
-					File dir = new File(
-							Environment.getExternalStorageDirectory(), "bst");
-					dir.mkdirs();
-					File file = new File(dir, new Date().getTime() + ".xml");
-					reader = new DebugReader(reader, file);
+			int start = 0;
+			while (true) {
+				String url = String.format(IMPORT_URL, type, start,
+						ELEMENTS_IN_REQUEST);
+				if (Debugger.ENABLED)
+					System.out.println("Request: " + url);
+				HttpResponse response = executeRequest(new HttpGet(url));
+				if (Debugger.ENABLED)
+					System.out.println("Response...");
+				XmlPullParser parser;
+				try {
+					parser = XmlPullParserFactory.newInstance().newPullParser();
+					Reader reader = new BufferedReader(new InputStreamReader(
+							response.getEntity().getContent(), "UTF-8"));
+					if (Debugger.ENABLED) {
+						File dir = new File(
+								Environment.getExternalStorageDirectory(),
+								"bst");
+						dir.mkdirs();
+						File file = new File(dir, new Date().getTime() + ".xml");
+						reader = new DebugReader(reader, file);
+					}
+					parser.setInput(reader);
+				} catch (IllegalStateException e) {
+					throw new RuntimeException(e);
+				} catch (XmlPullParserException e) {
+					throw new RuntimeException(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
-				parser.setInput(reader);
-			} catch (IllegalStateException e) {
-				throw new RuntimeException(e);
-			} catch (XmlPullParserException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			if (Debugger.ENABLED)
-				System.out.println("Parse...");
-			try {
-				new DocumentImporter(importer).parse(parser);
-			} catch (XmlPullParserException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+				if (Debugger.ENABLED)
+					System.out.println("Parse...");
+				importer.resetCount();
+				try {
+					new DocumentImporter(importer).parse(parser);
+				} catch (XmlPullParserException e) {
+					throw new RuntimeException(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+				if (Debugger.ENABLED)
+					System.out.println("Parsed: " + importer.getCount());
+				if (importer.getCount() < ELEMENTS_IN_REQUEST)
+					break;
+				start += ELEMENTS_IN_REQUEST;
 			}
 			if (Debugger.ENABLED)
 				System.out.println(type + " done.");

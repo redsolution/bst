@@ -14,6 +14,14 @@ public interface OperationListener {
 	void onBegin();
 
 	/**
+	 * Обновлен прогресс выполнения.
+	 * 
+	 * @param percent
+	 *            значение в интервале от 0 до 100 включительно.
+	 */
+	void onProgressUpdate(int percent);
+
+	/**
 	 * Операция успешно завершена.
 	 */
 	void onDone();

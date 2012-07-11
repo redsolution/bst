@@ -203,6 +203,10 @@ public class MainActivity extends PreferenceActivity implements
 	}
 
 	@Override
+	public void onProgressUpdate(int percent) {
+	}
+
+	@Override
 	public void onDone() {
 		updateView();
 		dismissDialog(DIALOG_PROGRESS_ID);

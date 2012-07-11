@@ -431,7 +431,7 @@ public class BST extends Application {
 	 * 
 	 */
 	private abstract class AbstractTask extends
-			AsyncTask<Void, Void, RuntimeException> {
+			AsyncTask<Void, Integer, RuntimeException> {
 
 		protected abstract void executeInBackground();
 
@@ -450,6 +450,13 @@ public class BST extends Application {
 			super.onPreExecute();
 			if (operationListener != null)
 				operationListener.onBegin();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			if (operationListener != null)
+				operationListener.onProgressUpdate(values[0]);
 		}
 
 		@Override

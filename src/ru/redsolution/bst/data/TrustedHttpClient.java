@@ -10,16 +10,31 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import ru.redsolution.bst.R;
 import android.content.Context;
 
 public class TrustedHttpClient extends DefaultHttpClient {
 
+	private static final int CONNECTION_TIMEOUT = 5000;
+	private static final int SO_TIMEOUT = 60000;
+
 	final Context context;
 
 	public TrustedHttpClient(Context context) {
+		super(createParams());
 		this.context = context;
+	}
+
+	private static HttpParams createParams() {
+		HttpParams httpParameters = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParameters,
+				CONNECTION_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(httpParameters, SO_TIMEOUT);
+		return httpParameters;
 	}
 
 	@Override

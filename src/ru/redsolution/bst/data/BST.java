@@ -25,7 +25,16 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import ru.redsolution.bst.R;
+import ru.redsolution.bst.data.parse.CompaniesImporter;
+import ru.redsolution.bst.data.parse.ContainerImporter;
+import ru.redsolution.bst.data.parse.ContractsImporter;
 import ru.redsolution.bst.data.parse.DocumentImporter;
+import ru.redsolution.bst.data.parse.GoodFoldersImporter;
+import ru.redsolution.bst.data.parse.GoodsImporter;
+import ru.redsolution.bst.data.parse.MyCompaniesImporter;
+import ru.redsolution.bst.data.parse.ProjectsImporter;
+import ru.redsolution.bst.data.parse.UomsImporter;
+import ru.redsolution.bst.data.parse.WarehousesImporter;
 import ru.redsolution.bst.data.serializer.BaseSerializer;
 import ru.redsolution.bst.data.serializer.DemandSerializer;
 import ru.redsolution.bst.data.serializer.InventorySerializer;
@@ -62,7 +71,7 @@ public class BST extends Application {
 
 	private static final String HOST_URL = "https://online.moysklad.ru";
 	private static final String IMPORT_URL = HOST_URL
-			+ "/exchange/xml/export?name=Dictionary";
+			+ "/exchange/rest/ms/xml/%s/list";
 	private static final String INVENTORY_URL = HOST_URL
 			+ "/exchange/rest/ms/xml/Inventory";
 
@@ -493,18 +502,40 @@ public class BST extends Application {
 		protected void executeInBackground() {
 			CompanyFolderTable.getInstance().clear();
 			CompanyTable.getInstance().clear();
-			GoodTable.getInstance().clear();
+			UomTable.getInstance().clear();
 			GoodFolderTable.getInstance().clear();
+			GoodTable.getInstance().clear();
 			GoodBarcodeTable.getInstance().clear();
 			MyCompanyTable.getInstance().clear();
-			UomTable.getInstance().clear();
 			WarehouseTable.getInstance().clear();
 			ProjectTable.getInstance().clear();
 			ContractTable.getInstance().clear();
 			Editor editor = settings.edit();
 			editor.putBoolean(getString(R.string.imported_key), false);
 			editor.commit();
-			HttpResponse response = executeRequest(new HttpGet(IMPORT_URL));
+			// Не используется в новой версии МоегоСклада:
+			// getData("Agent", new DocumentImporter(new
+			// CompanyFoldersImporter()));
+			getData("Uom", new UomsImporter());
+			getData("Company", new CompaniesImporter());
+			getData("GoodFolder", new GoodFoldersImporter());
+			getData("Good", new GoodsImporter());
+			getData("MyCompany", new MyCompaniesImporter());
+			getData("Warehouse", new WarehousesImporter());
+			getData("Project", new ProjectsImporter());
+			getData("Contract", new ContractsImporter());
+			editor = settings.edit();
+			editor.putBoolean(getString(R.string.imported_key), true);
+			editor.commit();
+		}
+
+		private void getData(String type, ContainerImporter importer) {
+			String url = String.format(IMPORT_URL, type);
+			if (Debugger.ENABLED)
+				System.out.println("Request: " + url);
+			HttpResponse response = executeRequest(new HttpGet(url));
+			if (Debugger.ENABLED)
+				System.out.println("Response...");
 			XmlPullParser parser;
 			try {
 				parser = XmlPullParserFactory.newInstance().newPullParser();
@@ -525,16 +556,17 @@ public class BST extends Application {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+			if (Debugger.ENABLED)
+				System.out.println("Parse...");
 			try {
-				new DocumentImporter().parse(parser);
+				new DocumentImporter(importer).parse(parser);
 			} catch (XmlPullParserException e) {
 				throw new RuntimeException(e);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			editor = settings.edit();
-			editor.putBoolean(getString(R.string.imported_key), true);
-			editor.commit();
+			if (Debugger.ENABLED)
+				System.out.println(type + " done.");
 		}
 
 		@Override

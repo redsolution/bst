@@ -13,13 +13,19 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class DocumentImporter extends BaseImporter {
 
+	private final BaseImporter importer;
+
+	public DocumentImporter(BaseImporter importer) {
+		this.importer = importer;
+	}
+
 	@Override
 	protected boolean parseInnerElement(XmlPullParser parser)
 			throws XmlPullParserException, IOException {
 		if (super.parseInnerElement(parser))
 			return true;
-		if (parser.getName().equals("exchange")) {
-			new ExchangeImporter().parse(parser);
+		if (parser.getName().equals("collection")) {
+			importer.parse(parser);
 			return true;
 		}
 		return false;

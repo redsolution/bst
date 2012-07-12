@@ -19,8 +19,8 @@ import android.content.Context;
 
 public class TrustedHttpClient extends DefaultHttpClient {
 
-	private static final int CONNECTION_TIMEOUT = 5000;
-	private static final int SO_TIMEOUT = 60000;
+	private static final int CONNECTION_TIMEOUT = 10000;
+	private static final int SO_TIMEOUT = 120000;
 
 	final Context context;
 

@@ -75,7 +75,7 @@ public class BST extends Application {
 	private static final String INVENTORY_URL = HOST_URL
 			+ "/exchange/rest/ms/xml/Inventory";
 
-	private static final int ELEMENTS_IN_REQUEST = 50;
+	private static final int ELEMENTS_IN_REQUEST = 200;
 
 	private static BST instance;
 

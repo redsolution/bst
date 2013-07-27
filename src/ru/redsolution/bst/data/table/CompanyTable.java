@@ -1,9 +1,5 @@
 package ru.redsolution.bst.data.table;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import android.content.ContentValues;
 
 /**
  * Список организаций.
@@ -12,12 +8,6 @@ import android.content.ContentValues;
  * 
  */
 public class CompanyTable extends NamedTable {
-	public static final class Fields implements NamedTable.Fields {
-		private Fields() {
-		}
-
-		public static final String FOLDER = "folder";
-	}
 
 	private static final String NAME = "company";
 
@@ -40,28 +30,4 @@ public class CompanyTable extends NamedTable {
 		return NAME;
 	}
 
-	@Override
-	protected Collection<String> getFields() {
-		Collection<String> collection = new ArrayList<String>(super.getFields());
-		collection.add(Fields.FOLDER);
-		return collection;
-	}
-
-	@Override
-	public void add(String id, String name) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Добавить элемент.
-	 * 
-	 * @param id
-	 * @param name
-	 * @param folder
-	 */
-	public void add(String id, String name, String folder) {
-		ContentValues values = getValues(id, name);
-		values.put(Fields.FOLDER, folder);
-		add(values);
-	}
 }

@@ -40,7 +40,6 @@ import ru.redsolution.bst.data.serializer.DemandSerializer;
 import ru.redsolution.bst.data.serializer.InventorySerializer;
 import ru.redsolution.bst.data.serializer.MoveSerializer;
 import ru.redsolution.bst.data.serializer.SupplySerializer;
-import ru.redsolution.bst.data.table.CompanyFolderTable;
 import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.ContractTable;
 import ru.redsolution.bst.data.table.CustomGoodTable;
@@ -115,9 +114,8 @@ public class BST extends Application {
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		// Создает singleton-ы
+		// Singletons
 		DatabaseHelper.getInstance();
-		CompanyFolderTable.getInstance();
 		CompanyTable.getInstance();
 		GoodTable.getInstance();
 		GoodFolderTable.getInstance();
@@ -506,7 +504,6 @@ public class BST extends Application {
 		@Override
 		protected void executeInBackground() {
 			synchronized (lock) {
-				CompanyFolderTable.getInstance().clear();
 				CompanyTable.getInstance().clear();
 				UomTable.getInstance().clear();
 				GoodFolderTable.getInstance().clear();
@@ -519,9 +516,6 @@ public class BST extends Application {
 				Editor editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), false);
 				editor.commit();
-				// Не используется в новой версии МоегоСклада:
-				// getData("Agent", new DocumentImporter(new
-				// CompanyFoldersImporter()));
 				getData("Uom", new UomsImporter());
 				publishProgress(10);
 				getData("Company", new CompaniesImporter());

@@ -345,6 +345,14 @@ public class BST extends Application {
 		setValue(R.string.default_project_key, value);
 	}
 
+	public String getDefaultPriceType() {
+		return getValue(R.string.default_price_type_key);
+	}
+
+	public void setDefaultPriceType(String value) {
+		setValue(R.string.default_price_type_key, value);
+	}
+
 	/**
 	 * @return Тип редактируемого документа. <code>null</code>, если тип не
 	 *         выбран.
@@ -421,6 +429,14 @@ public class BST extends Application {
 
 	public void setSelectedProject(String value) {
 		setValue(R.string.selected_project_key, value);
+	}
+
+	public String getSelectedPriceType() {
+		return getValue(R.string.selected_price_type_key);
+	}
+
+	public void setSelectedPriceType(String value) {
+		setValue(R.string.selected_price_type_key, value);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.ContractTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
+import ru.redsolution.bst.data.table.PriceTypeTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
@@ -32,6 +33,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	private static final String SAVED_COMPANY = "ru.redsolution.bst.ui.HeaderActivity.SAVED_COMPANY";
 	private static final String SAVED_CONTRACT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_CONTRACT";
 	private static final String SAVED_PROJECT = "ru.redsolution.bst.ui.HeaderActivity.SAVED_PROJECT";
+	private static final String SAVED_PRICE_TYPE = "ru.redsolution.bst.ui.HeaderActivity.SAVED_PRICE_TYPE";
 	private static final String SAVED_DEFAULTS_NOTIFIED = "ru.redsolution.bst.ui.HeaderActivity.SAVED_DEFAULTS_NOTIFIED";
 
 	private static final int DIALOG_DEFAULTS_ID = 0x10;
@@ -49,6 +51,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	private String company;
 	private String contract;
 	private String project;
+	private String priceType;
 
 	private boolean defaultsNotified;
 
@@ -88,6 +91,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			company = savedInstanceState.getString(SAVED_COMPANY);
 			contract = savedInstanceState.getString(SAVED_CONTRACT);
 			project = savedInstanceState.getString(SAVED_PROJECT);
+			priceType = savedInstanceState.getString(SAVED_PRICE_TYPE);
 			defaultsNotified = savedInstanceState.getBoolean(
 					SAVED_DEFAULTS_NOTIFIED, false);
 		} else {
@@ -98,6 +102,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 			company = BST.getInstance().getSelectedCompany();
 			contract = BST.getInstance().getSelectedContract();
 			project = BST.getInstance().getSelectedProject();
+			priceType = BST.getInstance().getSelectedPriceType();
 			defaultsNotified = false;
 		}
 		if (ACTION_UPDATE.equals(getIntent().getAction())) {
@@ -113,6 +118,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		try {
 			WarehouseTable.getInstance().getName(warehouse);
 			MyCompanyTable.getInstance().getName(myCompany);
+			PriceTypeTable.getInstance().getName(priceType);
 			if (type != DocumentType.inventory && type != DocumentType.move)
 				CompanyTable.getInstance().getName(company);
 		} catch (BaseDatabaseException e) {
@@ -161,6 +167,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 				contract = BST.getInstance().getDefaultDemandContract();
 			}
 			project = BST.getInstance().getDefaultProject();
+			priceType = BST.getInstance().getDefaultPriceType();
 		}
 		super.onResume();
 		if (!isDefaultsSetted() && !defaultsNotified) {
@@ -179,6 +186,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 		outState.putString(SAVED_COMPANY, company);
 		outState.putString(SAVED_CONTRACT, contract);
 		outState.putString(SAVED_PROJECT, project);
+		outState.putString(SAVED_PRICE_TYPE, priceType);
 		outState.putBoolean(SAVED_DEFAULTS_NOTIFIED, defaultsNotified);
 	}
 
@@ -223,6 +231,7 @@ public class HeaderActivity extends BaseSettingsActivity implements
 				BST.getInstance().setSelectedCompany(company);
 				BST.getInstance().setSelectedContract(contract);
 				BST.getInstance().setSelectedProject(project);
+				BST.getInstance().setSelectedPriceType(priceType);
 				if (!ACTION_UPDATE.equals(getIntent().getAction())) {
 					BST.getInstance().setDocumentType(type);
 					startActivity(new Intent(this, DocumentActivity.class));
@@ -277,6 +286,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
+	protected String getPriceType() {
+		return priceType;
+	}
+
+	@Override
 	protected void setMyCompany(String value) {
 		myCompany = value;
 	}
@@ -314,6 +328,11 @@ public class HeaderActivity extends BaseSettingsActivity implements
 	@Override
 	protected void setProject(String value) {
 		project = value;
+	}
+
+	@Override
+	protected void setPriceType(String value) {
+		priceType = value;
 	}
 
 }

@@ -114,6 +114,11 @@ public class SettingsActivity extends BaseSettingsActivity implements
 	}
 
 	@Override
+	protected String getPriceType() {
+		return BST.getInstance().getDefaultPriceType();
+	}
+
+	@Override
 	protected void setMyCompany(String value) {
 		BST.getInstance().setDefaultMyCompany(value);
 	}
@@ -150,6 +155,11 @@ public class SettingsActivity extends BaseSettingsActivity implements
 	@Override
 	protected void setProject(String value) {
 		BST.getInstance().setDefaultProject(value);
+	}
+
+	@Override
+	protected void setPriceType(String value) {
+		BST.getInstance().setDefaultPriceType(value);
 	}
 
 }

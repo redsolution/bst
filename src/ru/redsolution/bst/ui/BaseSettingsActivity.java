@@ -6,6 +6,7 @@ import ru.redsolution.bst.data.table.CompanyTable;
 import ru.redsolution.bst.data.table.ContractTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.NamedTable;
+import ru.redsolution.bst.data.table.PriceTypeTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.WarehouseTable;
 import ru.redsolution.bst.ui.dialog.CursorEmptyChoiceDialogBuilder;
@@ -30,6 +31,7 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 	private static final int DIALOG_DEMAND_COMPANY_ID = 0x05;
 	private static final int DIALOG_DEMAND_CONTRACT_ID = 0x06;
 	private static final int DIALOG_PROJECT_ID = 0x07;
+	private static final int DIALOG_PRICE_TYPE_ID = 0x09;
 
 	@Override
 	protected void onStart() {
@@ -42,6 +44,7 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		registerOnPreferenceClickListener(R.string.demand_company_title);
 		registerOnPreferenceClickListener(R.string.demand_contract_title);
 		registerOnPreferenceClickListener(R.string.project_title);
+		registerOnPreferenceClickListener(R.string.price_type_title);
 	}
 
 	@Override
@@ -75,6 +78,9 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		} else if (preference.getKey()
 				.equals(getString(R.string.project_title))) {
 			showDialog(DIALOG_PROJECT_ID);
+		} else if (preference.getKey().equals(
+				getString(R.string.price_type_title))) {
+			showDialog(DIALOG_PRICE_TYPE_ID);
 		}
 		return true;
 	}
@@ -116,6 +122,10 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 			return new CursorEmptyChoiceDialogBuilder(this, id, this,
 					ProjectTable.getInstance().list(), getProject(),
 					ProjectTable.Fields.NAME).create();
+		case DIALOG_PRICE_TYPE_ID:
+			return new CursorChoiceDialogBuilder(this, id, this, PriceTypeTable
+					.getInstance().list(), getPriceType(),
+					PriceTypeTable.Fields.NAME).create();
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -158,6 +168,10 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 			break;
 		case DIALOG_PROJECT_ID:
 			setProject(((CursorChoiceDialogBuilder) dialogBuilder)
+					.getCheckedId());
+			break;
+		case DIALOG_PRICE_TYPE_ID:
+			setPriceType(((CursorChoiceDialogBuilder) dialogBuilder)
 					.getCheckedId());
 			break;
 		default:
@@ -210,6 +224,8 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 				getDemandContract());
 		setSummary(R.string.project_title, ProjectTable.getInstance(),
 				getProject());
+		setSummary(R.string.price_type_title, PriceTypeTable.getInstance(),
+				getPriceType());
 	}
 
 	/**
@@ -258,6 +274,8 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 
 	protected abstract String getProject();
 
+	protected abstract String getPriceType();
+
 	protected abstract void setMyCompany(String value);
 
 	protected abstract void setWarehouse(String value);
@@ -273,5 +291,7 @@ public abstract class BaseSettingsActivity extends PreferenceActivity implements
 	protected abstract void setDemandContract(String value);
 
 	protected abstract void setProject(String value);
+
+	protected abstract void setPriceType(String value);
 
 }

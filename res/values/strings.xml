@@ -35,6 +35,7 @@
   <string name="demand_company_title">Customer company</string>
   <string name="demand_contract_title">Customer contract</string>
   <string name="project_title">Project</string>
+  <string name="price_type_title">Price type</string>
   <string name="complite_warning">Please fill the form</string>
   <string name="nothing">&lt; Nothing ></string>
   <string name="defaults_title">Default values</string>

@@ -42,5 +42,9 @@
             android:key="@string/project_title"
             android:title="@string/project_title"
             />
+        <PreferenceScreen
+            android:key="@string/price_type_title"
+            android:title="@string/price_type_title"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

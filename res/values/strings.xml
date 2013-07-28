@@ -22,7 +22,8 @@
   <string name="login_hint">name@company</string>
   <string name="password_title">password</string>
   <string name="incorrect_login">MoySklad does not support non ASCII symbols in login. Please use your email.</string>
-  <string name="wait">Please, wait&#8230;</string>
+  <string name="wait">Please, wait &#8230;</string>
+  <string name="wait_import">Load %1$s (%2$d/%3$d)&#8230;</string>
   <string name="auth_error">Authorization error</string>
   <string name="server_error">Server error</string>
   <string name="connection_error">Connection error</string>
@@ -71,7 +72,7 @@
   <string name="header_action">Change header</string>
   <string name="send_action">Send document</string>
   <string name="cancel_action">Remove document</string>
-  <string name="cancel_confirm">Do you realy want to remove the document?</string>
+  <string name="cancel_confirm">Do you really want to remove the document?</string>
   <string name="summary_text">%1$s %2$s</string>
   <string name="quantity_action">Change quantity</string>
   <string name="remove_action">Remove</string>
@@ -84,4 +85,12 @@
   <string name="about_summary">Online store integrated with MoySklad — info@redsolution.ru</string>
   <string name="about_title">Barcode scanner terminal for moysklad.ru service</string>
   <string name="debug_enabled">Debug enabled</string>
+  <string name="source_uom">units of measure</string>
+  <string name="source_company">companies</string>
+  <string name="source_good_folder">good folders</string>
+  <string name="source_good">goods</string>
+  <string name="source_my_company">my companies</string>
+  <string name="source_warehouse">warehouses</string>
+  <string name="source_project">projects</string>
+  <string name="source_contract">contracts</string>
 </resources>

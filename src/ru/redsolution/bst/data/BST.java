@@ -444,8 +444,8 @@ public class BST extends Application {
 	 * @author alexander.ivanov
 	 * 
 	 */
-	private abstract class AbstractTask extends
-			AsyncTask<Void, Integer, RuntimeException> {
+	private abstract class AbstractTask<T> extends
+			AsyncTask<Void, T, RuntimeException> {
 
 		protected abstract void executeInBackground();
 
@@ -464,13 +464,6 @@ public class BST extends Application {
 			super.onPreExecute();
 			if (operationListener != null)
 				operationListener.onBegin();
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			if (operationListener != null)
-				operationListener.onProgressUpdate(values[0]);
 		}
 
 		@Override
@@ -508,30 +501,33 @@ public class BST extends Application {
 		private final String requestType;
 
 		/**
+		 * ID ресурса с именем источника.
+		 */
+		private final int name;
+
+		/**
 		 * Парсер.
 		 */
 		private final ContainerImporter importer;
 
-		private final int progress;
-
-		public ImportSource(String requestType, ContainerImporter importer,
-				int progress) {
+		public ImportSource(String requestType, int name,
+				ContainerImporter importer) {
 			super();
 			this.requestType = requestType;
+			this.name = name;
 			this.importer = importer;
-			this.progress = progress;
 		}
 
 		public String getRequestType() {
 			return requestType;
 		}
 
-		public ContainerImporter getImporter() {
-			return importer;
+		public int getName() {
+			return name;
 		}
 
-		public int getProgess() {
-			return progress;
+		public ContainerImporter getImporter() {
+			return importer;
 		}
 
 	}
@@ -542,25 +538,29 @@ public class BST extends Application {
 	 * @author alexander.ivanov
 	 * 
 	 */
-	private class ImportTask extends AbstractTask {
+	private class ImportTask extends AbstractTask<ImportProgress> {
 
 		List<ImportSource> sources;
 
 		public ImportTask() {
 			super();
 			sources = new ArrayList<ImportSource>();
-			sources.add(new ImportSource("Uom", new UomsImporter(), 0));
-			sources.add(new ImportSource("Company", new CompaniesImporter(), 10));
+			sources.add(new ImportSource("Uom", R.string.source_uom,
+					new UomsImporter()));
+			sources.add(new ImportSource("Company", R.string.source_company,
+					new CompaniesImporter()));
 			sources.add(new ImportSource("GoodFolder",
-					new GoodFoldersImporter(), 30));
-			sources.add(new ImportSource("Good", new GoodsImporter(), 40));
+					R.string.source_good_folder, new GoodFoldersImporter()));
+			sources.add(new ImportSource("Good", R.string.source_good,
+					new GoodsImporter()));
 			sources.add(new ImportSource("MyCompany",
-					new MyCompaniesImporter(), 60));
-			sources.add(new ImportSource("Warehouse", new WarehousesImporter(),
-					70));
-			sources.add(new ImportSource("Project", new ProjectsImporter(), 80));
-			sources.add(new ImportSource("Contract", new ContractsImporter(),
-					90));
+					R.string.source_my_company, new MyCompaniesImporter()));
+			sources.add(new ImportSource("Warehouse",
+					R.string.source_warehouse, new WarehousesImporter()));
+			sources.add(new ImportSource("Project", R.string.source_project,
+					new ProjectsImporter()));
+			sources.add(new ImportSource("Contract", R.string.source_contract,
+					new ContractsImporter()));
 		}
 
 		@Override
@@ -578,16 +578,17 @@ public class BST extends Application {
 				Editor editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), false);
 				editor.commit();
-				for (ImportSource source : sources)
-					getData(sources);
+				for (int index = 0; index < sources.size(); index++)
+					getData(index, sources.get(index));
 				editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), true);
 				editor.commit();
 			}
 		}
 
-		private void getData(ImportSource importSource) {
-			publishProgress(importSource.getProgess());
+		private void getData(int index, ImportSource importSource) {
+			publishProgress(new ImportProgress(importSource.getName(), index,
+					sources.size()));
 			String type = importSource.getRequestType();
 			ContainerImporter importer = importSource.getImporter();
 			int start = 0;
@@ -654,6 +655,14 @@ public class BST extends Application {
 			super.onPostExecute(result);
 		}
 
+		@Override
+		protected void onProgressUpdate(ImportProgress... values) {
+			super.onProgressUpdate(values);
+			if (operationListener instanceof ImportOperationListener)
+				((ImportOperationListener) operationListener)
+						.onProgressUpdate(values[0]);
+		}
+
 	}
 
 	/**
@@ -662,7 +671,7 @@ public class BST extends Application {
 	 * @author alexander.ivanov
 	 * 
 	 */
-	private class SendTask extends AbstractTask {
+	private class SendTask extends AbstractTask<Void> {
 
 		@Override
 		protected void executeInBackground() {

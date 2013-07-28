@@ -5,7 +5,8 @@ import org.apache.http.auth.AuthenticationException;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;
-import ru.redsolution.bst.data.OperationListener;
+import ru.redsolution.bst.data.ImportOperationListener;
+import ru.redsolution.bst.data.ImportProgress;
 import ru.redsolution.bst.ui.dialog.AuthorizationDialogBuilder;
 import ru.redsolution.dialogs.AcceptAndDeclineDialogListener;
 import ru.redsolution.dialogs.ConfirmDialogBuilder;
@@ -28,7 +29,7 @@ import android.widget.Toast;
  * 
  */
 public class MainActivity extends PreferenceActivity implements
-		OnPreferenceClickListener, OperationListener,
+		OnPreferenceClickListener, ImportOperationListener,
 		AcceptAndDeclineDialogListener {
 
 	private static final String SAVED_INTENT = "ru.redsolution.bst.ui.MainActivity.SAVED_INTENT";
@@ -162,11 +163,10 @@ public class MainActivity extends PreferenceActivity implements
 					.setMessage(R.string.another_confirm).create();
 		case DIALOG_PROGRESS_ID:
 			progressDialog = new ProgressDialog(this);
-			progressDialog.setIndeterminate(false);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMax(100);
 			progressDialog.setTitle(R.string.import_action);
 			progressDialog.setMessage(getString(R.string.wait));
+			progressDialog.setIndeterminate(true);
 			progressDialog.setOnCancelListener(new OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
@@ -202,13 +202,15 @@ public class MainActivity extends PreferenceActivity implements
 	public void onBegin() {
 		updateView();
 		showDialog(DIALOG_PROGRESS_ID);
-		progressDialog.setProgress(0);
+		progressDialog.setMessage(getString(R.string.wait));
 	}
 
 	@Override
-	public void onProgressUpdate(int percent) {
+	public void onProgressUpdate(ImportProgress progress) {
 		showDialog(DIALOG_PROGRESS_ID);
-		progressDialog.setProgress(percent);
+		progressDialog.setMessage(getString(R.string.wait_import,
+				getString(progress.getSourceName()), progress.getSourceIndex(),
+				progress.getSourceCount()));
 	}
 
 	@Override

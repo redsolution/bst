@@ -22,7 +22,8 @@
   <string name="login_hint">имя@организация</string>
   <string name="password_title">Пароль</string>
   <string name="incorrect_login">МойСклад поддерживает только ASCII символы в именах пользователей. Пожалуйста, используйте ваш email.</string>
-  <string name="wait">Пожалуйста, подождите …</string>
+  <string name="wait">Пожалуйста, подождите…</string>
+  <string name="wait_import">Загрука %1$s (%2$d/%3$d)…</string>
   <string name="auth_error">Ошибка авторизации</string>
   <string name="server_error">Ошибка сервера</string>
   <string name="connection_error">Ошибка подключения</string>
@@ -84,4 +85,12 @@
   <string name="about_summary">Создание интернет-магазинов, интегрированных с сервисом МойСклад — info@redsolution.ru</string>
   <string name="about_title">Терминал ввода данных в сервис moysklad.ru</string>
   <string name="debug_enabled">Отладка включена</string>
+  <string name="source_uom">единиц измерения</string>
+  <string name="source_company">контрагентов</string>
+  <string name="source_good_folder">папок товаров</string>
+  <string name="source_good">товаров</string>
+  <string name="source_my_company">организаций</string>
+  <string name="source_warehouse">складов</string>
+  <string name="source_project">проектов</string>
+  <string name="source_contract">контрактов</string>
 </resources>

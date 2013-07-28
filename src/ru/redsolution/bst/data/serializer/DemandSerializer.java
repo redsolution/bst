@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
-import ru.redsolution.bst.data.table.GoodTable;
+import ru.redsolution.bst.data.table.PriceTable;
 
 public class DemandSerializer extends PricedSerializer {
 
@@ -40,8 +40,9 @@ public class DemandSerializer extends PricedSerializer {
 	}
 
 	@Override
-	protected String getPriceFieldName() {
-		return GoodTable.Fields.SALE_PRICE;
+	protected String getPrice(String id) {
+		String priceType = BST.getInstance().getSelectedPriceType();
+		return PriceTable.getInstance().getPrice(id, priceType);
 	}
 
 }

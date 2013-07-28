@@ -21,6 +21,7 @@ import ru.redsolution.bst.data.table.MultipleObjectsReturnedException;
 import ru.redsolution.bst.data.table.NewGoodBarcodeTable;
 import ru.redsolution.bst.data.table.ObjectDoesNotExistException;
 import ru.redsolution.bst.data.table.ParentableTable;
+import ru.redsolution.bst.data.table.PriceTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.UomTable;
 import ru.redsolution.bst.ui.dialog.ValueDialogBuilder;
@@ -455,9 +456,15 @@ public class VerifyActivity extends PreferenceActivity implements
 			} catch (BaseDatabaseException e) {
 			}
 			String price;
-			if (BST.getInstance().getDocumentType().useSalePrice())
-				price = values.getAsString(BaseGoodTable.Fields.SALE_PRICE);
-			else
+			if (BST.getInstance().getDocumentType().useSalePrice()) {
+				if (isCustom)
+					price = "";
+				else {
+					String priceType = BST.getInstance().getSelectedPriceType();
+					price = PriceTable.getInstance().getPrice(productId,
+							priceType);
+				}
+			} else
 				price = values.getAsString(BaseGoodTable.Fields.BUY_PRICE);
 			BigDecimal bigDecimal = null;
 			try {

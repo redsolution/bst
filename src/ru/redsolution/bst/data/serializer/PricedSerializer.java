@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import ru.redsolution.bst.data.table.BaseDatabaseException;
-import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import android.content.ContentValues;
 
@@ -21,22 +19,18 @@ public abstract class PricedSerializer extends BaseSerializer {
 	private static final String BASE_PRICE_TAG = "basePrice";
 
 	/**
-	 * @return Имя поля со значением цены в таблице товаров.
+	 * @param good
+	 *            Идентификатор товара.
+	 * @return Цена товара.
 	 */
-	protected abstract String getPriceFieldName();
+	protected abstract String getPrice(String good);
 
 	@Override
 	protected void renderItemBody(XmlSerializer serializer, ContentValues values)
 			throws IllegalArgumentException, IllegalStateException, IOException {
 		super.renderItemBody(serializer, values);
 		String id = values.getAsString(SelectedGoodTable.Fields._ID);
-		ContentValues good;
-		try {
-			good = GoodTable.getInstance().getById(id);
-		} catch (BaseDatabaseException e) {
-			return;
-		}
-		String price = good.getAsString(getPriceFieldName());
+		String price = getPrice(id);
 		if ("".equals(price))
 			return;
 		serializer.startTag("", BASE_PRICE_TAG);

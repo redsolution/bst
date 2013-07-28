@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
+import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
+import android.content.ContentValues;
 
 public class SupplySerializer extends PricedSerializer {
 
@@ -40,8 +42,14 @@ public class SupplySerializer extends PricedSerializer {
 	}
 
 	@Override
-	protected String getPriceFieldName() {
-		return GoodTable.Fields.BUY_PRICE;
+	protected String getPrice(String id) {
+		ContentValues good;
+		try {
+			good = GoodTable.getInstance().getById(id);
+		} catch (BaseDatabaseException e) {
+			return "";
+		}
+		return good.getAsString(GoodTable.Fields.BUY_PRICE);
 	}
 
 }

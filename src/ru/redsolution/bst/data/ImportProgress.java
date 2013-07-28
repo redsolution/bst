@@ -23,12 +23,24 @@ public class ImportProgress {
 	 */
 	private final int sourceCount;
 
+	/**
+	 * Количество загруженных записей.
+	 */
+	private final int progress;
+
+	/**
+	 * Общее количество записей. -1, если значение не известно.
+	 */
+	private final int maximum;
+
 	public ImportProgress(int sourceName, int sourceIndex, int sourceCount,
 			int progress, int maximum) {
 		super();
 		this.sourceName = sourceName;
 		this.sourceIndex = sourceIndex;
 		this.sourceCount = sourceCount;
+		this.progress = progress;
+		this.maximum = maximum;
 	}
 
 	public int getSourceName() {
@@ -41,6 +53,14 @@ public class ImportProgress {
 
 	public int getSourceCount() {
 		return sourceCount;
+	}
+
+	public int getProgress() {
+		return progress;
+	}
+
+	public int getMaximum() {
+		return maximum;
 	}
 
 }

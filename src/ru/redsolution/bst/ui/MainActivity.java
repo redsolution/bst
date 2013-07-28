@@ -166,6 +166,8 @@ public class MainActivity extends PreferenceActivity implements
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.import_action);
 			progressDialog.setMessage(getString(R.string.wait));
+			progressDialog.setMax(100);
+			progressDialog.setProgress(0);
 			progressDialog.setIndeterminate(true);
 			progressDialog.setOnCancelListener(new OnCancelListener() {
 				@Override
@@ -203,6 +205,9 @@ public class MainActivity extends PreferenceActivity implements
 		updateView();
 		showDialog(DIALOG_PROGRESS_ID);
 		progressDialog.setMessage(getString(R.string.wait));
+		progressDialog.setMax(100);
+		progressDialog.setProgress(0);
+		progressDialog.setIndeterminate(true);
 	}
 
 	@Override
@@ -211,6 +216,14 @@ public class MainActivity extends PreferenceActivity implements
 		progressDialog.setMessage(getString(R.string.wait_import,
 				getString(progress.getSourceName()), progress.getSourceIndex(),
 				progress.getSourceCount()));
+		progressDialog.setIndeterminate(progress.getMaximum() == -1);
+		if (progress.getMaximum() == -1) {
+			progressDialog.setMax(100);
+			progressDialog.setProgress(0);
+		} else {
+			progressDialog.setMax(progress.getMaximum());
+			progressDialog.setProgress(progress.getProgress());
+		}
 	}
 
 	@Override

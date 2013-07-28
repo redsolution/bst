@@ -15,6 +15,8 @@ public abstract class ContainerImporter extends BaseImporter {
 
 	private int count;
 
+	private Integer total;
+
 	public ContainerImporter() {
 		count = 0;
 	}
@@ -28,6 +30,14 @@ public abstract class ContainerImporter extends BaseImporter {
 	 * @return Объект для импорта объекта.
 	 */
 	protected abstract Importer createItemImporter();
+
+	@Override
+	protected void preProcess(XmlPullParser parser) {
+		super.preProcess(parser);
+		String value = parser.getAttributeValue(null, "total");
+		if (value != null)
+			total = Integer.valueOf(value);
+	}
 
 	@Override
 	protected boolean parseInnerElement(XmlPullParser parser)
@@ -54,6 +64,13 @@ public abstract class ContainerImporter extends BaseImporter {
 	 */
 	public void resetCount() {
 		count = 0;
+	}
+
+	/**
+	 * @return Общее количество элементов.
+	 */
+	public Integer getTotal() {
+		return total;
 	}
 
 }

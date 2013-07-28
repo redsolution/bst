@@ -634,7 +634,8 @@ public class BST extends Application {
 					throw new RuntimeException(e);
 				}
 				if (Debugger.ENABLED)
-					System.out.println("Parsed: " + importer.getCount());
+					System.out.println("Parsed: " + importer.getCount()
+							+ ", total: " + importer.getTotal());
 				if (importer.getCount() < ELEMENTS_IN_REQUEST)
 					break;
 				start += ELEMENTS_IN_REQUEST;

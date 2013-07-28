@@ -13,7 +13,6 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 	private final ArrayList<PriceImporter> priceImporters = new ArrayList<PriceImporter>();
 
 	private String buyPrice = null;
-	private String salePrice = null;
 	private String uom = null;
 	private String folder = null;
 	private String productCode = null;
@@ -23,7 +22,6 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 	protected void preProcess(XmlPullParser parser) {
 		super.preProcess(parser);
 		buyPrice = parser.getAttributeValue(null, "buyPrice");
-		salePrice = parser.getAttributeValue(null, "salePrice");
 		uom = parser.getAttributeValue(null, "uomUuid");
 		folder = parser.getAttributeValue(null, "parentUuid");
 		productCode = parser.getAttributeValue(null, "productCode");
@@ -54,8 +52,6 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 	public boolean isValid() {
 		if (buyPrice == null)
 			buyPrice = "";
-		if (salePrice == null)
-			salePrice = "";
 		if (uom == null)
 			uom = "";
 		if (folder == null)
@@ -69,7 +65,7 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 
 	@Override
 	protected void saveInsatce() {
-		GoodTable.getInstance().add(id, name, buyPrice, salePrice, uom, folder,
+		GoodTable.getInstance().add(id, name, buyPrice, uom, folder,
 				productCode, code);
 	}
 

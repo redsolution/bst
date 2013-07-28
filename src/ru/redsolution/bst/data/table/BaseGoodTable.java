@@ -15,7 +15,6 @@ import android.database.Cursor;
 public abstract class BaseGoodTable extends NamedTable {
 	public static interface Fields extends NamedTable.Fields {
 		public static final String BUY_PRICE = "buy_price";
-		public static final String SALE_PRICE = "sale_price";
 		public static final String UOM = "uom";
 		public static final String GOOD_FOLDER = "good_folder";
 		public static final String PRODUCT_CODE = "product_code";
@@ -27,7 +26,6 @@ public abstract class BaseGoodTable extends NamedTable {
 	protected Collection<String> getFields() {
 		Collection<String> collection = new ArrayList<String>(super.getFields());
 		collection.add(Fields.BUY_PRICE);
-		collection.add(Fields.SALE_PRICE);
 		collection.add(Fields.UOM);
 		collection.add(Fields.GOOD_FOLDER);
 		collection.add(Fields.PRODUCT_CODE);

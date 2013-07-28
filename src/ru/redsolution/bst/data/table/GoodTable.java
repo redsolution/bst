@@ -2,6 +2,7 @@ package ru.redsolution.bst.data.table;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Список товаров.
@@ -56,11 +57,10 @@ public class GoodTable extends BaseGoodTable {
 	 * @param productCode
 	 * @param code
 	 */
-	public void add(String id, String name, String buyPrice, String salePrice,
-			String uom, String folder, String productCode, String code) {
+	public void add(String id, String name, String buyPrice, String uom,
+			String folder, String productCode, String code) {
 		ContentValues values = getValues(id, name);
 		values.put(Fields.BUY_PRICE, buyPrice);
-		values.put(Fields.SALE_PRICE, salePrice);
 		values.put(Fields.UOM, uom);
 		values.put(Fields.GOOD_FOLDER, folder);
 		values.put(Fields.PRODUCT_CODE, productCode);
@@ -75,6 +75,33 @@ public class GoodTable extends BaseGoodTable {
 	public Cursor list(String folder) {
 		return filter(Fields.GOOD_FOLDER + " = ?", new String[] { folder },
 				Fields.NAME);
+	}
+
+	@Override
+	public void migrate(SQLiteDatabase db, int toVersion) {
+		super.migrate(db, toVersion);
+		String sql;
+		switch (toVersion) {
+		case 7:
+			sql = "ALTER TABLE good RENAME TO good_;";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "CREATE TABLE good (" + "_id TEXT,"
+					+ "name TEXT COLLATE UNICODE, " + "buy_price TEXT,"
+					+ "uom TEXT," + "good_folder TEXT," + "product_code TEXT,"
+					+ "code TEXT," + "lower_cased_name TEXT);";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "INSERT INTO good ("
+					+ "_id, name, buy_price, uom, good_folder, "
+					+ "product_code, code, lower_cased_name) "
+					+ "SELECT _id, name, buy_price, uom, good_folder, "
+					+ "product_code, code, lower_cased_name FROM good_;";
+			DatabaseHelper.execSQL(db, sql);
+			sql = "DROP TABLE good_;";
+			DatabaseHelper.execSQL(db, sql);
+			break;
+		default:
+			break;
+		}
 	}
 
 }

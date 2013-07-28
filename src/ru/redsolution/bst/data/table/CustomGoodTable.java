@@ -48,7 +48,6 @@ public class CustomGoodTable extends BaseGoodTable {
 		ContentValues values = new ContentValues();
 		values.put(Fields.NAME, name);
 		values.put(Fields.BUY_PRICE, "");
-		values.put(Fields.SALE_PRICE, "");
 		values.put(Fields.UOM, "");
 		values.put(Fields.GOOD_FOLDER, "");
 		values.put(Fields.PRODUCT_CODE, "");

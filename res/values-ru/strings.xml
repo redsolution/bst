@@ -93,4 +93,5 @@
   <string name="source_warehouse">складов</string>
   <string name="source_project">проектов</string>
   <string name="source_contract">контрактов</string>
+  <string name="source_price_type">типов цен</string>
 </resources>

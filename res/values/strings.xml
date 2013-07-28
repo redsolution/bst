@@ -93,4 +93,5 @@
   <string name="source_warehouse">warehouses</string>
   <string name="source_project">projects</string>
   <string name="source_contract">contracts</string>
+  <string name="source_price_type">price types</string>
 </resources>

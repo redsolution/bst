@@ -34,6 +34,7 @@ import ru.redsolution.bst.data.parse.DocumentImporter;
 import ru.redsolution.bst.data.parse.GoodFoldersImporter;
 import ru.redsolution.bst.data.parse.GoodsImporter;
 import ru.redsolution.bst.data.parse.MyCompaniesImporter;
+import ru.redsolution.bst.data.parse.PriceTypesImporter;
 import ru.redsolution.bst.data.parse.ProjectsImporter;
 import ru.redsolution.bst.data.parse.UomsImporter;
 import ru.redsolution.bst.data.parse.WarehousesImporter;
@@ -51,6 +52,7 @@ import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.NewGoodBarcodeTable;
+import ru.redsolution.bst.data.table.PriceTypeTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import ru.redsolution.bst.data.table.UomTable;
@@ -130,6 +132,7 @@ public class BST extends Application {
 		SelectedGoodTable.getInstance();
 		NewGoodBarcodeTable.getInstance();
 		CustomGoodTable.getInstance();
+		PriceTypeTable.getInstance();
 	}
 
 	public boolean showWellcomeScreen() {
@@ -561,6 +564,8 @@ public class BST extends Application {
 					new ProjectsImporter()));
 			sources.add(new ImportSource("Contract", R.string.source_contract,
 					new ContractsImporter()));
+			sources.add(new ImportSource("PriceType",
+					R.string.source_price_type, new PriceTypesImporter()));
 		}
 
 		@Override
@@ -575,6 +580,7 @@ public class BST extends Application {
 				WarehouseTable.getInstance().clear();
 				ProjectTable.getInstance().clear();
 				ContractTable.getInstance().clear();
+				PriceTypeTable.getInstance().clear();
 				Editor editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), false);
 				editor.commit();

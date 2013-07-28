@@ -52,6 +52,7 @@ import ru.redsolution.bst.data.table.GoodFolderTable;
 import ru.redsolution.bst.data.table.GoodTable;
 import ru.redsolution.bst.data.table.MyCompanyTable;
 import ru.redsolution.bst.data.table.NewGoodBarcodeTable;
+import ru.redsolution.bst.data.table.PriceTable;
 import ru.redsolution.bst.data.table.PriceTypeTable;
 import ru.redsolution.bst.data.table.ProjectTable;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
@@ -133,6 +134,7 @@ public class BST extends Application {
 		NewGoodBarcodeTable.getInstance();
 		CustomGoodTable.getInstance();
 		PriceTypeTable.getInstance();
+		PriceTable.getInstance();
 	}
 
 	public boolean showWellcomeScreen() {
@@ -597,6 +599,7 @@ public class BST extends Application {
 				ProjectTable.getInstance().clear();
 				ContractTable.getInstance().clear();
 				PriceTypeTable.getInstance().clear();
+				PriceTable.getInstance().clear();
 				Editor editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), false);
 				editor.commit();

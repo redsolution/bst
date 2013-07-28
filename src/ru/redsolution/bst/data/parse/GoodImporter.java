@@ -1,6 +1,7 @@
 package ru.redsolution.bst.data.parse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -8,6 +9,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import ru.redsolution.bst.data.table.GoodTable;
 
 public class GoodImporter extends BaseBarcodeContainerImporter {
+
+	private final ArrayList<PriceImporter> priceImporters = new ArrayList<PriceImporter>();
 
 	private String buyPrice = null;
 	private String salePrice = null;
@@ -40,6 +43,10 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 			code = parseText(parser);
 			return true;
 		}
+		if (parser.getName().equals("salePrices")) {
+			new PricesImporter(this).parse(parser);
+			return true;
+		}
 		return false;
 	}
 
@@ -64,6 +71,17 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 	protected void saveInsatce() {
 		GoodTable.getInstance().add(id, name, buyPrice, salePrice, uom, folder,
 				productCode, code);
+	}
+
+	@Override
+	protected void save() {
+		super.save();
+		for (PriceImporter priceImporter : priceImporters)
+			priceImporter.save(id);
+	}
+
+	public void addPrice(PriceImporter priceImporter) {
+		priceImporters.add(priceImporter);
 	}
 
 }

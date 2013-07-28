@@ -42,7 +42,7 @@ public abstract class BaseBarcodeContainerImporter extends NamedImporter
 	protected abstract void saveInsatce();
 
 	@Override
-	protected final void save() {
+	protected void save() {
 		saveInsatce();
 		for (BaseBarcodeImporter barcodeImporter : barcodeImporters)
 			barcodeImporter.save(id);

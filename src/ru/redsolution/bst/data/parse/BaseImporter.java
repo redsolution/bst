@@ -5,6 +5,9 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import ru.redsolution.bst.data.table.DatabaseHelper;
+import android.database.sqlite.SQLiteDatabase;
+
 /**
  * Реализует базовый парсинг данных.
  * 
@@ -61,9 +64,16 @@ public abstract class BaseImporter implements Importer {
 	@Override
 	public void parse(XmlPullParser parser) throws XmlPullParserException,
 			IOException {
-		preProcess(parser);
-		parseInner(parser);
-		postProcess();
+		SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+		try {
+			db.beginTransaction();
+			preProcess(parser);
+			parseInner(parser);
+			postProcess();
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	/**

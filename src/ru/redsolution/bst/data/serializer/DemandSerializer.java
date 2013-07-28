@@ -22,8 +22,6 @@ public class DemandSerializer extends PricedSerializer {
 		String company = BST.getInstance().getSelectedCompany();
 		String contract = BST.getInstance().getSelectedContract();
 		String project = BST.getInstance().getSelectedProject();
-		serializer.attribute("", "targetRequisiteId", company);
-		serializer.attribute("", "sourceRequisiteId", myCompany);
 		if (!"".equals(contract))
 			serializer.attribute("", "contractId", contract);
 		if (!"".equals(project))

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.iharder.base64.Base64;
 
@@ -494,12 +496,72 @@ public class BST extends Application {
 	}
 
 	/**
+	 * Источник для импорта.
+	 * 
+	 * @author alexander.ivanov
+	 */
+	private static class ImportSource {
+
+		/**
+		 * Тип запроса.
+		 */
+		private final String requestType;
+
+		/**
+		 * Парсер.
+		 */
+		private final ContainerImporter importer;
+
+		private final int progress;
+
+		public ImportSource(String requestType, ContainerImporter importer,
+				int progress) {
+			super();
+			this.requestType = requestType;
+			this.importer = importer;
+			this.progress = progress;
+		}
+
+		public String getRequestType() {
+			return requestType;
+		}
+
+		public ContainerImporter getImporter() {
+			return importer;
+		}
+
+		public int getProgess() {
+			return progress;
+		}
+
+	}
+
+	/**
 	 * Задача импорта данных.
 	 * 
 	 * @author alexander.ivanov
 	 * 
 	 */
 	private class ImportTask extends AbstractTask {
+
+		List<ImportSource> sources;
+
+		public ImportTask() {
+			super();
+			sources = new ArrayList<ImportSource>();
+			sources.add(new ImportSource("Uom", new UomsImporter(), 0));
+			sources.add(new ImportSource("Company", new CompaniesImporter(), 10));
+			sources.add(new ImportSource("GoodFolder",
+					new GoodFoldersImporter(), 30));
+			sources.add(new ImportSource("Good", new GoodsImporter(), 40));
+			sources.add(new ImportSource("MyCompany",
+					new MyCompaniesImporter(), 60));
+			sources.add(new ImportSource("Warehouse", new WarehousesImporter(),
+					70));
+			sources.add(new ImportSource("Project", new ProjectsImporter(), 80));
+			sources.add(new ImportSource("Contract", new ContractsImporter(),
+					90));
+		}
 
 		@Override
 		protected void executeInBackground() {
@@ -516,29 +578,18 @@ public class BST extends Application {
 				Editor editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), false);
 				editor.commit();
-				getData("Uom", new UomsImporter());
-				publishProgress(10);
-				getData("Company", new CompaniesImporter());
-				publishProgress(30);
-				getData("GoodFolder", new GoodFoldersImporter());
-				publishProgress(40);
-				getData("Good", new GoodsImporter());
-				publishProgress(60);
-				getData("MyCompany", new MyCompaniesImporter());
-				publishProgress(70);
-				getData("Warehouse", new WarehousesImporter());
-				publishProgress(80);
-				getData("Project", new ProjectsImporter());
-				publishProgress(90);
-				getData("Contract", new ContractsImporter());
-				publishProgress(100);
+				for (ImportSource source : sources)
+					getData(sources);
 				editor = settings.edit();
 				editor.putBoolean(getString(R.string.imported_key), true);
 				editor.commit();
 			}
 		}
 
-		private void getData(String type, ContainerImporter importer) {
+		private void getData(ImportSource importSource) {
+			publishProgress(importSource.getProgess());
+			String type = importSource.getRequestType();
+			ContainerImporter importer = importSource.getImporter();
 			int start = 0;
 			while (true) {
 				if (isCancelled())

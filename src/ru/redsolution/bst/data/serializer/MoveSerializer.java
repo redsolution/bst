@@ -23,12 +23,12 @@ public class MoveSerializer extends BaseSerializer {
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");
-		serializer.attribute("", "sourceStoreId", warehouse);
-		serializer.attribute("", "targetStoreId", targetWarehouse);
-		serializer.attribute("", "sourceAgentId", myCompany);
-		serializer.attribute("", "targetAgentId", myCompany);
+		serializer.attribute("", "sourceStoreUuid", warehouse);
+		serializer.attribute("", "targetStoreUuid", targetWarehouse);
+		serializer.attribute("", "sourceAgentUuid", myCompany);
+		serializer.attribute("", "targetAgentUuid", myCompany);
 		if (!"".equals(project))
-			serializer.attribute("", "projectId", project);
+			serializer.attribute("", "projectUuid", project);
 	}
 
 	@Override

@@ -23,9 +23,9 @@ public class InventorySerializer extends BaseSerializer {
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");
-		serializer.attribute("", "sourceStoreId", warehouse);
-		serializer.attribute("", "sourceAgentId", myCompany);
-		serializer.attribute("", "targetAgentId", myCompany);
+		serializer.attribute("", "sourceStoreUuid", warehouse);
+		serializer.attribute("", "sourceAgentUuid", myCompany);
+		serializer.attribute("", "targetAgentUuid", myCompany);
 	}
 
 	@Override

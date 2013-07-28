@@ -15,7 +15,7 @@ public abstract class ParentableImporter extends NamedImporter {
 	@Override
 	protected void preProcess(XmlPullParser parser) {
 		super.preProcess(parser);
-		parent = parser.getAttributeValue(null, "parentId");
+		parent = parser.getAttributeValue(null, "parentUuid");
 	}
 
 	@Override

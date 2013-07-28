@@ -173,7 +173,7 @@ public abstract class BaseSerializer {
 		String good = values.getAsString(SelectedGoodTable.Fields._ID);
 		String quantity = values.getAsString(SelectedGoodTable.Fields.QUANTITY);
 		serializer.attribute("", "quantity", String.valueOf(quantity));
-		serializer.attribute("", "goodId", good);
+		serializer.attribute("", "goodUuid", good);
 	}
 
 	/**

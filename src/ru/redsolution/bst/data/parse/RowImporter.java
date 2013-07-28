@@ -23,7 +23,7 @@ public abstract class RowImporter extends BaseImporter implements
 			throws XmlPullParserException, IOException {
 		if (super.parseInnerElement(parser))
 			return true;
-		if (parser.getName().equals("id")) {
+		if (parser.getName().equals("uuid")) {
 			id = parseText(parser);
 			return true;
 		}

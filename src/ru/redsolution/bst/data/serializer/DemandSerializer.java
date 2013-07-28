@@ -23,15 +23,15 @@ public class DemandSerializer extends PricedSerializer {
 		String contract = BST.getInstance().getSelectedContract();
 		String project = BST.getInstance().getSelectedProject();
 		if (!"".equals(contract))
-			serializer.attribute("", "contractId", contract);
+			serializer.attribute("", "contractUuid", contract);
 		if (!"".equals(project))
-			serializer.attribute("", "projectId", project);
+			serializer.attribute("", "projectUuid", project);
 		serializer.attribute("", "applicable", "true");
 		serializer.attribute("", "payerVat", "true");
 		serializer.attribute("", "vatIncluded", "true");
-		serializer.attribute("", "sourceStoreId", warehouse);
-		serializer.attribute("", "sourceAgentId", myCompany);
-		serializer.attribute("", "targetAgentId", company);
+		serializer.attribute("", "sourceStoreUuid", warehouse);
+		serializer.attribute("", "sourceAgentUuid", myCompany);
+		serializer.attribute("", "targetAgentUuid", company);
 	}
 
 	@Override

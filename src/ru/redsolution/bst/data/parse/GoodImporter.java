@@ -21,8 +21,8 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 		super.preProcess(parser);
 		buyPrice = parser.getAttributeValue(null, "buyPrice");
 		salePrice = parser.getAttributeValue(null, "salePrice");
-		uom = parser.getAttributeValue(null, "uomId");
-		folder = parser.getAttributeValue(null, "parentId");
+		uom = parser.getAttributeValue(null, "uomUuid");
+		folder = parser.getAttributeValue(null, "parentUuid");
 		productCode = parser.getAttributeValue(null, "productCode");
 	}
 

@@ -13,8 +13,8 @@ public class ContractImporter extends NamedImporter {
 	@Override
 	protected void preProcess(XmlPullParser parser) {
 		super.preProcess(parser);
-		company = parser.getAttributeValue(null, "agentId");
-		myCompany = parser.getAttributeValue(null, "ownCompanyId");
+		company = parser.getAttributeValue(null, "agentUuid");
+		myCompany = parser.getAttributeValue(null, "ownCompanyUuid");
 	}
 
 	@Override

@@ -568,12 +568,8 @@ public class BST extends Application {
 			sources = new ArrayList<ImportSource>();
 			sources.add(new ImportSource("Uom", R.string.source_uom,
 					new UomsImporter()));
-			sources.add(new ImportSource("Company", R.string.source_company,
-					new CompaniesImporter()));
-			sources.add(new ImportSource("GoodFolder",
-					R.string.source_good_folder, new GoodFoldersImporter()));
-			sources.add(new ImportSource("Good", R.string.source_good,
-					new GoodsImporter()));
+			sources.add(new ImportSource("PriceType",
+					R.string.source_price_type, new PriceTypesImporter()));
 			sources.add(new ImportSource("MyCompany",
 					R.string.source_my_company, new MyCompaniesImporter()));
 			sources.add(new ImportSource("Warehouse",
@@ -582,8 +578,12 @@ public class BST extends Application {
 					new ProjectsImporter()));
 			sources.add(new ImportSource("Contract", R.string.source_contract,
 					new ContractsImporter()));
-			sources.add(new ImportSource("PriceType",
-					R.string.source_price_type, new PriceTypesImporter()));
+			sources.add(new ImportSource("Company", R.string.source_company,
+					new CompaniesImporter()));
+			sources.add(new ImportSource("GoodFolder",
+					R.string.source_good_folder, new GoodFoldersImporter()));
+			sources.add(new ImportSource("Good", R.string.source_good,
+					new GoodsImporter()));
 		}
 
 		@Override

@@ -176,8 +176,8 @@ public class ChooseActivity extends ListActivity implements
 	 * @return Новый курсор.
 	 */
 	private Cursor createCursor(CharSequence constraint) {
-		if (BST.getInstance().isShowFolders()) {
-			if (constraint.length() == 0) {
+		if (constraint.length() == 0) {
+			if (BST.getInstance().isShowFolders()) {
 				if ("".equals(folder))
 					return new MergeCursor(new Cursor[] {
 							GoodFolderTable.getInstance().list(folder),
@@ -189,15 +189,16 @@ public class ChooseActivity extends ListActivity implements
 							GoodTable.getInstance().list(folder) });
 			} else {
 				return new MergeCursor(new Cursor[] {
-						CustomGoodTable.getInstance().filterByText(
-								constraint.toString()),
-						GoodTable.getInstance().filterByText(
-								constraint.toString()) });
+						CustomGoodTable.getInstance().list(),
+						GoodTable.getInstance().list() });
 			}
 		} else {
-			return new MergeCursor(new Cursor[] {
-					CustomGoodTable.getInstance().list(),
-					GoodTable.getInstance().list() });
+			return new MergeCursor(
+					new Cursor[] {
+							CustomGoodTable.getInstance().filterByText(
+									constraint.toString()),
+							GoodTable.getInstance().filterByText(
+									constraint.toString()) });
 		}
 	}
 

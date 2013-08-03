@@ -8,6 +8,12 @@ import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.SelectedGoodTable;
 import android.content.ContentValues;
 
+/**
+ * Сереализация документа инвентаризации.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class InventorySerializer extends BaseSerializer {
 
 	@Override

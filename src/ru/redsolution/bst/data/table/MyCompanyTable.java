@@ -28,4 +28,5 @@ public class MyCompanyTable extends ParentableTable {
 	public String getTableName() {
 		return NAME;
 	}
+
 }

@@ -48,6 +48,12 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.quietlycoding.android.picker.NumberPicker;
 
+/**
+ * Форма добавления записи в документ.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class VerifyActivity extends PreferenceActivity implements
 		OnClickListener, AcceptAndDeclineDialogListener {
 

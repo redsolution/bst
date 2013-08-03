@@ -52,4 +52,5 @@ public abstract class ParentableTable extends NamedTable {
 	public void add(String id, String name, String parent) {
 		add(getValues(id, name, parent));
 	}
+
 }

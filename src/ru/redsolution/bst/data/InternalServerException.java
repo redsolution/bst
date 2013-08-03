@@ -1,7 +1,7 @@
 package ru.redsolution.bst.data;
 
 /**
- * Сервер сообщает об ошибки с кодом 500.
+ * Ошибка сервера с кодом 500.
  * 
  * @author alexander.ivanov
  * 

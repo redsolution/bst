@@ -28,4 +28,5 @@ public class GoodBarcodeTable extends BaseBarcodeTable {
 	public String getTableName() {
 		return NAME;
 	}
+
 }

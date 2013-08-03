@@ -76,6 +76,11 @@ public class GoodImporter extends BaseBarcodeContainerImporter {
 			priceImporter.save(id);
 	}
 
+	/**
+	 * Добавляет парсер, содержащий цену.
+	 * 
+	 * @param priceImporter
+	 */
 	public void addPrice(PriceImporter priceImporter) {
 		priceImporters.add(priceImporter);
 	}

@@ -9,6 +9,12 @@ import ru.redsolution.bst.data.table.BaseDatabaseException;
 import ru.redsolution.bst.data.table.GoodTable;
 import android.content.ContentValues;
 
+/**
+ * Сереализация документа приемки товаров.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class SupplySerializer extends PricedSerializer {
 
 	@Override

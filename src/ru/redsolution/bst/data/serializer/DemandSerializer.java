@@ -7,6 +7,12 @@ import org.xmlpull.v1.XmlSerializer;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.table.PriceTable;
 
+/**
+ * Сереализация документа отгрузки товаров.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class DemandSerializer extends PricedSerializer {
 
 	@Override

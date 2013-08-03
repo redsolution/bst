@@ -30,6 +30,12 @@ import android.widget.FilterQueryProvider;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
+/**
+ * Справочник ТМЦ.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class ChooseActivity extends ListActivity implements
 		OnItemClickListener, OnClickListener {
 
@@ -59,10 +65,19 @@ public class ChooseActivity extends ListActivity implements
 	 */
 	private static enum Type {
 
+		/**
+		 * ТМЦ.
+		 */
 		good,
 
+		/**
+		 * ТМЦ, добавленный вручную.
+		 */
 		custom,
 
+		/**
+		 * Папка.
+		 */
 		folder;
 
 		/**

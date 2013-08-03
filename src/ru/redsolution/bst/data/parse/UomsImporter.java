@@ -1,6 +1,5 @@
 package ru.redsolution.bst.data.parse;
 
-
 public class UomsImporter extends ContainerImporter {
 
 	@Override

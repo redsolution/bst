@@ -18,6 +18,12 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
+/**
+ * Базовое окно настроек документа.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public abstract class BaseSettingsActivity extends PreferenceActivity implements
 		OnPreferenceClickListener, AcceptAndDeclineDialogListener {
 

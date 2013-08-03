@@ -69,4 +69,5 @@ public abstract class NamedTable extends BaseTable {
 	public void add(String id, String name) {
 		add(getValues(id, name));
 	}
+
 }

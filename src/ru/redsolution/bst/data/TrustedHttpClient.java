@@ -17,6 +17,13 @@ import org.apache.http.params.HttpParams;
 import ru.redsolution.bst.R;
 import android.content.Context;
 
+/**
+ * Http клиент с увеличенным интервалом ожидания ответа от сервера и с
+ * поддержкой дополнительных доверенных сертификатов.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class TrustedHttpClient extends DefaultHttpClient {
 
 	private static final int CONNECTION_TIMEOUT = 10000;
@@ -46,6 +53,12 @@ public class TrustedHttpClient extends DefaultHttpClient {
 		return new ThreadSafeClientConnManager(getParams(), registry);
 	}
 
+	/**
+	 * Обеспечивает подключение на устройствах без необходимого доверенного
+	 * сертификата.
+	 * 
+	 * @return
+	 */
 	private SSLSocketFactory newSslSocketFactory() {
 		try {
 			KeyStore trusted = KeyStore.getInstance("BKS");

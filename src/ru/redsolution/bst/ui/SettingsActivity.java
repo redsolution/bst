@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 
 /**
- * Окно настроет.
+ * Настройки приложения.
  * 
  * @author alexander.ivanov
  * 

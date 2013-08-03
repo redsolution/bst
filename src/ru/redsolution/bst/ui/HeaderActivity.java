@@ -21,6 +21,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * Настройки документа.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class HeaderActivity extends BaseSettingsActivity implements
 		OnClickListener, AcceptAndDeclineDialogListener {
 

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
  * 
  */
 public interface DatabaseTable {
+
 	/**
 	 * Вызывается при создании базы данных.
 	 * 
@@ -28,4 +29,5 @@ public interface DatabaseTable {
 	 * Вызывается перед синхронизацией базы данных.
 	 */
 	void clear();
+
 }

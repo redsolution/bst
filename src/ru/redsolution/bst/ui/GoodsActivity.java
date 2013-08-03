@@ -28,6 +28,12 @@ import android.widget.TextView;
 
 import com.quietlycoding.android.picker.NumberPicker;
 
+/**
+ * Список ТМЦ в документе.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class GoodsActivity extends ListActivity implements
 		AcceptAndDeclineDialogListener {
 

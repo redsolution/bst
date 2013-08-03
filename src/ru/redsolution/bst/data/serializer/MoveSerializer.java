@@ -6,6 +6,12 @@ import org.xmlpull.v1.XmlSerializer;
 
 import ru.redsolution.bst.data.BST;
 
+/**
+ * Сереализация документа перемещения товаров.
+ * 
+ * @author alexander.ivanov
+ * 
+ */
 public class MoveSerializer extends BaseSerializer {
 
 	@Override

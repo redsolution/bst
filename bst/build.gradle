@@ -8,8 +8,8 @@ android {
         applicationId "ru.redsolution.bst"
         minSdkVersion 3
         targetSdkVersion 23
-        versionCode 8
-        versionName '0.2.6'
+        versionCode 9
+        versionName '0.3'
     }
 
     dependencies {

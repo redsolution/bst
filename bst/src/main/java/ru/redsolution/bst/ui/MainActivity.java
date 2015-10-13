@@ -14,8 +14,8 @@
  */
 package ru.redsolution.bst.ui;
 
-import org.apache.http.auth.AuthenticationException;
 
+import cz.msebera.android.httpclient.auth.AuthenticationException;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.BST;
 import ru.redsolution.bst.data.DocumentType;

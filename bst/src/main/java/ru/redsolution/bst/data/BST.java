@@ -26,20 +26,20 @@ import java.util.List;
 
 import net.iharder.base64.Base64;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.auth.AuthenticationException;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
+import cz.msebera.android.httpclient.client.methods.HttpPut;
+import cz.msebera.android.httpclient.client.methods.HttpUriRequest;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.AbstractHttpClient;
+import cz.msebera.android.httpclient.util.EntityUtils;
 import ru.redsolution.bst.R;
 import ru.redsolution.bst.data.parse.CompaniesImporter;
 import ru.redsolution.bst.data.parse.ContainerImporter;
@@ -741,11 +741,7 @@ public class BST extends Application {
 				throw new RuntimeException(e);
 			}
 			StringEntity entity;
-			try {
-				entity = new StringEntity(body, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
+			entity = new StringEntity(body, "UTF-8");
 			entity.setContentType("application/xml");
 			request.setEntity(entity);
 			executeRequest(request);

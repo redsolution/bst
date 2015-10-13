@@ -1,3 +1,7 @@
-/gen
-/bin
-/.settings
+local.properties
+*.iml
+.idea
+build
+.gradle
+*.apk
+*~*

@@ -1,0 +1,18 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "ru.redsolution.bst"
+        minSdkVersion 3
+        targetSdkVersion 23
+        versionCode 9
+        versionName '0.3'
+    }
+
+    dependencies {
+        compile 'cz.msebera.android:httpclient:4.3.6'
+    }
+}
